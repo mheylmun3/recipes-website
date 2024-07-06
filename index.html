@@ -7,28 +7,114 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="navbar">
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="#Recipes">Recipes</a>
+                <a href="#GroceryList">Grocery List</a>
+                <a href="#Inventory">Inventory</a>
+            </div>
+        </div>
+        <h1>Recipe and Grocery List</h1>
+    </div>
+
     <div class="tab">
         <button class="tablinks" onclick="openTab(event, 'Recipes')">Recipes</button>
         <button class="tablinks" onclick="openTab(event, 'GroceryList')">Grocery List</button>
+        <button class="tablinks" onclick="openTab(event, 'Inventory')">Inventory</button>
     </div>
 
     <div id="Recipes" class="tabcontent">
         <h2>Recipes</h2>
-        <ul>
-            <li>Spaghetti Carbonara</li>
-            <li>Chicken Alfredo</li>
-            <li>Beef Tacos</li>
-        </ul>
+        <div class="subtab">
+            <button class="subtablinks" onclick="openSubTab(event, 'MainDishes')">Main Dishes</button>
+            <button class="subtablinks" onclick="openSubTab(event, 'SideDishes')">Side Dishes</button>
+            <button class="subtablinks" onclick="openSubTab(event, 'SweetTreats')">Sweet Treats</button>
+        </div>
+        <div id="MainDishes" class="subtabcontent">
+            <h3>Main Dishes</h3>
+            <ul>
+                <li><a href="#">Chicken Enchilada Soup</a></li>
+                <li><a href="#">Chili</a></li>
+                <li><a href="#">Tortellini</a></li>
+                <li><a href="#">Crack Chicken Noodle Soup</a></li>
+                <li><a href="#">Chicken Noodle Soup</a></li>
+                <li><a href="#">Loaded Potato Soup</a></li>
+                <li><a href="#">Lasagna Soup</a></li>
+                <li><a href="#">Lemon Chicken Orzo</a></li>
+                <li><a href="#">Chicken Fajitas</a></li>
+                <li><a href="#">Roast</a></li>
+                <li><a href="#">Carnitas</a></li>
+                <li><a href="#">Chicken Pot Pie</a></li>
+                <li><a href="#">Chicken and Dumplings</a></li>
+                <li><a href="#">Pulled Pork</a></li>
+                <li><a href="#">Crockpot Chicken Alfredo</a></li>
+                <li><a href="#">Beef Short Ribs</a></li>
+                <li><a href="#">Chicken Piccata</a></li>
+                <li><a href="#">Creamy Lemon Chicken</a></li>
+                <li><a href="#">Teriyaki Chicken</a></li>
+                <li><a href="#">Birria Tacos</a></li>
+                <li><a href="#">Butter Chicken</a></li>
+                <li><a href="#">Creamy Chicken Pasta</a></li>
+                <li><a href="#">Tacos</a></li>
+                <li><a href="#">Meatballs and Spaghetti</a></li>
+                <li><a href="#">Cheeseburger Sliders with Mac n Cheese</a></li>
+                <li><a href="#">Ravioli</a></li>
+                <li><a href="#">Gigi Hadid Pasta</a></li>
+                <li><a href="#">Creamy Sausage Bowtie Pasta</a></li>
+                <li><a href="#">French Onion Pasta</a></li>
+                <li><a href="#">French Onion Chicken</a></li>
+                <li><a href="#">Soupy Chicken</a></li>
+                <li><a href="#">Breaded Chicken</a></li>
+                <li><a href="#">Barbecue Chicken Bake</a></li>
+                <li><a href="#">Sausage and Peppers</a></li>
+                <li><a href="#">Ricotta Meatballs</a></li>
+                <li><a href="#">Rigatoni P</a></li>
+                <li><a href="#">Stir Fry</a></li>
+                <li><a href="#">Asian-Style Beef Burgers</a></li>
+                <li><a href="#">Beef and Broccoli</a></li>
+            </ul>
+        </div>
+        <div id="SideDishes" class="subtabcontent">
+            <h3>Side Dishes</h3>
+            <ul>
+                <li><a href="#">Parmesan-Crusted Oven Roasted Potatoes</a></li>
+                <li><a href="#">Parmesan-Garlic Butter Pizza Rolls</a></li>
+                <li><a href="#">Mac n Cheese</a></li>
+                <li><a href="#">Mashed Potatoes</a></li>
+                <li><a href="#">Roasted Garlic</a></li>
+            </ul>
+        </div>
+        <div id="SweetTreats" class="subtabcontent">
+            <h3>Sweet Treats</h3>
+            <ul>
+                <li><a href="#">No Bake Cookies</a></li>
+                <li><a href="#">Protein Balls</a></li>
+                <li><a href="#">Chocolate Chip Cookies</a></li>
+                <li><a href="#">Chocolate Covered Raspberries</a></li>
+                <li><a href="#">Protein Muffins</a></li>
+                <li><a href="#">Overnight Oats</a></li>
+                <li><a href="#">Green Smoothie</a></li>
+            </ul>
+        </div>
     </div>
 
     <div id="GroceryList" class="tabcontent">
         <h2>Grocery List</h2>
         <ul>
-            <li>Spaghetti</li>
-            <li>Chicken</li>
-            <li>Beef</li>
-            <li>Cheese</li>
-            <li>Taco Shells</li>
+            <li><input type="checkbox" id="chickenStock" name="chickenStock">
+            <label for="chickenStock">Chicken Stock</label></li>
+        </ul>
+    </div>
+
+    <div id="Inventory" class="tabcontent">
+        <h2>Inventory</h2>
+        <ul>
+            <li>Meatballs</li>
+            <li>Noodles and Potstickers</li>
+            <li>Mac n Cheese</li>
+            <li>Pasta with Garlic Bread</li>
         </ul>
     </div>
 
