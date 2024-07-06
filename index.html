@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe and Grocery List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Recipes')">Recipes</button>
+        <button class="tablinks" onclick="openTab(event, 'GroceryList')">Grocery List</button>
+    </div>
+
+    <div id="Recipes" class="tabcontent">
+        <h2>Recipes</h2>
+        <ul>
+            <li>Spaghetti Carbonara</li>
+            <li>Chicken Alfredo</li>
+            <li>Beef Tacos</li>
+        </ul>
+    </div>
+
+    <div id="GroceryList" class="tabcontent">
+        <h2>Grocery List</h2>
+        <ul>
+            <li>Spaghetti</li>
+            <li>Chicken</li>
+            <li>Beef</li>
+            <li>Cheese</li>
+            <li>Taco Shells</li>
+        </ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
