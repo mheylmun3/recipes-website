@@ -1,5 +1,23 @@
+function toggleMenu() {
+    var x = document.getElementById("menuDropdown");
+    if (x.style.display === "block") {
+        x.style.display = "none";
+    } else {
+        x.style.display = "block";
+    }
+}
+
+function toggleSubMenu() {
+    var x = document.getElementById("recipesSubMenu");
+    if (x.style.display === "block") {
+        x.style.display = "none";
+    } else {
+        x.style.display = "block";
+    }
+}
+
 function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
+    var i, tabcontent;
 
     // Get all elements with class="tabcontent" and hide them
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -7,19 +25,13 @@ function openTab(evt, tabName) {
         tabcontent[i].style.display = "none";
     }
 
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
-    // Show the current tab, and add an "active" class to the button that opened the tab
+    // Show the current tab
     document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
+    toggleMenu(); // Close the menu after selecting a tab
 }
 
 function openSubTab(evt, subTabName) {
-    var i, subtabcontent, subtablinks;
+    var i, subtabcontent;
 
     // Get all elements with class="subtabcontent" and hide them
     subtabcontent = document.getElementsByClassName("subtabcontent");
@@ -27,18 +39,7 @@ function openSubTab(evt, subTabName) {
         subtabcontent[i].style.display = "none";
     }
 
-    // Get all elements with class="subtablinks" and remove the class "active"
-    subtablinks = document.getElementsByClassName("subtablinks");
-    for (i = 0; i < subtablinks.length; i++) {
-        subtablinks[i].className = subtablinks[i].className.replace(" active", "");
-    }
-
-    // Show the current subtab, and add an "active" class to the button that opened the subtab
+    // Show the current subtab
     document.getElementById(subTabName).style.display = "block";
-    evt.currentTarget.className += " active";
+    toggleSubMenu(); // Close the submenu after selecting a subtab
 }
-
-// Set default tab to be open
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector('.tablinks').click();
-});

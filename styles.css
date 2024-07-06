@@ -12,7 +12,7 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1;
+    z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,11 +21,14 @@ body {
 
 .navbar h1 {
     margin: 0;
+    text-align: center;
+    flex-grow: 1;
 }
 
 .dropdown {
     position: relative;
     display: inline-block;
+    z-index: 1001;
 }
 
 .dropbtn {
@@ -43,7 +46,8 @@ body {
     background-color: #444;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    z-index: 1002;
+    flex-direction: column;
 }
 
 .dropdown-content a {
@@ -55,69 +59,43 @@ body {
 
 .dropdown-content a:hover {background-color: #555;}
 
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
 .dropdown:hover .dropbtn {
     background-color: #555;
 }
 
-.tab {
-    overflow: hidden;
-    border-bottom: 1px solid #ccc;
-    background-color: #333;
-    margin-top: 60px;
+.sub-dropdown {
+    position: relative;
 }
 
-.tab button {
-    background-color: inherit;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    font-size: 17px;
-    color: white;
-}
-
-.tab button:hover {
-    background-color: #575757;
-}
-
-.tab button.active {
+.sub-dropdown-content {
+    display: none;
+    position: absolute;
     background-color: #555;
+    left: 100%;
+    top: 0;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1003;
+}
+
+.sub-dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.sub-dropdown-content a:hover {background-color: #666;}
+
+.sub-dropdown:hover .sub-dropdown-content {
+    display: block;
 }
 
 .tabcontent {
     display: none;
     padding: 20px;
     background-color: #222;
-}
-
-.subtab {
-    overflow: hidden;
-    background-color: #444;
-    border-top: 1px solid #ccc;
-}
-
-.subtab button {
-    background-color: inherit;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 10px 12px;
-    transition: 0.3s;
-    font-size: 15px;
-    color: white;
-}
-
-.subtab button:hover {
-    background-color: #575757;
-}
-
-.subtab button.active {
-    background-color: #555;
+    margin-top: 60px;
 }
 
 .subtabcontent {

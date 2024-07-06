@@ -9,29 +9,26 @@
 <body>
     <div class="navbar">
         <div class="dropdown">
-            <button class="dropbtn">Menu</button>
-            <div class="dropdown-content">
-                <a href="#Recipes">Recipes</a>
-                <a href="#GroceryList">Grocery List</a>
-                <a href="#Inventory">Inventory</a>
+            <button class="dropbtn" onclick="toggleMenu()">&#9776; Menu</button>
+            <div class="dropdown-content" id="menuDropdown">
+                <a href="#" onclick="openTab(event, 'Recipes')">Recipes</a>
+                <div class="sub-dropdown">
+                    <a href="#" class="sub-dropbtn" onclick="toggleSubMenu()">&#9654; Recipes</a>
+                    <div class="sub-dropdown-content" id="recipesSubMenu">
+                        <a href="#" onclick="openSubTab(event, 'MainDishes')">Main Dishes</a>
+                        <a href="#" onclick="openSubTab(event, 'SideDishes')">Side Dishes</a>
+                        <a href="#" onclick="openSubTab(event, 'SweetTreats')">Sweet Treats</a>
+                    </div>
+                </div>
+                <a href="#" onclick="openTab(event, 'GroceryList')">Grocery List</a>
+                <a href="#" onclick="openTab(event, 'Inventory')">Inventory</a>
             </div>
         </div>
         <h1>Recipe and Grocery List</h1>
     </div>
 
-    <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'Recipes')">Recipes</button>
-        <button class="tablinks" onclick="openTab(event, 'GroceryList')">Grocery List</button>
-        <button class="tablinks" onclick="openTab(event, 'Inventory')">Inventory</button>
-    </div>
-
     <div id="Recipes" class="tabcontent">
         <h2>Recipes</h2>
-        <div class="subtab">
-            <button class="subtablinks" onclick="openSubTab(event, 'MainDishes')">Main Dishes</button>
-            <button class="subtablinks" onclick="openSubTab(event, 'SideDishes')">Side Dishes</button>
-            <button class="subtablinks" onclick="openSubTab(event, 'SweetTreats')">Sweet Treats</button>
-        </div>
         <div id="MainDishes" class="subtabcontent">
             <h3>Main Dishes</h3>
             <ul>
