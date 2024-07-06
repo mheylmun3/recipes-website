@@ -27,7 +27,8 @@ function openTab(evt, tabName) {
 
     // Show the current tab
     document.getElementById(tabName).style.display = "block";
-    toggleMenu(); // Close the menu after selecting a tab
+    // Ensure menu is hidden
+    document.getElementById("menuDropdown").style.display = "none";
 }
 
 function openSubTab(evt, subTabName) {
@@ -41,5 +42,6 @@ function openSubTab(evt, subTabName) {
 
     // Show the current subtab
     document.getElementById(subTabName).style.display = "block";
-    toggleSubMenu(); // Close the submenu after selecting a subtab
+    // Ensure submenu is hidden
+    document.getElementById("recipesSubMenu").style.display = "none";
 }
