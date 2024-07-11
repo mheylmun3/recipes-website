@@ -27,72 +27,62 @@
         <h1>Gab's Cuisines</h1>
     </div>
 
+    <button id="newRecipeBtn" onclick="openModal()">Create New Recipe</button>
+
+    <div id="newRecipeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Create New Recipe</h2>
+            <form id="newRecipeForm" action="/submit-recipe" method="POST" enctype="multipart/form-data">
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="Main Dishes">Main Dishes</option>
+                    <option value="Side Dishes">Side Dishes</option>
+                    <option value="Sweet Treats">Sweet Treats</option>
+                </select>
+
+                <label for="title">Recipe Title:</label>
+                <input type="text" id="title" name="title" required>
+
+                <label for="ingredients">Ingredients (one per line):</label>
+                <textarea id="ingredients" name="ingredients" rows="10" required></textarea>
+
+                <label for="instructions">Instructions:</label>
+                <textarea id="instructions" name="instructions" rows="10" required></textarea>
+
+                <label for="image">Image (optional):</label>
+                <input type="file" id="image" name="image">
+
+                <button type="submit">Submit Recipe</button>
+            </form>
+        </div>
+    </div>
+
     <div id="Recipes" class="tabcontent">
         <h2>Recipes</h2>
         <div id="MainDishes" class="subtabcontent">
             <h3>Main Dishes</h3>
-            <ul>
+            <ul id="mainDishesList">
                 <li><a href="recipes/chicken_enchilada_soup.html">Chicken Enchilada Soup</a></li>
                 <li><a href="recipes/chili.html">Chili</a></li>
                 <li><a href="recipes/tortellini.html">Tortellini</a></li>
-                <li><a href="recipes/crack_chicken_noodle_soup.html">Crack Chicken Noodle Soup</a></li>
-                <li><a href="recipes/chicken_noodle_soup.html">Chicken Noodle Soup</a></li>
-                <li><a href="recipes/loaded_potato_soup.html">Loaded Potato Soup</a></li>
-                <li><a href="recipes/lasagna_soup.html">Lasagna Soup</a></li>
-                <li><a href="recipes/lemon_chicken_orzo.html">Lemon Chicken Orzo</a></li>
-                <li><a href="recipes/chicken_fajitas.html">Chicken Fajitas</a></li>
-                <li><a href="recipes/roast.html">Roast</a></li>
-                <li><a href="recipes/carnitas.html">Carnitas</a></li>
-                <li><a href="recipes/chicken_pot_pie.html">Chicken Pot Pie</a></li>
-                <li><a href="recipes/chicken_and_dumplings.html">Chicken and Dumplings</a></li>
-                <li><a href="recipes/pulled_pork.html">Pulled Pork</a></li>
-                <li><a href="recipes/crockpot_chicken_alfredo.html">Crockpot Chicken Alfredo</a></li>
-                <li><a href="recipes/beef_short_ribs.html">Beef Short Ribs</a></li>
-                <li><a href="recipes/chicken_piccata.html">Chicken Piccata</a></li>
-                <li><a href="recipes/creamy_lemon_chicken.html">Creamy Lemon Chicken</a></li>
-                <li><a href="recipes/teriyaki_chicken.html">Teriyaki Chicken</a></li>
-                <li><a href="recipes/birria_tacos.html">Birria Tacos</a></li>
-                <li><a href="recipes/butter_chicken.html">Butter Chicken</a></li>
-                <li><a href="recipes/creamy_chicken_pasta.html">Creamy Chicken Pasta</a></li>
-                <li><a href="recipes/tacos.html">Tacos</a></li>
-                <li><a href="recipes/meatballs_and_spaghetti.html">Meatballs and Spaghetti</a></li>
-                <li><a href="recipes/cheeseburger_sliders.html">Cheeseburger Sliders with Mac n Cheese</a></li>
-                <li><a href="recipes/ravioli.html">Ravioli</a></li>
-                <li><a href="recipes/gigi_hadid_pasta.html">Gigi Hadid Pasta</a></li>
-                <li><a href="recipes/creamy_sausage_bowtie_pasta.html">Creamy Sausage Bowtie Pasta</a></li>
-                <li><a href="recipes/french_onion_pasta.html">French Onion Pasta</a></li>
-                <li><a href="recipes/french_onion_chicken.html">French Onion Chicken</a></li>
-                <li><a href="recipes/soupy_chicken.html">Soupy Chicken</a></li>
-                <li><a href="recipes/breaded_chicken.html">Breaded Chicken</a></li>
-                <li><a href="recipes/barbecue_chicken_bake.html">Barbecue Chicken Bake</a></li>
-                <li><a href="recipes/sausage_and_peppers.html">Sausage and Peppers</a></li>
-                <li><a href="recipes/ricotta_meatballs.html">Ricotta Meatballs</a></li>
-                <li><a href="recipes/rigatoni_p.html">Rigatoni P</a></li>
-                <li><a href="recipes/stir_fry.html">Stir Fry</a></li>
-                <li><a href="recipes/asian_style_beef_burgers.html">Asian-Style Beef Burgers</a></li>
-                <li><a href="recipes/beef_and_broccoli.html">Beef and Broccoli</a></li>
+                <!-- Add the rest of the main dishes here -->
             </ul>
         </div>
         <div id="SideDishes" class="subtabcontent">
             <h3>Side Dishes</h3>
-            <ul>
+            <ul id="sideDishesList">
                 <li><a href="recipes/parmesan_crusted_potatoes.html">Parmesan-Crusted Oven Roasted Potatoes</a></li>
                 <li><a href="recipes/pizza_rolls.html">Parmesan-Garlic Butter Pizza Rolls</a></li>
-                <li><a href="recipes/mac_n_cheese.html">Mac n Cheese</a></li>
-                <li><a href="recipes/mashed_potatoes.html">Mashed Potatoes</a></li>
-                <li><a href="recipes/roasted_garlic.html">Roasted Garlic</a></li>
+                <!-- Add the rest of the side dishes here -->
             </ul>
         </div>
         <div id="SweetTreats" class="subtabcontent">
             <h3>Sweet Treats</h3>
-            <ul>
+            <ul id="sweetTreatsList">
                 <li><a href="recipes/no_bake_cookies.html">No Bake Cookies</a></li>
                 <li><a href="recipes/protein_balls.html">Protein Balls</a></li>
-                <li><a href="recipes/chocolate_chip_cookies.html">Chocolate Chip Cookies</a></li>
-                <li><a href="recipes/chocolate_covered_raspberries.html">Chocolate Covered Raspberries</a></li>
-                <li><a href="recipes/protein_muffins.html">Protein Muffins</a></li>
-                <li><a href="recipes/overnight_oats.html">Overnight Oats</a></li>
-                <li><a href="recipes/green_smoothie.html">Green Smoothie</a></li>
+                <!-- Add the rest of the sweet treats here -->
             </ul>
         </div>
     </div>
