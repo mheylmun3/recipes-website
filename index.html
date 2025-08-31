@@ -1,110 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gab's Cuisines</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Recipe App</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div class="navbar">
-        <div class="dropdown">
-            <button class="dropbtn" onclick="toggleMenu()">&#9776; Menu</button>
-            <div class="dropdown-content" id="menuDropdown">
-                <a href="#" onclick="openTab(event, 'Recipes')">Recipes</a>
-                <div class="sub-dropdown">
-                    <a href="#" class="sub-dropbtn" onclick="toggleSubMenu()">&#9654; Recipes</a>
-                    <div class="sub-dropdown-content" id="recipesSubMenu">
-                        <a href="#" onclick="openSubTab(event, 'MainDishes')">Main Dishes</a>
-                        <a href="#" onclick="openSubTab(event, 'SideDishes')">Side Dishes</a>
-                        <a href="#" onclick="openSubTab(event, 'SweetTreats')">Sweet Treats</a>
-                    </div>
-                </div>
-                <a href="#" onclick="openTab(event, 'GroceryList')">Grocery List</a>
-                <a href="#" onclick="openTab(event, 'Inventory')">Inventory</a>
-            </div>
-        </div>
-        <h1>Gab's Cuisines</h1>
+
+  <!-- Navigation -->
+  <header>
+    <nav class="navbar">
+      <h1>My Recipes</h1>
+      <ul>
+        <li><a href="all-recipes.html">All Recipes</a></li>
+        <li><a href="#">Add Recipe</a></li>
+        <li><a href="#">Inventory</a></li>
+        <li><a href="#">Grocery List</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h2>Welcome to Your Personal Recipe Manager</h2>
+    <p>Track your recipes, manage your pantry, and generate grocery lists automatically.</p>
+  </section>
+
+  <!-- Category Quick Links -->
+  <section class="category-links">
+    <h3>Browse by Category</h3>
+    <div class="category-grid">
+      <a class="category-link" href="category.html?type=sweet-treats">Sweet Treats</a>
+      <a class="category-link" href="category.html?type=breakfast">Breakfast</a>
+      <a class="category-link" href="category.html?type=soups">Soups</a>
+      <a class="category-link" href="category.html?type=crockpot-meals">Crockpot Meals</a>
+      <a class="category-link" href="category.html?type=stove">Stove Meals</a>
+      <a class="category-link" href="category.html?type=side-dishes">Side Dishes</a>
     </div>
+  </section>
 
-    <button id="newRecipeBtn" onclick="openModal()">Create New Recipe</button>
-
-    <div id="newRecipeModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Create New Recipe</h2>
-            <form id="newRecipeForm" action="/submit-recipe" method="POST" enctype="multipart/form-data">
-                <label for="category">Category:</label>
-                <select id="category" name="category" required>
-                    <option value="Main Dishes">Main Dishes</option>
-                    <option value="Side Dishes">Side Dishes</option>
-                    <option value="Sweet Treats">Sweet Treats</option>
-                </select>
-
-                <label for="title">Recipe Title:</label>
-                <input type="text" id="title" name="title" required>
-
-                <label for="ingredients">Ingredients (one per line):</label>
-                <textarea id="ingredients" name="ingredients" rows="10" required></textarea>
-
-                <label for="instructions">Instructions:</label>
-                <textarea id="instructions" name="instructions" rows="10" required></textarea>
-
-                <label for="image">Image (optional):</label>
-                <input type="file" id="image" name="image">
-
-                <button type="submit">Submit Recipe</button>
-            </form>
-        </div>
+  <!-- Featured Recipes -->
+  <section class="featured-recipes">
+    <h3>Featured Recipes</h3>
+    <div class="recipe-card-container" id="featured-container">
+      <!-- Cards will be inserted here by script.js -->
     </div>
+  </section>
 
-    <div id="Recipes" class="tabcontent">
-        <h2>Recipes</h2>
-        <div id="MainDishes" class="subtabcontent">
-            <h3>Main Dishes</h3>
-            <ul id="mainDishesList">
-                <li><a href="recipes/chicken_enchilada_soup.html">Chicken Enchilada Soup</a></li>
-                <li><a href="recipes/chili.html">Chili</a></li>
-                <li><a href="recipes/tortellini.html">Tortellini</a></li>
-                <!-- Add the rest of the main dishes here -->
-            </ul>
-        </div>
-        <div id="SideDishes" class="subtabcontent">
-            <h3>Side Dishes</h3>
-            <ul id="sideDishesList">
-                <li><a href="recipes/parmesan_crusted_potatoes.html">Parmesan-Crusted Oven Roasted Potatoes</a></li>
-                <li><a href="recipes/pizza_rolls.html">Parmesan-Garlic Butter Pizza Rolls</a></li>
-                <!-- Add the rest of the side dishes here -->
-            </ul>
-        </div>
-        <div id="SweetTreats" class="subtabcontent">
-            <h3>Sweet Treats</h3>
-            <ul id="sweetTreatsList">
-                <li><a href="recipes/no_bake_cookies.html">No Bake Cookies</a></li>
-                <li><a href="recipes/protein_balls.html">Protein Balls</a></li>
-                <!-- Add the rest of the sweet treats here -->
-            </ul>
-        </div>
-    </div>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 My Recipes</p>
+  </footer>
 
-    <div id="GroceryList" class="tabcontent">
-        <h2>Grocery List</h2>
-        <ul>
-            <li><input type="checkbox" id="chickenStock" name="chickenStock">
-            <label for="chickenStock">Chicken Stock</label></li>
-        </ul>
-    </div>
-
-    <div id="Inventory" class="tabcontent">
-        <h2>Inventory</h2>
-        <ul>
-            <li>Meatballs</li>
-            <li>Noodles and Potstickers</li>
-            <li>Mac n Cheese</li>
-            <li>Pasta with Garlic Bread</li>
-        </ul>
-    </div>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

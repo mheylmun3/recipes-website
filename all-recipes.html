@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All Recipes</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <h1><a href="index.html">My Recipes</a></h1>
+      <ul>
+        <li><a href="all-recipes.html">All Recipes</a></li>
+        <li><a href="#">Add Recipe</a></li>
+        <li><a href="#">Inventory</a></li>
+        <li><a href="#">Grocery List</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="all-recipes-container">
+    <section class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search recipes..." />
+    </section>
+
+    <section class="sort-bar">
+      <label for="sortSelect">Sort by:</label>
+      <select id="sortSelect">
+        <option value="alphabetical" selected>Alphabetical</option>
+        <option value="popularity">Popularity</option>
+      </select>
+    </section>    
+
+    <section class="recipe-grid" id="recipeGrid">
+      <!-- Recipe cards will be generated here -->
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 My Recipes</p>
+  </footer>
+
+  <script src="all-recipes.js"></script>
+</body>
+</html>
