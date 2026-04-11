@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Recipe</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <canvas id="fairy-canvas"></canvas>
+    <div class="vine vine-left" aria-hidden="true"></div>
+    <div class="vine vine-right" aria-hidden="true"></div>
+
+  <header>
+    <nav class="navbar">
+      <h1><a href="index.html">My Recipes</a></h1>
+      <ul>
+        <li><a href="all-recipes.html">All Recipes</a></li>
+        <li><a href="add-recipe.html">Add Recipe</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="meal-plan.html">Meal Plan</a></li>
+        <li><a href="grocery-list.html">Grocery List</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="form-page">
+    <section class="form-card">
+      <h2>Add a New Recipe</h2>
+
+      <form id="addRecipeForm">
+        <label for="recipeName">Recipe Name</label>
+        <input type="text" id="recipeName" required />
+
+        <label for="recipeCategory">Category</label>
+        <select id="recipeCategory" required>
+          <option value="">Select a category</option>
+          <option value="breakfast">Breakfast</option>
+          <option value="soups">Soups</option>
+          <option value="crockpot-meals">Crockpot Meals</option>
+          <option value="stove">Stove Meals</option>
+          <option value="side-dishes">Side Dishes</option>
+          <option value="sweet-treats">Sweet Treats</option>
+        </select>
+
+        <label for="recipeServings">Servings</label>
+        <input
+        type="number"
+        id="recipeServings"
+        min="1"
+        step="1"
+        placeholder="Enter number of servings"
+        required
+        />
+
+        <label for="recipeImage">Recipe Image</label>
+        <input
+          type="file"
+          id="recipeImage"
+          accept="image/*"
+        />
+
+        <img id="recipeImagePreview" alt="Recipe preview" style="display: none; max-width: 260px; border-radius: 18px; margin-top: 0.75rem;" />
+
+        <div class="recipe-section">
+          <h3>Ingredients</h3>
+          <div id="addIngredientsList" class="inventory-list"></div>
+        </div>
+
+        <button type="button" id="addIngredientRowBtn">Add Ingredient Row</button>
+
+        <label for="recipeInstructions">Instructions</label>
+        <textarea id="recipeInstructions" rows="8" required></textarea>
+
+        <button type="submit">Save Recipe</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Gab's Recipes</p>
+  </footer>
+
+  <script src="ingredients.js"></script>
+  <script src="add-recipe.js"></script>
+  <script src="background.js"></script>
+</body>
+</html>

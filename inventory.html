@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inventory</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="fairy-canvas"></canvas>
+  <div class="vine vine-left" aria-hidden="true"></div>
+  <div class="vine vine-right" aria-hidden="true"></div>
+
+  <header>
+    <nav class="navbar">
+      <h1><a href="index.html">My Recipes</a></h1>
+      <ul>
+        <li><a href="all-recipes.html">All Recipes</a></li>
+        <li><a href="add-recipe.html">Add Recipe</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="meal-plan.html">Meal Plan</a></li>
+        <li><a href="grocery-list.html">Grocery List</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="inventory-page">
+    <section class="inventory-card">
+      <h2>Pantry Inventory</h2>
+
+      <div class="ingredient-selector">
+        <label for="ingredientSearch">Search Ingredient</label>
+        <input
+          type="text"
+          id="ingredientSearch"
+          placeholder="Start typing an ingredient..."
+          autocomplete="off"
+        />
+
+        <div id="ingredientSuggestions" class="suggestions-list"></div>
+
+        <div class="inventory-form-row">
+          <div>
+            <label for="ingredientQuantity">Quantity</label>
+            <input
+              type="number"
+              id="ingredientQuantity"
+              min="0"
+              step="1"
+              placeholder="Enter quantity"
+            />
+          </div>
+
+          <div>
+            <label for="ingredientUnit">Unit</label>
+            <select id="ingredientUnit">
+              <option value="count">Count</option>
+              <option value="tsp">tsp</option>
+              <option value="tbsp">tbsp</option>
+              <option value="cups">Cups</option>
+              <option value="oz">oz</option>
+              <option value="lbs">lbs</option>
+              <option value="ml">mL</option>
+              <option value="liters">Liters</option>
+              <option value="gallon">Gallon</option>
+              <option value="cans">Cans</option>
+              <option value="jars">Jars</option>
+              <option value="cloves">Cloves</option>
+              <option value="container">Container</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="inventory-actions">
+          <button id="addSelectedBtn" type="button">Add Selected Ingredient</button>
+          <button id="addNewBtn" type="button">Add As New Ingredient</button>
+        </div>
+      </div>
+
+      <section class="inventory-list-section">
+        <h3>Current Inventory</h3>
+        <div id="inventoryList" class="inventory-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Gab's Recipes</p>
+  </footer>
+
+  <script src="ingredients.js"></script>
+  <script src="inventory.js"></script>
+  <script src="background.js"></script>
+</body>
+</html>

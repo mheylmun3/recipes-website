@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Side Dishes</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Grocery List</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <canvas id="fairy-canvas"></canvas>
@@ -24,14 +24,16 @@
     </nav>
   </header>
 
-  <main class="all-recipes-container">
-    <section class="category-header">
-      <h2>Side Dishes</h2>
-      <p>Perfect pairings to complete your meals.</p>
-    </section>
+  <main class="grocery-list-page">
+    <section class="grocery-list-card">
+      <h2>Grocery List</h2>
+      <p>Generated from your current meal plan and inventory.</p>
 
-    <section class="recipe-grid" id="recipeGrid">
-      <!-- Side dish recipes inserted by JS -->
+      <div id="groceryListContainer" class="inventory-list"></div>
+
+      <div class="grocery-list-actions">
+      <button type="button" id="clearCheckedBtn">Clear Checked Items</button>
+      </div>
     </section>
   </main>
 
@@ -39,7 +41,7 @@
     <p>&copy; 2026 Gab's Recipes</p>
   </footer>
 
-  <script src="side-dishes.js"></script>
+  <script src="grocery-list.js"></script>
   <script src="background.js"></script>
 </body>
 </html>

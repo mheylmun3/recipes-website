@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Side Dishes</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Recipe Details</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <canvas id="fairy-canvas"></canvas>
@@ -24,14 +24,27 @@
     </nav>
   </header>
 
-  <main class="all-recipes-container">
-    <section class="category-header">
-      <h2>Side Dishes</h2>
-      <p>Perfect pairings to complete your meals.</p>
-    </section>
+  <main class="recipe-page">
+    <section class="recipe-detail-card">
 
-    <section class="recipe-grid" id="recipeGrid">
-      <!-- Side dish recipes inserted by JS -->
+      <div class="recipe-page-actions">
+      <a href="all-recipes.html">← Back to All Recipes</a>
+      <a id="editRecipeLink" href="#">Edit Recipe</a>
+      </div>
+
+      <h2 id="recipeTitle">Loading...</h2>
+      <p id="recipeServings"></p>
+      <img id="recipeImageDisplay" alt="Recipe image" style="display: none; max-width: 320px; width: 100%; border-radius: 20px; margin-bottom: 1rem;" />
+
+      <div class="recipe-section">
+        <h3>Ingredients</h3>
+        <ul id="ingredientsList"></ul>
+      </div>
+
+      <div class="recipe-section">
+        <h3>Instructions</h3>
+        <p id="instructionsText"></p>
+      </div>
     </section>
   </main>
 
@@ -39,7 +52,7 @@
     <p>&copy; 2026 Gab's Recipes</p>
   </footer>
 
-  <script src="side-dishes.js"></script>
+  <script src="recipe.js"></script>
   <script src="background.js"></script>
 </body>
 </html>

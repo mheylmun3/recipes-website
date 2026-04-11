@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Side Dishes</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Meal Plan</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <canvas id="fairy-canvas"></canvas>
@@ -24,14 +24,28 @@
     </nav>
   </header>
 
-  <main class="all-recipes-container">
-    <section class="category-header">
-      <h2>Side Dishes</h2>
-      <p>Perfect pairings to complete your meals.</p>
-    </section>
+  <main class="meal-plan-page">
+    <section class="meal-plan-card">
+      <h2>Weekly Meal Plan</h2>
 
-    <section class="recipe-grid" id="recipeGrid">
-      <!-- Side dish recipes inserted by JS -->
+      <div class="meal-plan-add">
+        <div class="ingredient-search-wrapper">
+          <input
+            type="text"
+            id="recipeSearchInput"
+            placeholder="Search recipe to add"
+            autocomplete="off"
+          />
+          <div id="recipeSuggestions" class="suggestions-list"></div>
+        </div>
+
+        <button type="button" id="addRecipeToPlanBtn">Add to Meal Plan</button>
+      </div>
+
+      <section class="meal-plan-list-section">
+        <h3>Planned Recipes</h3>
+        <div id="mealPlanList" class="inventory-list"></div>
+      </section>
     </section>
   </main>
 
@@ -39,7 +53,7 @@
     <p>&copy; 2026 Gab's Recipes</p>
   </footer>
 
-  <script src="side-dishes.js"></script>
+  <script src="meal-plan.js"></script>
   <script src="background.js"></script>
 </body>
 </html>

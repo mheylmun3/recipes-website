@@ -1,825 +1,755 @@
 [
-    {
-      "name": "Chia Seed Pudding",
-      "slug": "chia-seed-pudding",
-      "ingredients": [
-        "2 Tablespoons Chia Seeds",
-        "\u00bc Cup Water or Milk",
-        "\u00be Cup Greek Yogurt",
-        "1 Scoop Protein Powder",
-        "1 Tablespoon of Peanut Butter (optional)",
-        "Fruit"
-      ],
-      "instructions": "Mix all ingredients and let sit overnight in the fridge. Top with fruit before serving."
-    },
-    {
-      "name": "Protein Overnight Oats",
-      "slug": "protein-overnight-oats",
-      "ingredients": [
-        "\u00bd Cup Oats",
-        "\u00bd Cup Milk",
-        "1 Scoop Protein Powder",
-        "\u00bd Cup Greek Yogurt",
-        "Fruit"
-      ],
-      "instructions": "Combine all ingredients and refrigerate overnight. Stir and top with fruit before eating."
-    },
-    {
-      "name": "Protein Muffins",
-      "slug": "protein-muffins",
-      "ingredients": [
-        "1 Egg",
-        "\u00bc Cup Apple Sauce",
-        "\u00bd Cup Brown Sugar",
-        "\u00bc Stick Butter",
-        "\u00be Cup Protein Milk",
-        "\u00bd Tablespoon Cinnamon",
-        "Salt",
-        "1.5 Cups Protein Rolled Oats",
-        "1 Teaspoon Baking Powder",
-        "Chocolate Chips",
-        "Flax Seed or Hemp Hearts",
-        "Muffin Liners"
-      ],
-      "instructions": "Preheat oven to 350\u00b0F. Line muffin pan with liners. In a bowl, mix brown sugar, egg, and melted butter. Add applesauce, protein milk, cinnamon, and salt. Stir in oats and baking powder. Pour into muffin liners using a \u00bc cup measure. Top with chocolate chips, flax seed, or hemp hearts. Bake for 30 minutes."
-    },
-    {
-      "name": "Overnight Oats",
-      "slug": "overnight-oats",
-      "ingredients": [
-        "Oats",
-        "Peanut Butter",
-        "Chia Seeds",
-        "Protein Milk",
-        "Apples or Other Fruit",
-        "Flax Seed"
-      ],
-      "instructions": "Combine oats, peanut butter, chia seeds, protein milk, and flax seed. Add chopped fruit. Refrigerate overnight before serving."
-    },
-    {
-      "name": "Green Smoothie",
-      "slug": "green-smoothie",
-      "ingredients": [
-        "Cucumber",
-        "Spinach",
-        "Celery",
-        "Avocado",
-        "Hemp Seeds or Chia Seeds",
-        "Protein Powder",
-        "Water",
-        "Pineapple",
-        "\u00bd Apple",
-        "\u00bd Banana",
-        "Ginger"
-      ],
-      "instructions": "Blend all ingredients together until smooth. Adjust thickness by adding more water if needed. Serve chilled."
-    }, 
-    {
+  {
+    "name": "Chia Seed Pudding",
+    "slug": "chia-seed-pudding",
+    "category": "breakfast",
+    "ingredients": [
+      { "ingredientId": "chia-seeds", "name": "Chia Seeds", "quantity": 2, "unit": "tbsp", "text": "2 Tablespoons Chia Seeds" },
+      { "ingredientId": "water-or-milk", "name": "Water or Milk", "quantity": 0.25, "unit": "cups", "text": "¼ Cup Water or Milk" },
+      { "ingredientId": "greek-yogurt", "name": "Greek Yogurt", "quantity": 0.75, "unit": "cups", "text": "¾ Cup Greek Yogurt" },
+      { "ingredientId": "protein-powder", "name": "Protein Powder", "quantity": 1, "unit": "count", "text": "1 Scoop Protein Powder" },
+      { "ingredientId": "peanut-butter", "name": "Peanut Butter", "quantity": 1, "unit": "tbsp", "text": "1 Tablespoon of Peanut Butter (optional)" },
+      { "ingredientId": "fruit", "name": "Fruit", "quantity": null, "unit": null, "text": "Fruit" }
+    ],
+    "instructions": "Mix all ingredients and let sit overnight in the fridge. Top with fruit before serving."
+  },
+  {
+    "name": "Protein Overnight Oats",
+    "slug": "protein-overnight-oats",
+    "category": "breakfast",
+    "ingredients": [
+      { "ingredientId": "oats", "name": "Oats", "quantity": 0.5, "unit": "cups", "text": "½ Cup Oats" },
+      { "ingredientId": "milk", "name": "Milk", "quantity": 0.5, "unit": "cups", "text": "½ Cup Milk" },
+      { "ingredientId": "protein-powder", "name": "Protein Powder", "quantity": 1, "unit": "count", "text": "1 Scoop Protein Powder" },
+      { "ingredientId": "greek-yogurt", "name": "Greek Yogurt", "quantity": 0.5, "unit": "cups", "text": "½ Cup Greek Yogurt" },
+      { "ingredientId": "fruit", "name": "Fruit", "quantity": null, "unit": null, "text": "Fruit" }
+    ],
+    "instructions": "Combine all ingredients and refrigerate overnight. Stir and top with fruit before eating."
+  },
+  {
+    "name": "Protein Muffins",
+    "slug": "protein-muffins",
+    "category": "breakfast",
+    "ingredients": [
+      { "ingredientId": "egg", "name": "Egg", "quantity": 1, "unit": "count", "text": "1 Egg" },
+      { "ingredientId": "apple-sauce", "name": "Apple Sauce", "quantity": 0.25, "unit": "cups", "text": "¼ Cup Apple Sauce" },
+      { "ingredientId": "brown-sugar", "name": "Brown Sugar", "quantity": 0.5, "unit": "cups", "text": "½ Cup Brown Sugar" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": 0.25, "unit": "count", "text": "¼ Stick Butter" },
+      { "ingredientId": "protein-milk", "name": "Protein Milk", "quantity": 0.75, "unit": "cups", "text": "¾ Cup Protein Milk" },
+      { "ingredientId": "cinnamon", "name": "Cinnamon", "quantity": 0.5, "unit": "tbsp", "text": "½ Tablespoon Cinnamon" },
+      { "ingredientId": "salt", "name": "Salt", "quantity": null, "unit": null, "text": "Salt" },
+      { "ingredientId": "protein-rolled-oats", "name": "Protein Rolled Oats", "quantity": 1.5, "unit": "cups", "text": "1.5 Cups Protein Rolled Oats" },
+      { "ingredientId": "baking-powder", "name": "Baking Powder", "quantity": 1, "unit": "tsp", "text": "1 Teaspoon Baking Powder" },
+      { "ingredientId": "chocolate-chips", "name": "Chocolate Chips", "quantity": null, "unit": null, "text": "Chocolate Chips" },
+      { "ingredientId": "flax-seed-or-hemp-hearts", "name": "Flax Seed or Hemp Hearts", "quantity": null, "unit": null, "text": "Flax Seed or Hemp Hearts" },
+      { "ingredientId": "muffin-liners", "name": "Muffin Liners", "quantity": null, "unit": null, "text": "Muffin Liners" }
+    ],
+    "instructions": "Preheat oven to 350°F. Line muffin pan with liners. In a bowl, mix brown sugar, egg, and melted butter. Add applesauce, protein milk, cinnamon, and salt. Stir in oats and baking powder. Pour into muffin liners using a ¼ cup measure. Top with chocolate chips, flax seed, or hemp hearts. Bake for 30 minutes."
+  },
+  {
+    "name": "Overnight Oats",
+    "slug": "overnight-oats",
+    "category": "breakfast",
+    "ingredients": [
+      { "ingredientId": "oats", "name": "Oats", "quantity": null, "unit": null, "text": "Oats" },
+      { "ingredientId": "peanut-butter", "name": "Peanut Butter", "quantity": null, "unit": null, "text": "Peanut Butter" },
+      { "ingredientId": "chia-seeds", "name": "Chia Seeds", "quantity": null, "unit": null, "text": "Chia Seeds" },
+      { "ingredientId": "protein-milk", "name": "Protein Milk", "quantity": null, "unit": null, "text": "Protein Milk" },
+      { "ingredientId": "apples-or-other-fruit", "name": "Apples or Other Fruit", "quantity": null, "unit": null, "text": "Apples or Other Fruit" },
+      { "ingredientId": "flax-seed", "name": "Flax Seed", "quantity": null, "unit": null, "text": "Flax Seed" }
+    ],
+    "instructions": "Combine oats, peanut butter, chia seeds, protein milk, and flax seed. Add chopped fruit. Refrigerate overnight before serving."
+  },
+  {
+    "name": "Green Smoothie",
+    "slug": "green-smoothie",
+    "category": "breakfast",
+    "ingredients": [
+      { "ingredientId": "cucumber", "name": "Cucumber", "quantity": null, "unit": null, "text": "Cucumber" },
+      { "ingredientId": "spinach", "name": "Spinach", "quantity": null, "unit": null, "text": "Spinach" },
+      { "ingredientId": "celery", "name": "Celery", "quantity": null, "unit": null, "text": "Celery" },
+      { "ingredientId": "avocado", "name": "Avocado", "quantity": null, "unit": null, "text": "Avocado" },
+      { "ingredientId": "hemp-seeds-or-chia-seeds", "name": "Hemp Seeds or Chia Seeds", "quantity": null, "unit": null, "text": "Hemp Seeds or Chia Seeds" },
+      { "ingredientId": "protein-powder", "name": "Protein Powder", "quantity": null, "unit": null, "text": "Protein Powder" },
+      { "ingredientId": "water", "name": "Water", "quantity": null, "unit": null, "text": "Water" },
+      { "ingredientId": "pineapple", "name": "Pineapple", "quantity": null, "unit": null, "text": "Pineapple" },
+      { "ingredientId": "apple", "name": "Apple", "quantity": 0.5, "unit": "count", "text": "½ Apple" },
+      { "ingredientId": "banana", "name": "Banana", "quantity": 0.5, "unit": "count", "text": "½ Banana" },
+      { "ingredientId": "ginger", "name": "Ginger", "quantity": null, "unit": null, "text": "Ginger" }
+    ],
+    "instructions": "Blend all ingredients together until smooth. Adjust thickness by adding more water if needed. Serve chilled."
+  },
+  {
     "name": "Chicken Enchilada Soup",
     "slug": "chicken-enchilada-soup",
+    "category": "soups",
     "ingredients": [
-      "Rotisserie Chicken",
-      "Corn",
-      "Tomatoes",
-      "Black Beans",
-      "Soup Mix",
-      "Cheese"
+      { "ingredientId": "rotisserie-chicken", "name": "Rotisserie Chicken", "quantity": null, "unit": null, "text": "Rotisserie Chicken" },
+      { "ingredientId": "corn", "name": "Corn", "quantity": null, "unit": null, "text": "Corn" },
+      { "ingredientId": "tomatoes", "name": "Tomatoes", "quantity": null, "unit": null, "text": "Tomatoes" },
+      { "ingredientId": "black-beans", "name": "Black Beans", "quantity": null, "unit": null, "text": "Black Beans" },
+      { "ingredientId": "soup-mix", "name": "Soup Mix", "quantity": null, "unit": null, "text": "Soup Mix" },
+      { "ingredientId": "cheese", "name": "Cheese", "quantity": null, "unit": null, "text": "Cheese" }
     ],
     "instructions": "Combine shredded rotisserie chicken, corn, tomatoes, black beans, and soup mix in a pot. Simmer until heated through. Top with cheese before serving."
   },
   {
     "name": "Chili",
     "slug": "chili",
+    "category": "soups",
     "ingredients": [
-      "1 Onion",
-      "Ground Beef",
-      "Chili Mix",
-      "3-Cheese Mix",
-      "Tomatoes or Extra Beans"
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "1 Onion" },
+      { "ingredientId": "ground-beef", "name": "Ground Beef", "quantity": null, "unit": null, "text": "Ground Beef" },
+      { "ingredientId": "chili-mix", "name": "Chili Mix", "quantity": null, "unit": null, "text": "Chili Mix" },
+      { "ingredientId": "three-cheese-mix", "name": "3-Cheese Mix", "quantity": null, "unit": null, "text": "3-Cheese Mix" },
+      { "ingredientId": "tomatoes-or-extra-beans", "name": "Tomatoes or Extra Beans", "quantity": null, "unit": null, "text": "Tomatoes or Extra Beans" }
     ],
     "instructions": "Cook ground beef and onion in a pot until browned. Add chili mix and tomatoes/beans. Simmer until thickened. Top with 3-cheese mix before serving."
   },
   {
     "name": "Tortellini Soup",
     "slug": "tortellini-soup",
+    "category": "soups",
     "ingredients": [
-      "Carrots",
-      "Celery",
-      "1 Onion",
-      "Chicken Broth",
-      "Tortellini",
-      "Cream",
-      "Flour or Ranch Seasoning Mix",
-      "Italian Sausage"
+      { "ingredientId": "carrots", "name": "Carrots", "quantity": null, "unit": null, "text": "Carrots" },
+      { "ingredientId": "celery", "name": "Celery", "quantity": null, "unit": null, "text": "Celery" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "1 Onion" },
+      { "ingredientId": "chicken-broth", "name": "Chicken Broth", "quantity": null, "unit": null, "text": "Chicken Broth" },
+      { "ingredientId": "tortellini", "name": "Tortellini", "quantity": null, "unit": null, "text": "Tortellini" },
+      { "ingredientId": "cream", "name": "Cream", "quantity": null, "unit": null, "text": "Cream" },
+      { "ingredientId": "flour-or-ranch-seasoning-mix", "name": "Flour or Ranch Seasoning Mix", "quantity": null, "unit": null, "text": "Flour or Ranch Seasoning Mix" },
+      { "ingredientId": "italian-sausage", "name": "Italian Sausage", "quantity": null, "unit": null, "text": "Italian Sausage" }
     ],
     "instructions": "Saute carrots, celery, and onion. Add Italian sausage and cook through. Stir in chicken broth, flour or ranch mix, and tortellini. Simmer until pasta is tender. Add cream and serve."
   },
   {
     "name": "Crack Chicken Noodle Soup",
     "slug": "crack-chicken-noodle-soup",
+    "category": "soups",
     "ingredients": [
-      "1 Onion",
-      "Carrot",
-      "Celery",
-      "Chicken Stock",
-      "Cream of Chicken or Onion Soup",
-      "Spaghetti",
-      "Rotisserie Chicken",
-      "Cheddar Cheese",
-      "Ranch Seasoning Mix"
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "1 Onion" },
+      { "ingredientId": "carrot", "name": "Carrot", "quantity": 1, "unit": "count", "text": "Carrot" },
+      { "ingredientId": "celery", "name": "Celery", "quantity": null, "unit": null, "text": "Celery" },
+      { "ingredientId": "chicken-stock", "name": "Chicken Stock", "quantity": null, "unit": null, "text": "Chicken Stock" },
+      { "ingredientId": "cream-of-chicken-or-onion-soup", "name": "Cream of Chicken or Onion Soup", "quantity": null, "unit": null, "text": "Cream of Chicken or Onion Soup" },
+      { "ingredientId": "spaghetti", "name": "Spaghetti", "quantity": null, "unit": null, "text": "Spaghetti" },
+      { "ingredientId": "rotisserie-chicken", "name": "Rotisserie Chicken", "quantity": null, "unit": null, "text": "Rotisserie Chicken" },
+      { "ingredientId": "cheddar-cheese", "name": "Cheddar Cheese", "quantity": null, "unit": null, "text": "Cheddar Cheese" },
+      { "ingredientId": "ranch-seasoning-mix", "name": "Ranch Seasoning Mix", "quantity": null, "unit": null, "text": "Ranch Seasoning Mix" }
     ],
     "instructions": "Combine all ingredients except cheese in a large pot and bring to a boil. Simmer until vegetables and pasta are tender. Stir in cheddar cheese and serve."
   },
   {
     "name": "Chicken Noodle Soup",
     "slug": "chicken-noodle-soup",
+    "category": "soups",
     "ingredients": [
-      "Carrots",
-      "Celery",
-      "1 Onion",
-      "Rotisserie Chicken",
-      "Soup Mix Bag"
+      { "ingredientId": "carrots", "name": "Carrots", "quantity": null, "unit": null, "text": "Carrots" },
+      { "ingredientId": "celery", "name": "Celery", "quantity": null, "unit": null, "text": "Celery" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "1 Onion" },
+      { "ingredientId": "rotisserie-chicken", "name": "Rotisserie Chicken", "quantity": null, "unit": null, "text": "Rotisserie Chicken" },
+      { "ingredientId": "soup-mix-bag", "name": "Soup Mix Bag", "quantity": null, "unit": null, "text": "Soup Mix Bag" }
     ],
     "instructions": "Simmer chopped vegetables with soup mix and shredded rotisserie chicken until tender. Serve hot."
   },
   {
     "name": "Loaded Potato Soup",
     "slug": "loaded-potato-soup",
+    "category": "soups",
     "ingredients": [
-      "Celery",
-      "\u00bd Onion",
-      "Garlic",
-      "4 Potatoes",
-      "Bacon",
-      "Flour",
-      "Vegetable Stock",
-      "Vegetable Bullion",
-      "Cheddar Cheese",
-      "Heavy Cream"
+      { "ingredientId": "celery", "name": "Celery", "quantity": null, "unit": null, "text": "Celery" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 0.5, "unit": "count", "text": "½ Onion" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "potatoes", "name": "Potatoes", "quantity": 4, "unit": "count", "text": "4 Potatoes" },
+      { "ingredientId": "bacon", "name": "Bacon", "quantity": null, "unit": null, "text": "Bacon" },
+      { "ingredientId": "flour", "name": "Flour", "quantity": null, "unit": null, "text": "Flour" },
+      { "ingredientId": "vegetable-stock", "name": "Vegetable Stock", "quantity": null, "unit": null, "text": "Vegetable Stock" },
+      { "ingredientId": "vegetable-bouillon", "name": "Vegetable Bullion", "quantity": null, "unit": null, "text": "Vegetable Bullion" },
+      { "ingredientId": "cheddar-cheese", "name": "Cheddar Cheese", "quantity": null, "unit": null, "text": "Cheddar Cheese" },
+      { "ingredientId": "heavy-cream", "name": "Heavy Cream", "quantity": null, "unit": null, "text": "Heavy Cream" }
     ],
     "instructions": "Fry bacon, then saute celery, onion, and garlic in bacon fat. Add flour, vegetable stock, and bullion. Add cubed potatoes and simmer until tender. Stir in heavy cream and top with cheese and crumbled bacon."
   },
   {
     "name": "Lasagna Soup",
     "slug": "lasagna-soup",
+    "category": "soups",
     "ingredients": [
-      "Onion",
-      "Garlic",
-      "1 Pound Italian Sausage",
-      "Tomato Paste",
-      "2 Cups Marinara",
-      "3 Cups Chicken Broth",
-      "\u00bd Cup Heavy Cream",
-      "\u00bd Box Lasagna Noodles",
-      "Parmesan, Mozzarella, Ricotta",
-      "Parsley, Spinach, and Basil"
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "Onion" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "italian-sausage", "name": "Italian Sausage", "quantity": 1, "unit": "lbs", "text": "1 Pound Italian Sausage" },
+      { "ingredientId": "tomato-paste", "name": "Tomato Paste", "quantity": null, "unit": null, "text": "Tomato Paste" },
+      { "ingredientId": "marinara", "name": "Marinara", "quantity": 2, "unit": "cups", "text": "2 Cups Marinara" },
+      { "ingredientId": "chicken-broth", "name": "Chicken Broth", "quantity": 3, "unit": "cups", "text": "3 Cups Chicken Broth" },
+      { "ingredientId": "heavy-cream", "name": "Heavy Cream", "quantity": 0.5, "unit": "cups", "text": "½ Cup Heavy Cream" },
+      { "ingredientId": "lasagna-noodles", "name": "Lasagna Noodles", "quantity": 0.5, "unit": "count", "text": "½ Box Lasagna Noodles" },
+      { "ingredientId": "parmesan-mozzarella-ricotta", "name": "Parmesan, Mozzarella, Ricotta", "quantity": null, "unit": null, "text": "Parmesan, Mozzarella, Ricotta" },
+      { "ingredientId": "parsley-spinach-and-basil", "name": "Parsley, Spinach, and Basil", "quantity": null, "unit": null, "text": "Parsley, Spinach, and Basil" }
     ],
     "instructions": "Saute onion and garlic, then brown Italian sausage. Add tomato paste, marinara, broth, and heavy cream. Add noodles and cook until tender. Serve topped with mixed cheeses and herbs."
   },
   {
     "name": "Lemon Chicken Orzo Soup",
     "slug": "lemon-chicken-orzo",
+    "category": "soups",
     "ingredients": [
-      "Carrots",
-      "Celery",
-      "Onion",
-      "Butter",
-      "Garlic",
-      "Orzo",
-      "Flour",
-      "Chicken Broth",
-      "Rotisserie Chicken",
-      "Lemon"
-    ],
-    "instructions": "Saute carrots, celery, and onion in butter. Add garlic and flour, then stir in broth. Bring to a boil, add orzo, and cook until tender. Add shredded chicken and lemon juice/zest before serving."
-  },
-  {
-    "name": "Chicken Enchilada Soup",
-    "slug": "chicken-enchilada-soup",
-    "ingredients": [
-      "Rotisserie Chicken",
-      "Corn",
-      "Tomatoes",
-      "Black Beans",
-      "Soup Mix",
-      "Cheese"
-    ],
-    "instructions": "Combine shredded rotisserie chicken, corn, tomatoes, black beans, and soup mix in a pot. Simmer until heated through. Top with cheese before serving."
-  },
-  {
-    "name": "Chili",
-    "slug": "chili",
-    "ingredients": [
-      "1 Onion",
-      "Ground Beef",
-      "Chili Mix",
-      "3-Cheese Mix",
-      "Tomatoes or Extra Beans"
-    ],
-    "instructions": "Cook ground beef and onion in a pot until browned. Add chili mix and tomatoes/beans. Simmer until thickened. Top with 3-cheese mix before serving."
-  },
-  {
-    "name": "Tortellini Soup",
-    "slug": "tortellini-soup",
-    "ingredients": [
-      "Carrots",
-      "Celery",
-      "1 Onion",
-      "Chicken Broth",
-      "Tortellini",
-      "Cream",
-      "Flour or Ranch Seasoning Mix",
-      "Italian Sausage"
-    ],
-    "instructions": "Saute carrots, celery, and onion. Add Italian sausage and cook through. Stir in chicken broth, flour or ranch mix, and tortellini. Simmer until pasta is tender. Add cream and serve."
-  },
-  {
-    "name": "Crack Chicken Noodle Soup",
-    "slug": "crack-chicken-noodle-soup",
-    "ingredients": [
-      "1 Onion",
-      "Carrot",
-      "Celery",
-      "Chicken Stock",
-      "Cream of Chicken or Onion Soup",
-      "Spaghetti",
-      "Rotisserie Chicken",
-      "Cheddar Cheese",
-      "Ranch Seasoning Mix"
-    ],
-    "instructions": "Combine all ingredients except cheese in a large pot and bring to a boil. Simmer until vegetables and pasta are tender. Stir in cheddar cheese and serve."
-  },
-  {
-    "name": "Chicken Noodle Soup",
-    "slug": "chicken-noodle-soup",
-    "ingredients": [
-      "Carrots",
-      "Celery",
-      "1 Onion",
-      "Rotisserie Chicken",
-      "Soup Mix Bag"
-    ],
-    "instructions": "Simmer chopped vegetables with soup mix and shredded rotisserie chicken until tender. Serve hot."
-  },
-  {
-    "name": "Loaded Potato Soup",
-    "slug": "loaded-potato-soup",
-    "ingredients": [
-      "Celery",
-      "\u00bd Onion",
-      "Garlic",
-      "4 Potatoes",
-      "Bacon",
-      "Flour",
-      "Vegetable Stock",
-      "Vegetable Bullion",
-      "Cheddar Cheese",
-      "Heavy Cream"
-    ],
-    "instructions": "Fry bacon, then saute celery, onion, and garlic in bacon fat. Add flour, vegetable stock, and bullion. Add cubed potatoes and simmer until tender. Stir in heavy cream and top with cheese and crumbled bacon."
-  },
-  {
-    "name": "Lasagna Soup",
-    "slug": "lasagna-soup",
-    "ingredients": [
-      "Onion",
-      "Garlic",
-      "1 Pound Italian Sausage",
-      "Tomato Paste",
-      "2 Cups Marinara",
-      "3 Cups Chicken Broth",
-      "\u00bd Cup Heavy Cream",
-      "\u00bd Box Lasagna Noodles",
-      "Parmesan, Mozzarella, Ricotta",
-      "Parsley, Spinach, and Basil"
-    ],
-    "instructions": "Saute onion and garlic, then brown Italian sausage. Add tomato paste, marinara, broth, and heavy cream. Add noodles and cook until tender. Serve topped with mixed cheeses and herbs."
-  },
-  {
-    "name": "Lemon Chicken Orzo Soup",
-    "slug": "lemon-chicken-orzo",
-    "ingredients": [
-      "Carrots",
-      "Celery",
-      "Onion",
-      "Butter",
-      "Garlic",
-      "Orzo",
-      "Flour",
-      "Chicken Broth",
-      "Rotisserie Chicken",
-      "Lemon"
+      { "ingredientId": "carrots", "name": "Carrots", "quantity": null, "unit": null, "text": "Carrots" },
+      { "ingredientId": "celery", "name": "Celery", "quantity": null, "unit": null, "text": "Celery" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "Onion" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": null, "unit": null, "text": "Butter" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "orzo", "name": "Orzo", "quantity": null, "unit": null, "text": "Orzo" },
+      { "ingredientId": "flour", "name": "Flour", "quantity": null, "unit": null, "text": "Flour" },
+      { "ingredientId": "chicken-broth", "name": "Chicken Broth", "quantity": null, "unit": null, "text": "Chicken Broth" },
+      { "ingredientId": "rotisserie-chicken", "name": "Rotisserie Chicken", "quantity": null, "unit": null, "text": "Rotisserie Chicken" },
+      { "ingredientId": "lemon", "name": "Lemon", "quantity": null, "unit": null, "text": "Lemon" }
     ],
     "instructions": "Saute carrots, celery, and onion in butter. Add garlic and flour, then stir in broth. Bring to a boil, add orzo, and cook until tender. Add shredded chicken and lemon juice/zest before serving."
   },
   {
     "name": "Chicken Fajitas",
     "slug": "chicken-fajitas",
+    "category": "crockpot-meals",
     "ingredients": [
-      "Peppers/Onions",
-      "Chicken",
-      "Fajita Seasoning",
-      "Tortillas",
-      "Cheese",
-      "Rice"
+      { "ingredientId": "peppers-onions", "name": "Peppers/Onions", "quantity": null, "unit": null, "text": "Peppers/Onions" },
+      { "ingredientId": "chicken", "name": "Chicken", "quantity": null, "unit": null, "text": "Chicken" },
+      { "ingredientId": "fajita-seasoning", "name": "Fajita Seasoning", "quantity": null, "unit": null, "text": "Fajita Seasoning" },
+      { "ingredientId": "tortillas", "name": "Tortillas", "quantity": null, "unit": null, "text": "Tortillas" },
+      { "ingredientId": "cheese", "name": "Cheese", "quantity": null, "unit": null, "text": "Cheese" },
+      { "ingredientId": "rice", "name": "Rice", "quantity": null, "unit": null, "text": "Rice" }
     ],
     "instructions": "Add sliced peppers, onions, and chicken to crockpot. Sprinkle fajita seasoning over and cook on low for 6-8 hours or high for 3-4 hours. Serve in tortillas with cheese and rice."
   },
   {
     "name": "Roast",
     "slug": "roast",
+    "category": "crockpot-meals",
     "ingredients": [
-      "Chuck Roast",
-      "Potatoes",
-      "Onion",
-      "Carrots",
-      "Beef Stock",
-      "Pot Roast Seasoning or Onion Mix"
+      { "ingredientId": "chuck-roast", "name": "Chuck Roast", "quantity": null, "unit": null, "text": "Chuck Roast" },
+      { "ingredientId": "potatoes", "name": "Potatoes", "quantity": null, "unit": null, "text": "Potatoes" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "Onion" },
+      { "ingredientId": "carrots", "name": "Carrots", "quantity": null, "unit": null, "text": "Carrots" },
+      { "ingredientId": "beef-stock", "name": "Beef Stock", "quantity": null, "unit": null, "text": "Beef Stock" },
+      { "ingredientId": "pot-roast-seasoning-or-onion-mix", "name": "Pot Roast Seasoning or Onion Mix", "quantity": null, "unit": null, "text": "Pot Roast Seasoning or Onion Mix" }
     ],
     "instructions": "Place roast in crockpot and surround with chopped potatoes, onions, and carrots. Add seasoning and beef stock. Cook on low for 8-10 hours or high for 4-5 hours."
   },
   {
     "name": "Carnitas",
     "slug": "carnitas",
+    "category": "crockpot-meals",
     "ingredients": [
-      "Pork Butt or Shoulder",
-      "Chicken Broth",
-      "Orange Juice",
-      "Lime Juice",
-      "Green Chilis",
-      "Onion",
-      "Tortillas",
-      "Cayenne Pepper",
-      "Chili Powder",
-      "Cumin",
-      "Dried Cilantro"
+      { "ingredientId": "pork-butt-or-shoulder", "name": "Pork Butt or Shoulder", "quantity": null, "unit": null, "text": "Pork Butt or Shoulder" },
+      { "ingredientId": "chicken-broth", "name": "Chicken Broth", "quantity": null, "unit": null, "text": "Chicken Broth" },
+      { "ingredientId": "orange-juice", "name": "Orange Juice", "quantity": null, "unit": null, "text": "Orange Juice" },
+      { "ingredientId": "lime-juice", "name": "Lime Juice", "quantity": null, "unit": null, "text": "Lime Juice" },
+      { "ingredientId": "green-chilis", "name": "Green Chilis", "quantity": null, "unit": null, "text": "Green Chilis" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "Onion" },
+      { "ingredientId": "tortillas", "name": "Tortillas", "quantity": null, "unit": null, "text": "Tortillas" },
+      { "ingredientId": "cayenne-pepper", "name": "Cayenne Pepper", "quantity": null, "unit": null, "text": "Cayenne Pepper" },
+      { "ingredientId": "chili-powder", "name": "Chili Powder", "quantity": null, "unit": null, "text": "Chili Powder" },
+      { "ingredientId": "cumin", "name": "Cumin", "quantity": null, "unit": null, "text": "Cumin" },
+      { "ingredientId": "dried-cilantro", "name": "Dried Cilantro", "quantity": null, "unit": null, "text": "Dried Cilantro" }
     ],
     "instructions": "Season and sear pork. Add to crockpot with broth, juices, chilis, onion, and seasonings. Cook on low for 7-8 hours. Shred and serve in tortillas."
   },
   {
     "name": "Chicken Pot Pie",
     "slug": "chicken-pot-pie",
+    "category": "crockpot-meals",
     "ingredients": [
-      "Chicken Breast",
-      "Diced Onion",
-      "Cream of Chicken Soup",
-      "Frozen Vegetables",
-      "Biscuits",
-      "Half and Half"
+      { "ingredientId": "chicken-breast", "name": "Chicken Breast", "quantity": null, "unit": null, "text": "Chicken Breast" },
+      { "ingredientId": "diced-onion", "name": "Diced Onion", "quantity": null, "unit": null, "text": "Diced Onion" },
+      { "ingredientId": "cream-of-chicken-soup", "name": "Cream of Chicken Soup", "quantity": null, "unit": null, "text": "Cream of Chicken Soup" },
+      { "ingredientId": "frozen-vegetables", "name": "Frozen Vegetables", "quantity": null, "unit": null, "text": "Frozen Vegetables" },
+      { "ingredientId": "biscuits", "name": "Biscuits", "quantity": null, "unit": null, "text": "Biscuits" },
+      { "ingredientId": "half-and-half", "name": "Half and Half", "quantity": null, "unit": null, "text": "Half and Half" }
     ],
     "instructions": "Add chicken, onion, cream of chicken soup, and vegetables to crockpot. Cook on low 4-6 hours. Stir in half and half. Serve with biscuits."
   },
   {
     "name": "Chicken and Dumplings",
     "slug": "chicken-and-dumplings",
+    "category": "crockpot-meals",
     "ingredients": [
-      "Chicken Breast",
-      "Onion",
-      "Celery",
-      "Carrots",
-      "Cream of Chicken Soup",
-      "Cream of Celery or Onion Soup",
-      "Chicken Broth",
-      "Biscuits",
-      "Ranch Seasoning"
+      { "ingredientId": "chicken-breast", "name": "Chicken Breast", "quantity": null, "unit": null, "text": "Chicken Breast" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "Onion" },
+      { "ingredientId": "celery", "name": "Celery", "quantity": null, "unit": null, "text": "Celery" },
+      { "ingredientId": "carrots", "name": "Carrots", "quantity": null, "unit": null, "text": "Carrots" },
+      { "ingredientId": "cream-of-chicken-soup", "name": "Cream of Chicken Soup", "quantity": null, "unit": null, "text": "Cream of Chicken Soup" },
+      { "ingredientId": "cream-of-celery-or-onion-soup", "name": "Cream of Celery or Onion Soup", "quantity": null, "unit": null, "text": "Cream of Celery or Onion Soup" },
+      { "ingredientId": "chicken-broth", "name": "Chicken Broth", "quantity": null, "unit": null, "text": "Chicken Broth" },
+      { "ingredientId": "biscuits", "name": "Biscuits", "quantity": null, "unit": null, "text": "Biscuits" },
+      { "ingredientId": "ranch-seasoning", "name": "Ranch Seasoning", "quantity": null, "unit": null, "text": "Ranch Seasoning" }
     ],
     "instructions": "Add chicken, vegetables, soups, broth, and seasoning to crockpot. Cook on high for 4 hours. Shred chicken and add biscuits on top before serving."
   },
   {
     "name": "Pulled Pork",
     "slug": "pulled-pork",
+    "category": "crockpot-meals",
     "ingredients": [
-      "Pork",
-      "Barbecue Sauce",
-      "Buns"
+      { "ingredientId": "pork", "name": "Pork", "quantity": null, "unit": null, "text": "Pork" },
+      { "ingredientId": "barbecue-sauce", "name": "Barbecue Sauce", "quantity": null, "unit": null, "text": "Barbecue Sauce" },
+      { "ingredientId": "buns", "name": "Buns", "quantity": null, "unit": null, "text": "Buns" }
     ],
     "instructions": "Add pork and barbecue sauce to crockpot. Cook on low for 8 hours or high for 4-5. Shred and serve on buns."
   },
   {
     "name": "Crockpot Chicken Alfredo",
     "slug": "crockpot-chicken-alfredo",
+    "category": "crockpot-meals",
     "ingredients": [
-      "Chicken Breast",
-      "2 Cups Heavy Cream",
-      "1.5 Cups Chicken Broth",
-      "4 Ounces Cream Cheese",
-      "4 Tablespoons Butter",
-      "1 Pound Pasta",
-      "\u00bd Cup Parmesan"
+      { "ingredientId": "chicken-breast", "name": "Chicken Breast", "quantity": null, "unit": null, "text": "Chicken Breast" },
+      { "ingredientId": "heavy-cream", "name": "Heavy Cream", "quantity": 2, "unit": "cups", "text": "2 Cups Heavy Cream" },
+      { "ingredientId": "chicken-broth", "name": "Chicken Broth", "quantity": 1.5, "unit": "cups", "text": "1.5 Cups Chicken Broth" },
+      { "ingredientId": "cream-cheese", "name": "Cream Cheese", "quantity": 4, "unit": "oz", "text": "4 Ounces Cream Cheese" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": 4, "unit": "tbsp", "text": "4 Tablespoons Butter" },
+      { "ingredientId": "pasta", "name": "Pasta", "quantity": 1, "unit": "lbs", "text": "1 Pound Pasta" },
+      { "ingredientId": "parmesan", "name": "Parmesan", "quantity": 0.5, "unit": "cups", "text": "½ Cup Parmesan" }
     ],
     "instructions": "Add chicken, cream, broth, cream cheese, and butter to crockpot. Cook on high for 2 hours. Shred chicken and add pasta and parmesan. Cook 30 minutes more."
   },
   {
     "name": "Crockpot Creamy Lemon Chicken",
     "slug": "crockpot-creamy-lemon-chicken",
+    "category": "crockpot-meals",
     "ingredients": [
-      "Chicken Breasts",
-      "Butter",
-      "Lemon Juice and Zest",
-      "Garlic",
-      "Chicken Stock",
-      "Half and Half",
-      "Cornstarch",
-      "Chicken Base"
+      { "ingredientId": "chicken-breasts", "name": "Chicken Breasts", "quantity": null, "unit": null, "text": "Chicken Breasts" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": null, "unit": null, "text": "Butter" },
+      { "ingredientId": "lemon-juice-and-zest", "name": "Lemon Juice and Zest", "quantity": null, "unit": null, "text": "Lemon Juice and Zest" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "chicken-stock", "name": "Chicken Stock", "quantity": null, "unit": null, "text": "Chicken Stock" },
+      { "ingredientId": "half-and-half", "name": "Half and Half", "quantity": null, "unit": null, "text": "Half and Half" },
+      { "ingredientId": "cornstarch", "name": "Cornstarch", "quantity": null, "unit": null, "text": "Cornstarch" },
+      { "ingredientId": "chicken-base", "name": "Chicken Base", "quantity": null, "unit": null, "text": "Chicken Base" }
     ],
     "instructions": "Sear chicken in butter, then add to crockpot with lemon juice, zest, garlic, and sliced butter. Deglaze pan with stock and add to crockpot. Cook on low for 4 hours. Mix half and half, cornstarch, and chicken base. Add and cook 1 hour more."
   },
   {
     "name": "Teriyaki Chicken",
     "slug": "teriyaki-chicken",
+    "category": "crockpot-meals",
     "ingredients": [
-      "Chicken Breasts",
-      "Garlic",
-      "Ginger",
-      "Honey",
-      "Brown Sugar",
-      "Soy Sauce",
-      "Sesame Oil",
-      "Rice Vinegar",
-      "Cornstarch"
+      { "ingredientId": "chicken-breasts", "name": "Chicken Breasts", "quantity": null, "unit": null, "text": "Chicken Breasts" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "ginger", "name": "Ginger", "quantity": null, "unit": null, "text": "Ginger" },
+      { "ingredientId": "honey", "name": "Honey", "quantity": null, "unit": null, "text": "Honey" },
+      { "ingredientId": "brown-sugar", "name": "Brown Sugar", "quantity": null, "unit": null, "text": "Brown Sugar" },
+      { "ingredientId": "soy-sauce", "name": "Soy Sauce", "quantity": null, "unit": null, "text": "Soy Sauce" },
+      { "ingredientId": "sesame-oil", "name": "Sesame Oil", "quantity": null, "unit": null, "text": "Sesame Oil" },
+      { "ingredientId": "rice-vinegar", "name": "Rice Vinegar", "quantity": null, "unit": null, "text": "Rice Vinegar" },
+      { "ingredientId": "cornstarch", "name": "Cornstarch", "quantity": null, "unit": null, "text": "Cornstarch" }
     ],
     "instructions": "Place chicken in crockpot. Mix garlic, ginger, honey, sugar, soy sauce, oil, and vinegar. Pour over chicken. Cook low 6-7 hours or high 3-4. Thicken sauce with cornstarch slurry if needed."
   },
   {
     "name": "Tacos",
     "slug": "tacos",
+    "category": "stove",
     "ingredients": [
-      "Ground Beef",
-      "Onion",
-      "Tortillas",
-      "Cheese"
+      { "ingredientId": "ground-beef", "name": "Ground Beef", "quantity": null, "unit": null, "text": "Ground Beef" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "Onion" },
+      { "ingredientId": "tortillas", "name": "Tortillas", "quantity": null, "unit": null, "text": "Tortillas" },
+      { "ingredientId": "cheese", "name": "Cheese", "quantity": null, "unit": null, "text": "Cheese" }
     ],
     "instructions": "Brown ground beef and chopped onion in a skillet. Drain excess grease. Spoon into tortillas and top with cheese. Serve hot."
   },
   {
     "name": "Meatballs and Spaghetti",
     "slug": "meatballs-and-spaghetti",
+    "category": "stove",
     "ingredients": [
-      "Meatballs",
-      "Spaghetti",
-      "Spaghetti Sauce",
-      "Cheese"
+      { "ingredientId": "meatballs", "name": "Meatballs", "quantity": null, "unit": null, "text": "Meatballs" },
+      { "ingredientId": "spaghetti", "name": "Spaghetti", "quantity": null, "unit": null, "text": "Spaghetti" },
+      { "ingredientId": "spaghetti-sauce", "name": "Spaghetti Sauce", "quantity": null, "unit": null, "text": "Spaghetti Sauce" },
+      { "ingredientId": "cheese", "name": "Cheese", "quantity": null, "unit": null, "text": "Cheese" }
     ],
     "instructions": "Cook spaghetti according to package instructions. Heat meatballs and sauce in a pot until warmed through. Combine and top with cheese before serving."
   },
   {
     "name": "Cheeseburger Sliders with Mac n Cheese",
     "slug": "cheeseburger-sliders",
+    "category": "stove",
     "ingredients": [
-      "Ground Beef",
-      "Hamburger Buns",
-      "Cheese",
-      "Onion"
+      { "ingredientId": "ground-beef", "name": "Ground Beef", "quantity": null, "unit": null, "text": "Ground Beef" },
+      { "ingredientId": "hamburger-buns", "name": "Hamburger Buns", "quantity": null, "unit": null, "text": "Hamburger Buns" },
+      { "ingredientId": "cheese", "name": "Cheese", "quantity": null, "unit": null, "text": "Cheese" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "Onion" }
     ],
     "instructions": "Form ground beef into small patties and cook with sliced onion. Toast buns and assemble with cheese. Serve with mac n cheese if desired."
   },
   {
     "name": "Ravioli",
     "slug": "ravioli",
+    "category": "stove",
     "ingredients": [
-      "Frozen Ravioli",
-      "Spaghetti Sauce",
-      "Cheese"
+      { "ingredientId": "frozen-ravioli", "name": "Frozen Ravioli", "quantity": null, "unit": null, "text": "Frozen Ravioli" },
+      { "ingredientId": "spaghetti-sauce", "name": "Spaghetti Sauce", "quantity": null, "unit": null, "text": "Spaghetti Sauce" },
+      { "ingredientId": "cheese", "name": "Cheese", "quantity": null, "unit": null, "text": "Cheese" }
     ],
     "instructions": "Boil ravioli until tender. Drain and mix with heated spaghetti sauce. Top with cheese and serve."
   },
   {
     "name": "Gigi Hadid Pasta",
     "slug": "gigi-hadid-pasta",
+    "category": "stove",
     "ingredients": [
-      "Shallots",
-      "Tomato Paste",
-      "Pasta",
-      "Heavy Cream",
-      "Olive Oil",
-      "Butter",
-      "Parmesan",
-      "Red Pepper Flakes"
+      { "ingredientId": "shallots", "name": "Shallots", "quantity": null, "unit": null, "text": "Shallots" },
+      { "ingredientId": "tomato-paste", "name": "Tomato Paste", "quantity": null, "unit": null, "text": "Tomato Paste" },
+      { "ingredientId": "pasta", "name": "Pasta", "quantity": null, "unit": null, "text": "Pasta" },
+      { "ingredientId": "heavy-cream", "name": "Heavy Cream", "quantity": null, "unit": null, "text": "Heavy Cream" },
+      { "ingredientId": "olive-oil", "name": "Olive Oil", "quantity": null, "unit": null, "text": "Olive Oil" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": null, "unit": null, "text": "Butter" },
+      { "ingredientId": "parmesan", "name": "Parmesan", "quantity": null, "unit": null, "text": "Parmesan" },
+      { "ingredientId": "red-pepper-flakes", "name": "Red Pepper Flakes", "quantity": null, "unit": null, "text": "Red Pepper Flakes" }
     ],
-    "instructions": "Cook pasta and reserve 1 cup pasta water. In a pan, saut\u00e9 shallots and garlic in olive oil. Add tomato paste and cook 2-3 minutes. Add heavy cream and red pepper flakes, then stir in pasta, reserved water, butter, and parmesan. Season and serve."
+    "instructions": "Cook pasta and reserve 1 cup pasta water. In a pan, sauté shallots and garlic in olive oil. Add tomato paste and cook 2-3 minutes. Add heavy cream and red pepper flakes, then stir in pasta, reserved water, butter, and parmesan. Season and serve."
   },
   {
     "name": "Creamy Sausage Bowtie Pasta",
     "slug": "creamy-sausage-bowtie-pasta",
+    "category": "stove",
     "ingredients": [
-      "Italian Sausage",
-      "Garlic",
-      "Bowtie Pasta",
-      "Flour",
-      "1 Pint Heavy Cream",
-      "1 Cup Chicken Broth",
-      "1 Bag Baby Spinach",
-      "Parmesan Cheese",
-      "Mozzarella"
+      { "ingredientId": "italian-sausage", "name": "Italian Sausage", "quantity": null, "unit": null, "text": "Italian Sausage" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "bowtie-pasta", "name": "Bowtie Pasta", "quantity": null, "unit": null, "text": "Bowtie Pasta" },
+      { "ingredientId": "flour", "name": "Flour", "quantity": null, "unit": null, "text": "Flour" },
+      { "ingredientId": "heavy-cream", "name": "Heavy Cream", "quantity": 1, "unit": "count", "text": "1 Pint Heavy Cream" },
+      { "ingredientId": "chicken-broth", "name": "Chicken Broth", "quantity": 1, "unit": "cups", "text": "1 Cup Chicken Broth" },
+      { "ingredientId": "baby-spinach", "name": "Baby Spinach", "quantity": 1, "unit": "count", "text": "1 Bag Baby Spinach" },
+      { "ingredientId": "parmesan-cheese", "name": "Parmesan Cheese", "quantity": null, "unit": null, "text": "Parmesan Cheese" },
+      { "ingredientId": "mozzarella", "name": "Mozzarella", "quantity": null, "unit": null, "text": "Mozzarella" }
     ],
     "instructions": "Brown sausage and garlic. Cook pasta separately. Add flour to sausage, then stir in cream and broth. Add spinach and cheese. Stir in drained pasta and serve."
   },
   {
     "name": "French Onion Pasta",
     "slug": "french-onion-pasta",
+    "category": "stove",
     "ingredients": [
-      "1-2 Onions",
-      "2 Tablespoons Butter",
-      "Gruyere Cheese",
-      "White Wine",
-      "Uncooked Pasta",
-      "Beef Stock",
-      "Worcestershire Sauce",
-      "Half and Half",
-      "Thyme"
+      { "ingredientId": "onions", "name": "Onions", "quantity": null, "unit": null, "text": "1-2 Onions" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": 2, "unit": "tbsp", "text": "2 Tablespoons Butter" },
+      { "ingredientId": "gruyere-cheese", "name": "Gruyere Cheese", "quantity": null, "unit": null, "text": "Gruyere Cheese" },
+      { "ingredientId": "white-wine", "name": "White Wine", "quantity": null, "unit": null, "text": "White Wine" },
+      { "ingredientId": "uncooked-pasta", "name": "Uncooked Pasta", "quantity": null, "unit": null, "text": "Uncooked Pasta" },
+      { "ingredientId": "beef-stock", "name": "Beef Stock", "quantity": null, "unit": null, "text": "Beef Stock" },
+      { "ingredientId": "worcestershire-sauce", "name": "Worcestershire Sauce", "quantity": null, "unit": null, "text": "Worcestershire Sauce" },
+      { "ingredientId": "half-and-half", "name": "Half and Half", "quantity": null, "unit": null, "text": "Half and Half" },
+      { "ingredientId": "thyme", "name": "Thyme", "quantity": null, "unit": null, "text": "Thyme" }
     ],
     "instructions": "Caramelize onions in butter, then deglaze with white wine. Add pasta, beef stock, Worcestershire, and thyme. Simmer until pasta is cooked. Stir in gruyere and half and half."
   },
   {
     "name": "French Onion Chicken",
     "slug": "french-onion-chicken",
+    "category": "stove",
     "ingredients": [
-      "1 Onion",
-      "1 Stick Butter",
-      "Chicken Breasts or Tenderloins",
-      "Onion Soup Mix",
-      "French Onion Soup",
-      "Potatoes",
-      "Heavy Cream",
-      "Cheese"
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "1 Onion" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": 1, "unit": "count", "text": "1 Stick Butter" },
+      { "ingredientId": "chicken-breasts-or-tenderloins", "name": "Chicken Breasts or Tenderloins", "quantity": null, "unit": null, "text": "Chicken Breasts or Tenderloins" },
+      { "ingredientId": "onion-soup-mix", "name": "Onion Soup Mix", "quantity": null, "unit": null, "text": "Onion Soup Mix" },
+      { "ingredientId": "french-onion-soup", "name": "French Onion Soup", "quantity": null, "unit": null, "text": "French Onion Soup" },
+      { "ingredientId": "potatoes", "name": "Potatoes", "quantity": null, "unit": null, "text": "Potatoes" },
+      { "ingredientId": "heavy-cream", "name": "Heavy Cream", "quantity": null, "unit": null, "text": "Heavy Cream" },
+      { "ingredientId": "cheese", "name": "Cheese", "quantity": null, "unit": null, "text": "Cheese" }
     ],
     "instructions": "Sear chicken in butter, then set aside. Saute onions, then add soup mix and canned soup. Return chicken and simmer. Top with cheese and serve with potatoes."
   },
   {
     "name": "Soupy Chicken",
     "slug": "soupy-chicken",
+    "category": "stove",
     "ingredients": [
-      "Chicken Breasts",
-      "Olive Oil",
-      "Butter",
-      "Garlic",
-      "2 Onions",
-      "Cream of Onion or Chicken",
-      "Milk",
-      "Mashed Potatoes Ingredients",
-      "Green Beans"
+      { "ingredientId": "chicken-breasts", "name": "Chicken Breasts", "quantity": null, "unit": null, "text": "Chicken Breasts" },
+      { "ingredientId": "olive-oil", "name": "Olive Oil", "quantity": null, "unit": null, "text": "Olive Oil" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": null, "unit": null, "text": "Butter" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "onions", "name": "Onions", "quantity": 2, "unit": "count", "text": "2 Onions" },
+      { "ingredientId": "cream-of-onion-or-chicken", "name": "Cream of Onion or Chicken", "quantity": null, "unit": null, "text": "Cream of Onion or Chicken" },
+      { "ingredientId": "milk", "name": "Milk", "quantity": null, "unit": null, "text": "Milk" },
+      { "ingredientId": "mashed-potatoes-ingredients", "name": "Mashed Potatoes Ingredients", "quantity": null, "unit": null, "text": "Mashed Potatoes Ingredients" },
+      { "ingredientId": "green-beans", "name": "Green Beans", "quantity": null, "unit": null, "text": "Green Beans" }
     ],
     "instructions": "Sear seasoned chicken and onions in butter and oil. Add soup and milk. Simmer until chicken is cooked through. Serve with mashed potatoes and green beans."
   },
   {
     "name": "Breaded Chicken",
     "slug": "breaded-chicken",
+    "category": "stove",
     "ingredients": [
-      "Chicken Tenderloins",
-      "Flour",
-      "Eggs",
-      "Panko Breadcrumbs",
-      "Italian Breadcrumbs",
-      "Grated Parmesan",
-      "Olive Oil"
+      { "ingredientId": "chicken-tenderloins", "name": "Chicken Tenderloins", "quantity": null, "unit": null, "text": "Chicken Tenderloins" },
+      { "ingredientId": "flour", "name": "Flour", "quantity": null, "unit": null, "text": "Flour" },
+      { "ingredientId": "eggs", "name": "Eggs", "quantity": null, "unit": null, "text": "Eggs" },
+      { "ingredientId": "panko-breadcrumbs", "name": "Panko Breadcrumbs", "quantity": null, "unit": null, "text": "Panko Breadcrumbs" },
+      { "ingredientId": "italian-breadcrumbs", "name": "Italian Breadcrumbs", "quantity": null, "unit": null, "text": "Italian Breadcrumbs" },
+      { "ingredientId": "grated-parmesan", "name": "Grated Parmesan", "quantity": null, "unit": null, "text": "Grated Parmesan" },
+      { "ingredientId": "olive-oil", "name": "Olive Oil", "quantity": null, "unit": null, "text": "Olive Oil" }
     ],
     "instructions": "Dredge chicken in flour, then egg, then breadcrumb and cheese mix. Shallow fry in olive oil for 3-4 minutes per side until golden and cooked."
   },
   {
     "name": "Barbecue Chicken Bake",
     "slug": "barbecue-chicken-bake",
+    "category": "stove",
     "ingredients": [
-      "Butter",
-      "Chicken Breasts",
-      "Barbecue Sauce",
-      "Bacon",
-      "Cheese",
-      "Cooking Spray"
+      { "ingredientId": "butter", "name": "Butter", "quantity": null, "unit": null, "text": "Butter" },
+      { "ingredientId": "chicken-breasts", "name": "Chicken Breasts", "quantity": null, "unit": null, "text": "Chicken Breasts" },
+      { "ingredientId": "barbecue-sauce", "name": "Barbecue Sauce", "quantity": null, "unit": null, "text": "Barbecue Sauce" },
+      { "ingredientId": "bacon", "name": "Bacon", "quantity": null, "unit": null, "text": "Bacon" },
+      { "ingredientId": "cheese", "name": "Cheese", "quantity": null, "unit": null, "text": "Cheese" },
+      { "ingredientId": "cooking-spray", "name": "Cooking Spray", "quantity": null, "unit": null, "text": "Cooking Spray" }
     ],
-    "instructions": "Sear seasoned chicken in butter. Transfer to greased baking dish. Top with BBQ sauce and cheese. Bake at 350\u00b0F for 30 minutes. Top with cooked bacon and serve."
+    "instructions": "Sear seasoned chicken in butter. Transfer to greased baking dish. Top with BBQ sauce and cheese. Bake at 350°F for 30 minutes. Top with cooked bacon and serve."
   },
   {
     "name": "Sausage and Peppers",
     "slug": "sausage-and-peppers",
+    "category": "stove",
     "ingredients": [
-      "Sausage",
-      "1 Onion",
-      "Peppers",
-      "Olive Oil",
-      "Garlic"
+      { "ingredientId": "sausage", "name": "Sausage", "quantity": null, "unit": null, "text": "Sausage" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "1 Onion" },
+      { "ingredientId": "peppers", "name": "Peppers", "quantity": null, "unit": null, "text": "Peppers" },
+      { "ingredientId": "olive-oil", "name": "Olive Oil", "quantity": null, "unit": null, "text": "Olive Oil" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" }
     ],
     "instructions": "Sear sausage, then set aside. Saute onion and garlic, then add peppers and cook until tender. Return sausage and heat through. Serve with pasta if desired."
   },
   {
     "name": "Parmesan-Crusted Oven Roasted Potatoes",
     "slug": "parmesan-crusted-oven-roasted-potatoes",
+    "category": "side-dishes",
     "ingredients": [
-      "\u00bc Cup Butter",
-      "\u00bc Cup Olive Oil",
-      "1 Tablespoon Garlic",
-      "2 Tablespoons Parsley",
-      "3 Tablespoons Parmesan",
-      "Red Pepper Flakes",
-      "Salt and Pepper",
-      "2 Pounds Baby Gold Potatoes"
+      { "ingredientId": "butter", "name": "Butter", "quantity": 0.25, "unit": "cups", "text": "¼ Cup Butter" },
+      { "ingredientId": "olive-oil", "name": "Olive Oil", "quantity": 0.25, "unit": "cups", "text": "¼ Cup Olive Oil" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": 1, "unit": "tbsp", "text": "1 Tablespoon Garlic" },
+      { "ingredientId": "parsley", "name": "Parsley", "quantity": 2, "unit": "tbsp", "text": "2 Tablespoons Parsley" },
+      { "ingredientId": "parmesan", "name": "Parmesan", "quantity": 3, "unit": "tbsp", "text": "3 Tablespoons Parmesan" },
+      { "ingredientId": "red-pepper-flakes", "name": "Red Pepper Flakes", "quantity": null, "unit": null, "text": "Red Pepper Flakes" },
+      { "ingredientId": "salt-and-pepper", "name": "Salt and Pepper", "quantity": null, "unit": null, "text": "Salt and Pepper" },
+      { "ingredientId": "baby-gold-potatoes", "name": "Baby Gold Potatoes", "quantity": 2, "unit": "lbs", "text": "2 Pounds Baby Gold Potatoes" }
     ],
-    "instructions": "Preheat oven to 400\u00b0F. Melt butter and mix with olive oil, garlic, parsley, parmesan, red pepper flakes, salt, and pepper. Slice potatoes in half and toss in the mixture. Dip the flat side of each potato in extra parmesan and lay crust side down on a baking sheet. Roast for 30\u201340 minutes until golden."
+    "instructions": "Preheat oven to 400°F. Melt butter and mix with olive oil, garlic, parsley, parmesan, red pepper flakes, salt, and pepper. Slice potatoes in half and toss in the mixture. Dip the flat side of each potato in extra parmesan and lay crust side down on a baking sheet. Roast for 30–40 minutes until golden."
   },
   {
     "name": "Parmesan-Garlic Butter Pizza Rolls",
     "slug": "parmesan-garlic-butter-pizza-rolls",
+    "category": "side-dishes",
     "ingredients": [
-      "Pizza Rolls",
-      "Garlic Butter",
-      "Parmesan Cheese",
-      "Marinara Sauce"
+      { "ingredientId": "pizza-rolls", "name": "Pizza Rolls", "quantity": null, "unit": null, "text": "Pizza Rolls" },
+      { "ingredientId": "garlic-butter", "name": "Garlic Butter", "quantity": null, "unit": null, "text": "Garlic Butter" },
+      { "ingredientId": "parmesan-cheese", "name": "Parmesan Cheese", "quantity": null, "unit": null, "text": "Parmesan Cheese" },
+      { "ingredientId": "marinara-sauce", "name": "Marinara Sauce", "quantity": null, "unit": null, "text": "Marinara Sauce" }
     ],
     "instructions": "Fry pizza rolls until crisp. Toss in garlic butter and top with parmesan. Serve with marinara sauce for dipping."
   },
   {
     "name": "Mac n Cheese",
     "slug": "mac-n-cheese",
+    "category": "side-dishes",
     "ingredients": [
-      "1 Pound Cavatappi Noodles",
-      "1 Pound Mozzarella Cheese",
-      "1 Pound Colby Jack Cheese",
-      "\u00bd Pound Sharp Cheddar Cheese",
-      "Salt",
-      "Pepper",
-      "Garlic Powder",
-      "Smoked Paprika",
-      "3 Tablespoons Butter",
-      "3 Tablespoons Flour",
-      "1 Can Evaporated Milk",
-      "2 Cups Heavy Cream"
+      { "ingredientId": "cavatappi-noodles", "name": "Cavatappi Noodles", "quantity": 1, "unit": "lbs", "text": "1 Pound Cavatappi Noodles" },
+      { "ingredientId": "mozzarella-cheese", "name": "Mozzarella Cheese", "quantity": 1, "unit": "lbs", "text": "1 Pound Mozzarella Cheese" },
+      { "ingredientId": "colby-jack-cheese", "name": "Colby Jack Cheese", "quantity": 1, "unit": "lbs", "text": "1 Pound Colby Jack Cheese" },
+      { "ingredientId": "sharp-cheddar-cheese", "name": "Sharp Cheddar Cheese", "quantity": 0.5, "unit": "lbs", "text": "½ Pound Sharp Cheddar Cheese" },
+      { "ingredientId": "salt", "name": "Salt", "quantity": null, "unit": null, "text": "Salt" },
+      { "ingredientId": "pepper", "name": "Pepper", "quantity": null, "unit": null, "text": "Pepper" },
+      { "ingredientId": "garlic-powder", "name": "Garlic Powder", "quantity": null, "unit": null, "text": "Garlic Powder" },
+      { "ingredientId": "smoked-paprika", "name": "Smoked Paprika", "quantity": null, "unit": null, "text": "Smoked Paprika" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": 3, "unit": "tbsp", "text": "3 Tablespoons Butter" },
+      { "ingredientId": "flour", "name": "Flour", "quantity": 3, "unit": "tbsp", "text": "3 Tablespoons Flour" },
+      { "ingredientId": "evaporated-milk", "name": "Evaporated Milk", "quantity": 1, "unit": "cans", "text": "1 Can Evaporated Milk" },
+      { "ingredientId": "heavy-cream", "name": "Heavy Cream", "quantity": 2, "unit": "cups", "text": "2 Cups Heavy Cream" }
     ],
-    "instructions": "Cook and drain noodles. Shred and divide cheeses. Melt butter and add flour to make a roux. Stir in evaporated milk and heavy cream until thickened. Season and add half of cheese. Combine with noodles and layer remaining cheese. Bake at 350\u00b0F for 25\u201330 minutes."
+    "instructions": "Cook and drain noodles. Shred and divide cheeses. Melt butter and add flour to make a roux. Stir in evaporated milk and heavy cream until thickened. Season and add half of cheese. Combine with noodles and layer remaining cheese. Bake at 350°F for 25–30 minutes."
   },
   {
     "name": "Mashed Potatoes",
     "slug": "mashed-potatoes",
+    "category": "side-dishes",
     "ingredients": [
-      "3\u20134 Potatoes",
-      "Butter",
-      "Cream",
-      "Garlic Powder",
-      "Salt and Pepper"
+      { "ingredientId": "potatoes", "name": "Potatoes", "quantity": null, "unit": null, "text": "3–4 Potatoes" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": null, "unit": null, "text": "Butter" },
+      { "ingredientId": "cream", "name": "Cream", "quantity": null, "unit": null, "text": "Cream" },
+      { "ingredientId": "garlic-powder", "name": "Garlic Powder", "quantity": null, "unit": null, "text": "Garlic Powder" },
+      { "ingredientId": "salt-and-pepper", "name": "Salt and Pepper", "quantity": null, "unit": null, "text": "Salt and Pepper" }
     ],
     "instructions": "Peel and cube potatoes. Boil in salted water until fork-tender. Drain and return to pot. Mash with butter, cream, garlic powder, salt, and pepper to taste."
   },
   {
     "name": "Roasted Garlic",
     "slug": "roasted-garlic",
+    "category": "side-dishes",
     "ingredients": [
-      "Whole Garlic Heads",
-      "Olive Oil",
-      "Salt and Pepper",
-      "Aluminum Foil"
+      { "ingredientId": "whole-garlic-heads", "name": "Whole Garlic Heads", "quantity": null, "unit": null, "text": "Whole Garlic Heads" },
+      { "ingredientId": "olive-oil", "name": "Olive Oil", "quantity": null, "unit": null, "text": "Olive Oil" },
+      { "ingredientId": "salt-and-pepper", "name": "Salt and Pepper", "quantity": null, "unit": null, "text": "Salt and Pepper" },
+      { "ingredientId": "aluminum-foil", "name": "Aluminum Foil", "quantity": null, "unit": null, "text": "Aluminum Foil" }
     ],
-    "instructions": "Preheat oven to 400\u00b0F. Trim tops of garlic heads to expose cloves. Drizzle with olive oil and season with salt and pepper. Wrap in foil and roast for 30\u201340 minutes until soft and golden."
+    "instructions": "Preheat oven to 400°F. Trim tops of garlic heads to expose cloves. Drizzle with olive oil and season with salt and pepper. Wrap in foil and roast for 30–40 minutes until soft and golden."
   },
   {
     "name": "No Bake Cookies",
     "slug": "no-bake-cookies",
+    "category": "sweet-treats",
     "ingredients": [
-      "1 Cup Sugar",
-      "\u00bc Cup Milk",
-      "4 Tablespoons Butter",
-      "\u215b Cup Cocoa Powder",
-      "\u00bd Tablespoon Vanilla Extract",
-      "1\u00bd Cups Oats",
-      "\u00bd Cup Peanut Butter",
-      "Parchment Paper"
+      { "ingredientId": "sugar", "name": "Sugar", "quantity": 1, "unit": "cups", "text": "1 Cup Sugar" },
+      { "ingredientId": "milk", "name": "Milk", "quantity": 0.25, "unit": "cups", "text": "¼ Cup Milk" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": 4, "unit": "tbsp", "text": "4 Tablespoons Butter" },
+      { "ingredientId": "cocoa-powder", "name": "Cocoa Powder", "quantity": 0.125, "unit": "cups", "text": "⅛ Cup Cocoa Powder" },
+      { "ingredientId": "vanilla-extract", "name": "Vanilla Extract", "quantity": 0.5, "unit": "tbsp", "text": "½ Tablespoon Vanilla Extract" },
+      { "ingredientId": "oats", "name": "Oats", "quantity": 1.5, "unit": "cups", "text": "1½ Cups Oats" },
+      { "ingredientId": "peanut-butter", "name": "Peanut Butter", "quantity": 0.5, "unit": "cups", "text": "½ Cup Peanut Butter" },
+      { "ingredientId": "parchment-paper", "name": "Parchment Paper", "quantity": null, "unit": null, "text": "Parchment Paper" }
     ],
     "instructions": "In a saucepan, melt sugar, milk, butter, and cocoa powder. Bring to a boil for 1 minute. Remove from heat and stir in vanilla, oats, and peanut butter. Scoop onto parchment-lined baking sheet and refrigerate until firm."
   },
   {
     "name": "Protein Balls",
     "slug": "protein-balls",
+    "category": "sweet-treats",
     "ingredients": [
-      "1 Cup Protein Oats",
-      "\u00bd Cup Peanut Butter",
-      "\u00bd Cup Flax Seed",
-      "\u00bd Cup Chocolate Chips",
-      "\u2153 Cup Honey",
-      "1 Teaspoon Vanilla Extract"
+      { "ingredientId": "protein-oats", "name": "Protein Oats", "quantity": 1, "unit": "cups", "text": "1 Cup Protein Oats" },
+      { "ingredientId": "peanut-butter", "name": "Peanut Butter", "quantity": 0.5, "unit": "cups", "text": "½ Cup Peanut Butter" },
+      { "ingredientId": "flax-seed", "name": "Flax Seed", "quantity": 0.5, "unit": "cups", "text": "½ Cup Flax Seed" },
+      { "ingredientId": "chocolate-chips", "name": "Chocolate Chips", "quantity": 0.5, "unit": "cups", "text": "½ Cup Chocolate Chips" },
+      { "ingredientId": "honey", "name": "Honey", "quantity": 0.333, "unit": "cups", "text": "⅓ Cup Honey" },
+      { "ingredientId": "vanilla-extract", "name": "Vanilla Extract", "quantity": 1, "unit": "tsp", "text": "1 Teaspoon Vanilla Extract" }
     ],
-    "instructions": "Mix all ingredients in a bowl until well combined. Chill for 1\u20132 hours. Roll into balls and refrigerate."
+    "instructions": "Mix all ingredients in a bowl until well combined. Chill for 1–2 hours. Roll into balls and refrigerate."
   },
   {
     "name": "Chocolate Chip Cookies",
     "slug": "chocolate-chip-cookies",
+    "category": "sweet-treats",
     "ingredients": [
-      "\u00bd Cup Sugar",
-      "\u00bd Cup Butter",
-      "1 Cup Brown Sugar",
-      "1 Egg",
-      "1 Teaspoon Vanilla Extract",
-      "1 Teaspoon Salt",
-      "1\u00bc Cups Flour",
-      "\u00bd Teaspoon Baking Soda",
-      "8 Ounces Chocolate Chips"
+      { "ingredientId": "sugar", "name": "Sugar", "quantity": 0.5, "unit": "cups", "text": "½ Cup Sugar" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": 0.5, "unit": "cups", "text": "½ Cup Butter" },
+      { "ingredientId": "brown-sugar", "name": "Brown Sugar", "quantity": 1, "unit": "cups", "text": "1 Cup Brown Sugar" },
+      { "ingredientId": "egg", "name": "Egg", "quantity": 1, "unit": "count", "text": "1 Egg" },
+      { "ingredientId": "vanilla-extract", "name": "Vanilla Extract", "quantity": 1, "unit": "tsp", "text": "1 Teaspoon Vanilla Extract" },
+      { "ingredientId": "salt", "name": "Salt", "quantity": 1, "unit": "tsp", "text": "1 Teaspoon Salt" },
+      { "ingredientId": "flour", "name": "Flour", "quantity": 1.25, "unit": "cups", "text": "1¼ Cups Flour" },
+      { "ingredientId": "baking-soda", "name": "Baking Soda", "quantity": 0.5, "unit": "tsp", "text": "½ Teaspoon Baking Soda" },
+      { "ingredientId": "chocolate-chips", "name": "Chocolate Chips", "quantity": 8, "unit": "oz", "text": "8 Ounces Chocolate Chips" }
     ],
-    "instructions": "Cream sugars and butter. Add egg and vanilla. In another bowl, combine salt, flour, and baking soda. Mix dry into wet. Fold in chocolate chips. Chill dough 2 hours. Bake at 250\u00b0F for 8\u201313 minutes."
+    "instructions": "Cream sugars and butter. Add egg and vanilla. In another bowl, combine salt, flour, and baking soda. Mix dry into wet. Fold in chocolate chips. Chill dough 2 hours. Bake at 250°F for 8–13 minutes."
   },
   {
     "name": "Chocolate Covered Raspberries",
     "slug": "chocolate-covered-raspberries",
+    "category": "sweet-treats",
     "ingredients": [
-      "Raspberries",
-      "Peanut Butter",
-      "Chocolate Chips",
-      "Coconut Oil"
+      { "ingredientId": "raspberries", "name": "Raspberries", "quantity": null, "unit": null, "text": "Raspberries" },
+      { "ingredientId": "peanut-butter", "name": "Peanut Butter", "quantity": null, "unit": null, "text": "Peanut Butter" },
+      { "ingredientId": "chocolate-chips", "name": "Chocolate Chips", "quantity": null, "unit": null, "text": "Chocolate Chips" },
+      { "ingredientId": "coconut-oil", "name": "Coconut Oil", "quantity": null, "unit": null, "text": "Coconut Oil" }
     ],
     "instructions": "Mash raspberries and place on parchment paper. Add a dollop of melted peanut butter. Freeze. Melt chocolate with coconut oil, dip each raspberry dollop, and freeze until solid."
   },
   {
     "name": "S'mores Cookie Bars",
     "slug": "smores-cookie-bars",
+    "category": "sweet-treats",
     "ingredients": [],
     "instructions": "Recipe not fully provided. Please add ingredients and instructions manually."
   },
   {
     "name": "Ricotta Meatballs",
     "slug": "ricotta-meatballs",
+    "category": "stove",
     "ingredients": [
-      "Olive Oil",
-      "Tomato Sauce",
-      "Ricotta Cheese",
-      "Garlic",
-      "Fresh Parsley",
-      "Dried Basil, Oregano, Parsley",
-      "Onion",
-      "Egg",
-      "Half and Half",
-      "Italian Breadcrumbs",
-      "Fresh Parmesan Cheese",
-      "Ground Chuck",
-      "Ground Italian Sausage"
+      { "ingredientId": "olive-oil", "name": "Olive Oil", "quantity": null, "unit": null, "text": "Olive Oil" },
+      { "ingredientId": "tomato-sauce", "name": "Tomato Sauce", "quantity": null, "unit": null, "text": "Tomato Sauce" },
+      { "ingredientId": "ricotta-cheese", "name": "Ricotta Cheese", "quantity": null, "unit": null, "text": "Ricotta Cheese" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "fresh-parsley", "name": "Fresh Parsley", "quantity": null, "unit": null, "text": "Fresh Parsley" },
+      { "ingredientId": "dried-basil-oregano-parsley", "name": "Dried Basil, Oregano, Parsley", "quantity": null, "unit": null, "text": "Dried Basil, Oregano, Parsley" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "Onion" },
+      { "ingredientId": "egg", "name": "Egg", "quantity": 1, "unit": "count", "text": "Egg" },
+      { "ingredientId": "half-and-half", "name": "Half and Half", "quantity": null, "unit": null, "text": "Half and Half" },
+      { "ingredientId": "italian-breadcrumbs", "name": "Italian Breadcrumbs", "quantity": null, "unit": null, "text": "Italian Breadcrumbs" },
+      { "ingredientId": "fresh-parmesan-cheese", "name": "Fresh Parmesan Cheese", "quantity": null, "unit": null, "text": "Fresh Parmesan Cheese" },
+      { "ingredientId": "ground-chuck", "name": "Ground Chuck", "quantity": null, "unit": null, "text": "Ground Chuck" },
+      { "ingredientId": "ground-italian-sausage", "name": "Ground Italian Sausage", "quantity": null, "unit": null, "text": "Ground Italian Sausage" }
     ],
-    "instructions": "Mix ricotta, garlic, and seasonings. Saut\u00e9 onion and garlic in olive oil. In a bowl, combine egg, half and half, breadcrumbs, cheese, ricotta mix, saut\u00e9ed onion. Add seasoned meat and form into meatballs. Refrigerate 15 min. Brown in oil, then add to sauce and cook covered 30 min. Add remaining ricotta on top. Serve with pasta."
+    "instructions": "Mix ricotta, garlic, and seasonings. Sauté onion and garlic in olive oil. In a bowl, combine egg, half and half, breadcrumbs, cheese, ricotta mix, sautéed onion. Add seasoned meat and form into meatballs. Refrigerate 15 min. Brown in oil, then add to sauce and cook covered 30 min. Add remaining ricotta on top. Serve with pasta."
   },
   {
     "name": "Rigatoni P",
     "slug": "rigatoni-p",
+    "category": "stove",
     "ingredients": [
-      "Sliced Mushrooms",
-      "Diced Onion",
-      "Garlic",
-      "Balsamic Vinegar",
-      "Cornstarch",
-      "Chicken Broth",
-      "Rigatoni Pasta",
-      "Olive Oil",
-      "Butter",
-      "Chicken Breast",
-      "White Wine",
-      "Marsala Wine",
-      "Heavy Cream",
-      "Fresh Parmesan Cheese",
-      "Fresh Parsley"
+      { "ingredientId": "sliced-mushrooms", "name": "Sliced Mushrooms", "quantity": null, "unit": null, "text": "Sliced Mushrooms" },
+      { "ingredientId": "diced-onion", "name": "Diced Onion", "quantity": null, "unit": null, "text": "Diced Onion" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "balsamic-vinegar", "name": "Balsamic Vinegar", "quantity": null, "unit": null, "text": "Balsamic Vinegar" },
+      { "ingredientId": "cornstarch", "name": "Cornstarch", "quantity": null, "unit": null, "text": "Cornstarch" },
+      { "ingredientId": "chicken-broth", "name": "Chicken Broth", "quantity": null, "unit": null, "text": "Chicken Broth" },
+      { "ingredientId": "rigatoni-pasta", "name": "Rigatoni Pasta", "quantity": null, "unit": null, "text": "Rigatoni Pasta" },
+      { "ingredientId": "olive-oil", "name": "Olive Oil", "quantity": null, "unit": null, "text": "Olive Oil" },
+      { "ingredientId": "butter", "name": "Butter", "quantity": null, "unit": null, "text": "Butter" },
+      { "ingredientId": "chicken-breast", "name": "Chicken Breast", "quantity": null, "unit": null, "text": "Chicken Breast" },
+      { "ingredientId": "white-wine", "name": "White Wine", "quantity": null, "unit": null, "text": "White Wine" },
+      { "ingredientId": "marsala-wine", "name": "Marsala Wine", "quantity": null, "unit": null, "text": "Marsala Wine" },
+      { "ingredientId": "heavy-cream", "name": "Heavy Cream", "quantity": null, "unit": null, "text": "Heavy Cream" },
+      { "ingredientId": "fresh-parmesan-cheese", "name": "Fresh Parmesan Cheese", "quantity": null, "unit": null, "text": "Fresh Parmesan Cheese" },
+      { "ingredientId": "fresh-parsley", "name": "Fresh Parsley", "quantity": null, "unit": null, "text": "Fresh Parsley" }
     ],
-    "instructions": "Preheat oven to 450\u00b0F. Roast mushrooms, onion, and garlic with balsamic vinegar. Sear chicken in butter and oil. Deglaze with white and marsala wine. Add chicken broth and cornstarch slurry, cook until thick. Mix in cream, cheese, parsley, and roasted vegetables. Combine with cooked pasta and bake until golden."
+    "instructions": "Preheat oven to 450°F. Roast mushrooms, onion, and garlic with balsamic vinegar. Sear chicken in butter and oil. Deglaze with white and marsala wine. Add chicken broth and cornstarch slurry, cook until thick. Mix in cream, cheese, parsley, and roasted vegetables. Combine with cooked pasta and bake until golden."
   },
   {
     "name": "Stir Fry",
     "slug": "stir-fry",
+    "category": "stove",
     "ingredients": [
-      "Soy Sauce",
-      "Vegetable Stock",
-      "Sesame Oil",
-      "Rice Vinegar",
-      "Garlic",
-      "Grated Ginger",
-      "Sugar",
-      "Cornstarch",
-      "Red Pepper Flakes",
-      "Bell Peppers",
-      "Onion",
-      "Snap Peas",
-      "Stir Fry Meat"
+      { "ingredientId": "soy-sauce", "name": "Soy Sauce", "quantity": null, "unit": null, "text": "Soy Sauce" },
+      { "ingredientId": "vegetable-stock", "name": "Vegetable Stock", "quantity": null, "unit": null, "text": "Vegetable Stock" },
+      { "ingredientId": "sesame-oil", "name": "Sesame Oil", "quantity": null, "unit": null, "text": "Sesame Oil" },
+      { "ingredientId": "rice-vinegar", "name": "Rice Vinegar", "quantity": null, "unit": null, "text": "Rice Vinegar" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "grated-ginger", "name": "Grated Ginger", "quantity": null, "unit": null, "text": "Grated Ginger" },
+      { "ingredientId": "sugar", "name": "Sugar", "quantity": null, "unit": null, "text": "Sugar" },
+      { "ingredientId": "cornstarch", "name": "Cornstarch", "quantity": null, "unit": null, "text": "Cornstarch" },
+      { "ingredientId": "red-pepper-flakes", "name": "Red Pepper Flakes", "quantity": null, "unit": null, "text": "Red Pepper Flakes" },
+      { "ingredientId": "bell-peppers", "name": "Bell Peppers", "quantity": null, "unit": null, "text": "Bell Peppers" },
+      { "ingredientId": "onion", "name": "Onion", "quantity": 1, "unit": "count", "text": "Onion" },
+      { "ingredientId": "snap-peas", "name": "Snap Peas", "quantity": null, "unit": null, "text": "Snap Peas" },
+      { "ingredientId": "stir-fry-meat", "name": "Stir Fry Meat", "quantity": null, "unit": null, "text": "Stir Fry Meat" }
     ],
-    "instructions": "Make sauce by mixing soy sauce, stock, oil, vinegar, garlic, ginger, sugar, cornstarch, and red pepper. Stir fry meat and set aside. Saut\u00e9 onion, snap peas, and peppers. Add meat back and pour sauce over. Simmer until thickened. Serve with rice or noodles."
+    "instructions": "Make sauce by mixing soy sauce, stock, oil, vinegar, garlic, ginger, sugar, cornstarch, and red pepper. Stir fry meat and set aside. Sauté onion, snap peas, and peppers. Add meat back and pour sauce over. Simmer until thickened. Serve with rice or noodles."
   },
   {
     "name": "Asian-Style Beef Burgers",
     "slug": "asian-style-beef-burgers",
+    "category": "stove",
     "ingredients": [
-      "Ground Beef",
-      "Potato Buns",
-      "Garlic",
-      "Scallion",
-      "Dried Shiitake Mushrooms",
-      "Carrots",
-      "Baby Bok Choy",
-      "Broccoli",
-      "Hoisin Sauce",
-      "Sesame Oil",
-      "Apple Cider Vinegar",
-      "Kombu"
+      { "ingredientId": "ground-beef", "name": "Ground Beef", "quantity": null, "unit": null, "text": "Ground Beef" },
+      { "ingredientId": "potato-buns", "name": "Potato Buns", "quantity": null, "unit": null, "text": "Potato Buns" },
+      { "ingredientId": "garlic", "name": "Garlic", "quantity": null, "unit": null, "text": "Garlic" },
+      { "ingredientId": "scallion", "name": "Scallion", "quantity": null, "unit": null, "text": "Scallion" },
+      { "ingredientId": "dried-shiitake-mushrooms", "name": "Dried Shiitake Mushrooms", "quantity": null, "unit": null, "text": "Dried Shiitake Mushrooms" },
+      { "ingredientId": "carrots", "name": "Carrots", "quantity": null, "unit": null, "text": "Carrots" },
+      { "ingredientId": "baby-bok-choy", "name": "Baby Bok Choy", "quantity": null, "unit": null, "text": "Baby Bok Choy" },
+      { "ingredientId": "broccoli", "name": "Broccoli", "quantity": null, "unit": null, "text": "Broccoli" },
+      { "ingredientId": "hoisin-sauce", "name": "Hoisin Sauce", "quantity": null, "unit": null, "text": "Hoisin Sauce" },
+      { "ingredientId": "sesame-oil", "name": "Sesame Oil", "quantity": null, "unit": null, "text": "Sesame Oil" },
+      { "ingredientId": "apple-cider-vinegar", "name": "Apple Cider Vinegar", "quantity": null, "unit": null, "text": "Apple Cider Vinegar" },
+      { "ingredientId": "kombu", "name": "Kombu", "quantity": null, "unit": null, "text": "Kombu" }
     ],
-    "instructions": "Rehydrate mushrooms. Saut\u00e9 carrots and broccoli in sesame oil. Add water and vinegar, cook until soft. Make patties from beef, scallions, mushrooms, garlic, hoisin. Sear patties. Toast buns. Assemble with bok choy and cooked veggies. Garnish with scallion tops."
+    "instructions": "Rehydrate mushrooms. Sauté carrots and broccoli in sesame oil. Add water and vinegar, cook until soft. Make patties from beef, scallions, mushrooms, garlic, hoisin. Sear patties. Toast buns. Assemble with bok choy and cooked veggies. Garnish with scallion tops."
   },
   {
     "name": "Beef and Broccoli",
     "slug": "beef-and-broccoli",
+    "category": "stove",
     "ingredients": [
-      "Coleslaw Mix",
-      "Broccoli",
-      "Beef",
-      "Omson Lemongrass Marinade",
-      "Rice Ramen"
+      { "ingredientId": "coleslaw-mix", "name": "Coleslaw Mix", "quantity": null, "unit": null, "text": "Coleslaw Mix" },
+      { "ingredientId": "broccoli", "name": "Broccoli", "quantity": null, "unit": null, "text": "Broccoli" },
+      { "ingredientId": "beef", "name": "Beef", "quantity": null, "unit": null, "text": "Beef" },
+      { "ingredientId": "omson-lemongrass-marinade", "name": "Omson Lemongrass Marinade", "quantity": null, "unit": null, "text": "Omson Lemongrass Marinade" },
+      { "ingredientId": "rice-ramen", "name": "Rice Ramen", "quantity": null, "unit": null, "text": "Rice Ramen" }
     ],
     "instructions": "Brown beef with ginger, garlic, salt, and pepper. Add coleslaw mix and sauce. Cook rice ramen separately. Combine beef mix with noodles and broccoli. Serve hot."
   }
-  ]
+]
