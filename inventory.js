@@ -170,6 +170,7 @@ async function addIngredientToInventory(ingredient) {
 
     clearIngredientForm();
     await loadInventory();
+    await rebuildMealPlanGroceryListInSupabase();
   } catch (error) {
     console.error("Failed to update inventory:", error);
     alert(error.message || "Failed to update inventory.");

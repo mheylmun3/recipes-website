@@ -188,8 +188,8 @@ function renderMealPlan() {
           item.id,
           Math.max(1, parseInt(countInput.value, 10) || 1)
         );
+        await rebuildMealPlanGroceryListInSupabase();
         await loadMealPlan();
-        await buildGroceryListFromMealPlan();
       } catch (error) {
         console.error("Failed to update meal plan count:", error);
         alert(error.message || "Failed to update meal plan.");
@@ -206,8 +206,8 @@ function renderMealPlan() {
     removeBtn.addEventListener("click", async () => {
       try {
         await deleteMealPlanItemFromSupabase(item.id);
+        await rebuildMealPlanGroceryListInSupabase();
         await loadMealPlan();
-        await buildGroceryListFromMealPlan();
       } catch (error) {
         console.error("Failed to remove meal plan item:", error);
         alert(error.message || "Failed to remove recipe.");
@@ -228,8 +228,8 @@ async function addSelectedRecipeToMealPlan() {
 
   try {
     await upsertMealPlanItemInSupabase(selectedRecipe.slug, 1);
+    await rebuildMealPlanGroceryListInSupabase();
     await loadMealPlan();
-    await buildGroceryListFromMealPlan();
 
     recipeSearchInput.value = "";
     recipeSuggestions.innerHTML = "";

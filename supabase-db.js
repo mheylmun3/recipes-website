@@ -599,3 +599,92 @@ async function softDeleteRecipeInSupabase(slug) {
 
   if (error) throw error;
 }
+
+async function rebuildMealPlanGroceryListInSupabase() {
+  await requireSignedInUser();
+
+  const mealPlanItems = await fetchMealPlanFromSupabase();
+  const inventoryItems = await fetchInventoryFromSupabase();
+
+  const neededMap = new Map();
+
+  mealPlanItems.forEach(planItem => {
+    const recipe = planItem.recipe;
+    if (!recipe || !Array.isArray(recipe.ingredients)) return;
+
+    const multiplier = planItem.count || 1;
+
+    recipe.ingredients.forEach(ingredient => {
+      if (
+        !ingredient ||
+        typeof ingredient === "string" ||
+        !ingredient.ingredientId ||
+        ingredient.quantity == null ||
+        !ingredient.unit
+      ) {
+        return;
+      }
+
+      const key = `${ingredient.ingredientId}__${ingredient.unit}`;
+      const existing = neededMap.get(key);
+      const neededQuantity = Number(ingredient.quantity) * Number(multiplier);
+
+      if (existing) {
+        existing.quantityNeeded += neededQuantity;
+      } else {
+        neededMap.set(key, {
+          ingredientSlug: ingredient.ingredientId,
+          name: ingredient.name,
+          unit: ingredient.unit,
+          quantityNeeded: neededQuantity
+        });
+      }
+    });
+  });
+
+  const { error: deleteError } = await supabaseClient
+    .from("grocery_list_items")
+    .delete()
+    .eq("source", "meal-plan");
+
+  if (deleteError) throw deleteError;
+
+  const rowsToInsert = [];
+
+  for (const needed of neededMap.values()) {
+    const { data: ingredientRow, error: ingredientError } = await supabaseClient
+      .from("ingredients")
+      .select("id")
+      .eq("slug", needed.ingredientSlug)
+      .single();
+
+    if (ingredientError) throw ingredientError;
+
+    const inventoryMatch = inventoryItems.find(
+      item => item.id === needed.ingredientSlug && item.unit === needed.unit
+    );
+
+    const quantityInInventory = inventoryMatch ? Number(inventoryMatch.quantity) : 0;
+    const quantityToBuy = Number(needed.quantityNeeded) - quantityInInventory;
+
+    if (quantityToBuy > 0) {
+      rowsToInsert.push({
+        ingredient_id: ingredientRow.id,
+        quantity_needed: needed.quantityNeeded,
+        quantity_in_inventory: quantityInInventory,
+        quantity_to_buy: quantityToBuy,
+        unit: needed.unit,
+        source: "meal-plan",
+        checked: false
+      });
+    }
+  }
+
+  if (rowsToInsert.length) {
+    const { error: insertError } = await supabaseClient
+      .from("grocery_list_items")
+      .insert(rowsToInsert);
+
+    if (insertError) throw insertError;
+  }
+}

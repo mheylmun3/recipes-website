@@ -476,10 +476,6 @@ editRecipeForm.addEventListener("submit", async event => {
   }
 });
 
-addIngredientRowBtn.addEventListener("click", () => {
-  createIngredientRow();
-});
-
 recipeImageInput.addEventListener("change", async () => {
   const file = recipeImageInput.files?.[0];
   if (!file) return;
