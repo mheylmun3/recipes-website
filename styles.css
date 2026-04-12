@@ -1566,24 +1566,177 @@ header.nav-scrolled .nav-logo {
   }
 }
 
-.recipe-controls {
+.recipes-toolbar {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.recipes-search-row {
+  display: flex;
+  justify-content: center;
   margin-bottom: 1.5rem;
 }
 
-.sort-group {
+.recipes-search-row #searchInput {
+  width: 230px;
+}
+
+.sort-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.sort-inline label {
+  margin: 0;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.recipes-sort-bar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 2rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+.sort-inline {
   display: flex;
   align-items: center;
   gap: 0.6rem;
 }
 
-.sort-group label {
+.sort-inline label {
   margin: 0;
   white-space: nowrap;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
-.sort-group select {
+.sort-inline .styled-select,
+.sort-inline select {
+  width: 180px;
   min-width: 180px;
+}
+
+.recipes-content {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.recipes-search-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.recipes-search-row #searchInput {
+  width: 100%;
+  max-width: 230px;
+}
+
+.styled-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+
+  padding: 0.85rem 2.75rem 0.85rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text-main);
+
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-soft);
+  outline: none;
+  cursor: pointer;
+
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #a58fba 50%),
+    linear-gradient(135deg, #a58fba 50%, transparent 50%) !important;
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px) !important;
+  background-size: 6px 6px, 6px 6px !important;
+  background-repeat: no-repeat !important;
+}
+
+.styled-select:focus {
+  border-color: rgba(186, 154, 213, 0.75);
+  box-shadow: 0 0 0 4px rgba(223, 202, 245, 0.38);
+}
+
+.danger-zone-card {
+  margin-top: 2.5rem;
+  padding: 1.4rem;
+  border-radius: 24px;
+  background: rgba(255, 245, 248, 0.75);
+  border: 1px solid rgba(220, 170, 185, 0.45);
+  box-shadow: var(--shadow-soft);
+}
+
+.danger-zone-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #7b4d5c;
+}
+
+.danger-zone-card p {
+  margin-bottom: 1rem;
+  color: var(--text-soft);
+}
+
+.danger-btn {
+  background: linear-gradient(135deg, #f3c6d3, #e7b8c8);
+  border: 1px solid rgba(190, 120, 145, 0.3);
+  color: #5f3441;
+}
+
+.danger-btn:hover {
+  background: linear-gradient(135deg, #efbccb, #e1acbe);
+}
+
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(80, 64, 93, 0.28);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  z-index: 9999;
+}
+
+.custom-modal {
+  width: 100%;
+  max-width: 460px;
+  padding: 1.5rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 18px 40px rgba(100, 80, 120, 0.18);
+}
+
+.custom-modal h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.custom-modal p {
+  margin-bottom: 1.25rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.custom-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }

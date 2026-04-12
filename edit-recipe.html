@@ -153,12 +153,35 @@
         <button type="button" id="addIngredientRowBtn">Add Ingredient Row</button>
         <button type="submit">Save Changes</button>
       </form>
+      <div class="danger-zone-card" data-requires-auth="true">
+        <h3>Remove Recipe</h3>
+        <p>This will hide the recipe from the site without permanently deleting it.</p>
+        <button type="button" id="deleteRecipeBtn" class="danger-btn">
+          Hide Recipe
+        </button>
+      </div>
     </section>
   </main>
 
   <footer>
     <p>&copy; 2026 Gab's Italian Kitchen</p>
   </footer>
+
+  <div id="deleteRecipeModal" class="custom-modal-overlay" style="display: none;">
+    <div class="custom-modal">
+      <h3>Hide Recipe?</h3>
+      <p>
+        This recipe will be hidden from the website and no longer appear in recipe lists,
+        meal plans, or searches.
+      </p>
+      <div class="custom-modal-actions">
+        <button type="button" id="cancelDeleteRecipeBtn">Cancel</button>
+        <button type="button" id="confirmDeleteRecipeBtn" class="danger-btn">
+          Yes, Hide Recipe
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>

@@ -43,6 +43,7 @@ async function fetchAllRecipesFromSupabase() {
             )
         )
     `)
+    .eq("is_deleted", false)
     .order("name", { ascending: true });
 
   if (error) throw error;
@@ -77,6 +78,7 @@ async function fetchRecipeBySlugFromSupabase(slug) {
         )
     `)
     .eq("slug", slug)
+    .eq("is_deleted", false)
     .single();
 
   if (error) throw error;
@@ -580,6 +582,20 @@ async function clearCheckedGroceryItemsInSupabase() {
     .from("grocery_list_items")
     .delete()
     .eq("checked", true);
+
+  if (error) throw error;
+}
+
+async function softDeleteRecipeInSupabase(slug) {
+  await requireSignedInUser();
+
+  const { error } = await supabaseClient
+    .from("recipes")
+    .update({
+      is_deleted: true,
+      updated_at: new Date().toISOString()
+    })
+    .eq("slug", slug);
 
   if (error) throw error;
 }

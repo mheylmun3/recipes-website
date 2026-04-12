@@ -65,21 +65,27 @@
     </div>
   </header>
 
-  <main class="all-recipes-container">
-    <section class="search-bar">
-      <input type="text" id="searchInput" placeholder="Search recipes..." />
-    </section>
+  <main class="all-recipes-page">
+    <div class="recipes-sort-bar">
+      <div class="sort-inline">
+        <label for="sortSelect">Sort by:</label>
+        <select id="sortSelect" class="styled-select">
+          <option value="alphabetical">Alphabetical</option>
+          <option value="popularity">Popularity</option>
+        </select>
+      </div>
+    </div>
 
-    <section class="sort-bar">
-      <label for="sortSelect">Sort by:</label>
-      <select id="sortSelect">
-        <option value="alphabetical" selected>Alphabetical</option>
-        <option value="popularity">Popularity</option>
-      </select>
-    </section>    
+    <section class="recipes-content">
+      <div class="recipes-search-row">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search recipes..."
+        />
+      </div>
 
-    <section class="recipe-grid" id="recipeGrid">
-      <!-- Recipe cards will be generated here -->
+      <div id="recipeGrid" class="recipe-grid"></div>
     </section>
   </main>
 

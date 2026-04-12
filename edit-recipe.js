@@ -14,6 +14,11 @@ const recipeImageInput = document.getElementById("recipeImage");
 const recipeImagePreview = document.getElementById("recipeImagePreview");
 const removeRecipeImageBtn = document.getElementById("removeRecipeImageBtn");
 
+const deleteRecipeBtn = document.getElementById("deleteRecipeBtn");
+const deleteRecipeModal = document.getElementById("deleteRecipeModal");
+const cancelDeleteRecipeBtn = document.getElementById("cancelDeleteRecipeBtn");
+const confirmDeleteRecipeBtn = document.getElementById("confirmDeleteRecipeBtn");
+
 let pendingRecipeImage = "";
 let removeRecipeImage = false;
 
@@ -357,6 +362,47 @@ function collectIngredientsFromForm() {
       };
     })
     .filter(Boolean);
+}
+
+if (deleteRecipeBtn) {
+  deleteRecipeBtn.addEventListener("click", () => {
+    if (deleteRecipeModal) {
+      deleteRecipeModal.style.display = "flex";
+    }
+  });
+}
+
+if (cancelDeleteRecipeBtn) {
+  cancelDeleteRecipeBtn.addEventListener("click", () => {
+    if (deleteRecipeModal) {
+      deleteRecipeModal.style.display = "none";
+    }
+  });
+}
+
+if (deleteRecipeModal) {
+  deleteRecipeModal.addEventListener("click", event => {
+    if (event.target === deleteRecipeModal) {
+      deleteRecipeModal.style.display = "none";
+    }
+  });
+}
+
+if (confirmDeleteRecipeBtn) {
+  confirmDeleteRecipeBtn.addEventListener("click", async () => {
+    if (!currentSlug) {
+      alert("No recipe found to hide.");
+      return;
+    }
+
+    try {
+      await softDeleteRecipeInSupabase(currentSlug);
+      window.location.href = "all-recipes.html";
+    } catch (error) {
+      console.error("Failed to hide recipe:", error);
+      alert(error.message || "Failed to hide recipe.");
+    }
+  });
 }
 
 async function loadRecipe() {
