@@ -15,17 +15,6 @@ function trackRecipeClick(slug) {
   localStorage.setItem(key, current ? parseInt(current, 10) + 1 : 1);
 }
 
-function getUserRecipes() {
-  try {
-    const saved = localStorage.getItem("userRecipes");
-    console.log("Raw userRecipes from localStorage:", saved);
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse userRecipes from localStorage:", error);
-    return [];
-  }
-}
-
 // Render filtered recipe cards
 function displayRecipes(filter = "", sortBy = "alphabetical") {
   console.log("displayRecipes called");
@@ -67,56 +56,18 @@ function displayRecipes(filter = "", sortBy = "alphabetical") {
   }
 }
 
-// Fetch recipe data from JSON file + localStorage
-fetch("all-recipes.json")
-  .then(res => {
-    console.log("Fetch response status:", res.status);
-    return res.json();
-  })
-  .then(data => {
-    console.log("JSON recipes loaded:", data.length);
-
-    const userRecipes = getUserRecipes();
-    console.log("User recipes loaded:", userRecipes.length);
-
-    const combinedRecipes = [...data, ...userRecipes];
-    console.log("Combined recipes length:", combinedRecipes.length);
-
-    const uniqueByName = new Map();
-    const duplicates = [];
-
-    combinedRecipes.forEach(recipe => {
-      const key = recipe.name.toLowerCase().trim();
-
-      if (!uniqueByName.has(key)) {
-        uniqueByName.set(key, recipe);
-      } else {
-        duplicates.push(recipe.name);
-      }
-    });
-
-    if (duplicates.length) {
-      console.warn("Duplicate recipes found:", duplicates);
-    }
-
-    allRecipes = Array.from(uniqueByName.values());
-    console.log("Final allRecipes length:", allRecipes.length);
+async function loadRecipes() {
+  try {
+    console.log("Loading recipes from Supabase...");
+    allRecipes = await fetchAllRecipesFromSupabase();
+    console.log("Recipes loaded from Supabase:", allRecipes.length);
 
     displayRecipes(searchInput.value, sortSelect?.value || "alphabetical");
-  })
-  .catch(err => {
-    console.error("Error loading recipes:", err);
-
-    const userRecipes = getUserRecipes();
-    console.log("Fallback user recipes length:", userRecipes.length);
-
-    if (userRecipes.length) {
-      allRecipes = userRecipes;
-      displayRecipes(searchInput.value, sortSelect?.value || "alphabetical");
-    } else {
-      recipeGrid.innerHTML = "<p>Failed to load recipes.</p>";
-    }
-  });
+  } catch (err) {
+    console.error("Error loading recipes from Supabase:", err);
+    recipeGrid.innerHTML = "<p>Failed to load recipes.</p>";
+  }
+}
 
 // Event listeners
 searchInput.addEventListener("input", () => {
@@ -126,3 +77,5 @@ searchInput.addEventListener("input", () => {
 sortSelect?.addEventListener("change", () => {
   displayRecipes(searchInput.value, sortSelect.value);
 });
+
+loadRecipes();

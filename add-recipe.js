@@ -41,19 +41,7 @@ function slugify(text) {
     .replace(/-+/g, "-");
 }
 
-function getUserRecipes() {
-  try {
-    const saved = localStorage.getItem("userRecipes");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse userRecipes:", error);
-    return [];
-  }
-}
 
-function saveUserRecipes(recipes) {
-  localStorage.setItem("userRecipes", JSON.stringify(recipes));
-}
 
 function getIngredientCatalog() {
   try {
@@ -302,7 +290,7 @@ function collectIngredientsFromForm() {
     .filter(Boolean);
 }
 
-addRecipeForm.addEventListener("submit", event => {
+addRecipeForm.addEventListener("submit", async event => {
   event.preventDefault();
 
   const name = recipeNameInput.value.trim();
@@ -337,29 +325,32 @@ addRecipeForm.addEventListener("submit", event => {
     return;
   }
 
-  const existingRecipes = getUserRecipes();
-  const slugAlreadyExists = existingRecipes.some(recipe => recipe.slug === slug);
+  try {
+    const existingRecipes = await fetchAllRecipesFromSupabase();
+    const slugAlreadyExists = existingRecipes.some(recipe => recipe.slug === slug);
 
-  if (slugAlreadyExists) {
-    alert("A user-added recipe with this name already exists.");
-    return;
+    if (slugAlreadyExists) {
+      alert("A recipe with this name already exists.");
+      return;
+    }
+
+    const newRecipe = {
+      name,
+      slug,
+      category,
+      servings,
+      image: pendingRecipeImage || "",
+      ingredients,
+      instructions
+    };
+
+    await createRecipeInSupabase(newRecipe);
+
+    window.location.href = `recipe.html?slug=${encodeURIComponent(slug)}`;
+  } catch (error) {
+    console.error("Failed to save recipe:", error);
+    alert(error.message || "Failed to save recipe.");
   }
-
-  const newRecipe = {
-    name,
-    slug,
-    category,
-    servings,
-    image: pendingRecipeImage || "",
-    ingredients,
-    instructions,
-    source: "user"
-  };
-
-  existingRecipes.push(newRecipe);
-  saveUserRecipes(existingRecipes);
-
-  window.location.href = `recipe.html?slug=${encodeURIComponent(slug)}`;
 });
 
 addIngredientRowBtn.addEventListener("click", () => {

@@ -1,5 +1,4 @@
-const groceryListContainer = document.getElementById("groceryListContainer");
-const clearCheckedBtn = document.getElementById("clearCheckedBtn");
+const groceryListContainer = document.getElementById("groceryListContainer"); 
 
 const grocerySearchInput = document.getElementById("grocerySearchInput");
 const grocerySuggestions = document.getElementById("grocerySuggestions");
@@ -9,6 +8,7 @@ const addManualGroceryBtn = document.getElementById("addManualGroceryBtn");
 const addNewManualItemBtn = document.getElementById("addNewManualItemBtn");
 
 let selectedCatalogItem = null;
+let currentGroceryList = [];
 
 function slugify(text) {
   return text
@@ -18,34 +18,6 @@ function slugify(text) {
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
-}
-
-function getGroceryList() {
-  try {
-    const saved = localStorage.getItem("groceryList");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse groceryList:", error);
-    return [];
-  }
-}
-
-function saveGroceryList(items) {
-  localStorage.setItem("groceryList", JSON.stringify(items));
-}
-
-function getInventory() {
-  try {
-    const saved = localStorage.getItem("inventoryItems");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse inventoryItems:", error);
-    return [];
-  }
-}
-
-function saveInventory(items) {
-  localStorage.setItem("inventoryItems", JSON.stringify(items));
 }
 
 function getItemCatalog() {
@@ -97,6 +69,16 @@ function formatUnit(quantity, unit) {
 
   const forms = unitMap[unit] || [unit, unit];
   return quantity === 1 ? forms[0] : forms[1];
+}
+
+async function loadGroceryList() {
+  try {
+    currentGroceryList = await fetchGroceryListFromSupabase();
+    renderGroceryList();
+  } catch (error) {
+    console.error("Failed to load grocery list from Supabase:", error);
+    groceryListContainer.innerHTML = "<p>Failed to load grocery list.</p>";
+  }
 }
 
 function renderSuggestions(searchTerm) {
@@ -151,7 +133,7 @@ function clearManualAddForm() {
   selectedCatalogItem = null;
 }
 
-function addManualItemToGroceryList(item) {
+async function addManualItemToGroceryList(item) {
   const quantity = parseFloat(groceryQuantity.value);
   const unit = groceryUnit.value;
 
@@ -160,35 +142,20 @@ function addManualItemToGroceryList(item) {
     return;
   }
 
-  const current = getGroceryList();
-
-  const existing = current.find(
-    groceryItem =>
-      groceryItem.ingredientId === item.id &&
-      groceryItem.unit === unit &&
-      groceryItem.source === "manual"
-  );
-
-  if (existing) {
-    existing.quantityToBuy += quantity;
-    existing.quantityNeeded = existing.quantityToBuy;
-  } else {
-    current.push({
-      ingredientId: item.id,
-      name: item.name,
-      unit,
-      quantityNeeded: quantity,
-      quantityInInventory: 0,
-      quantityToBuy: quantity,
-      source: "manual",
-      checked: false
+  try {
+    await upsertManualGroceryItemInSupabase({
+      ingredientSlug: item.id,
+      ingredientName: item.name,
+      quantity,
+      unit
     });
-  }
 
-  current.sort((a, b) => a.name.localeCompare(b.name));
-  saveGroceryList(current);
-  renderGroceryList();
-  clearManualAddForm();
+    clearManualAddForm();
+    await loadGroceryList();
+  } catch (error) {
+    console.error("Failed to add manual grocery item:", error);
+    alert(error.message || "Failed to add grocery item.");
+  }
 }
 
 function addNewItemName() {
@@ -226,66 +193,42 @@ function addNewItemName() {
   grocerySuggestions.style.display = "none";
 }
 
-function addItemToInventory(groceryItem) {
-  const inventory = getInventory();
-
-  const existing = inventory.find(
-    item =>
-      item.id === groceryItem.ingredientId &&
-      item.unit === groceryItem.unit
-  );
-
-  if (existing) {
-    existing.quantity += groceryItem.quantityToBuy;
-  } else {
-    inventory.push({
-      id: groceryItem.ingredientId,
-      name: groceryItem.name,
+async function addItemToInventory(groceryItem) {
+  try {
+    await upsertInventoryItemInSupabase({
+      ingredientSlug: groceryItem.ingredientId,
+      ingredientName: groceryItem.name,
       quantity: groceryItem.quantityToBuy,
       unit: groceryItem.unit
     });
+
+    await deleteGroceryItemFromSupabase(groceryItem.rowId);
+    await loadGroceryList();
+  } catch (error) {
+    console.error("Failed to add grocery item to inventory:", error);
+    alert(error.message || "Failed to add item to inventory.");
   }
-
-  saveInventory(inventory);
-
-  const updatedGroceryList = getGroceryList().filter(
-    item =>
-      !(
-        item.ingredientId === groceryItem.ingredientId &&
-        item.unit === groceryItem.unit &&
-        item.source === groceryItem.source
-      )
-  );
-
-  saveGroceryList(updatedGroceryList);
-  renderGroceryList();
 }
 
-function removeGroceryItem(targetItem) {
-  const items = getGroceryList();
-
-  const updated = items.filter(item =>
-    !(
-      item.ingredientId === targetItem.ingredientId &&
-      item.unit === targetItem.unit &&
-      item.source === targetItem.source
-    )
-  );
-
-  saveGroceryList(updated);
-  renderGroceryList();
+async function removeGroceryItem(targetItem) {
+  try {
+    await deleteGroceryItemFromSupabase(targetItem.rowId);
+    await loadGroceryList();
+  } catch (error) {
+    console.error("Failed to remove grocery item:", error);
+    alert(error.message || "Failed to remove grocery item.");
+  }
 }
 
 function renderGroceryList() {
-  const items = getGroceryList();
   groceryListContainer.innerHTML = "";
 
-  if (!items.length) {
+  if (!currentGroceryList.length) {
     groceryListContainer.innerHTML = "<p>No grocery items needed right now.</p>";
     return;
   }
 
-  items.forEach((item, index) => {
+  currentGroceryList.forEach(item => {
     const row = document.createElement("div");
     row.className = "inventory-item grocery-list-item";
 
@@ -296,11 +239,14 @@ function renderGroceryList() {
     checkbox.type = "checkbox";
     checkbox.checked = !!item.checked;
 
-    checkbox.addEventListener("change", () => {
-      const updated = getGroceryList();
-      updated[index].checked = checkbox.checked;
-      saveGroceryList(updated);
-      renderGroceryList();
+    checkbox.addEventListener("change", async () => {
+      try {
+        await updateGroceryItemCheckedInSupabase(item.rowId, checkbox.checked);
+        await loadGroceryList();
+      } catch (error) {
+        console.error("Failed to update grocery item check state:", error);
+        alert(error.message || "Failed to update grocery item.");
+      }
     });
 
     const text = document.createElement("div");
@@ -337,16 +283,15 @@ function renderGroceryList() {
     addBtn.type = "button";
     addBtn.textContent = "Add to Inventory";
     addBtn.addEventListener("click", () => {
-    addItemToInventory(item);
+      addItemToInventory(item);
     });
 
     const removeBtn = document.createElement("button");
     removeBtn.type = "button";
     removeBtn.textContent = "Remove";
     removeBtn.className = "remove-btn";
-
     removeBtn.addEventListener("click", () => {
-    removeGroceryItem(item);
+      removeGroceryItem(item);
     });
 
     buttonGroup.appendChild(addBtn);
@@ -395,13 +340,6 @@ addNewManualItemBtn.addEventListener("click", () => {
   addNewItemName();
 });
 
-clearCheckedBtn.addEventListener("click", () => {
-  const items = getGroceryList();
-  const filtered = items.filter(item => !item.checked);
-  saveGroceryList(filtered);
-  renderGroceryList();
-});
-
 document.addEventListener("click", event => {
   if (
     !grocerySearchInput.contains(event.target) &&
@@ -411,4 +349,4 @@ document.addEventListener("click", event => {
   }
 });
 
-renderGroceryList();
+loadGroceryList();

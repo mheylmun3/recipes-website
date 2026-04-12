@@ -4,73 +4,43 @@ const addRecipeToPlanBtn = document.getElementById("addRecipeToPlanBtn");
 const mealPlanList = document.getElementById("mealPlanList");
 
 let allRecipes = [];
+let currentMealPlan = [];
 let selectedRecipe = null;
-
-function getUserRecipes() {
-  try {
-    const saved = localStorage.getItem("userRecipes");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse userRecipes:", error);
-    return [];
-  }
-}
-
-function getEditedRecipes() {
-  try {
-    const saved = localStorage.getItem("editedRecipes");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse editedRecipes:", error);
-    return [];
-  }
-}
-
-function getInventory() {
-  try {
-    const saved = localStorage.getItem("inventoryItems");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse inventoryItems:", error);
-    return [];
-  }
-}
-
-function getMealPlan() {
-  try {
-    const saved = localStorage.getItem("mealPlan");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse mealPlan:", error);
-    return [];
-  }
-}
-
-function saveMealPlan(plan) {
-  localStorage.setItem("mealPlan", JSON.stringify(plan));
-}
 
 function saveGroceryList(items) {
   localStorage.setItem("groceryList", JSON.stringify(items));
 }
 
-function loadAllRecipes() {
-  return fetch("all-recipes.json")
-    .then(res => res.json())
-    .then(jsonRecipes => {
-      const userRecipes = getUserRecipes();
-      const editedRecipes = getEditedRecipes();
+function getExistingGroceryList() {
+  try {
+    const saved = localStorage.getItem("groceryList");
+    return saved ? JSON.parse(saved) : [];
+  } catch (error) {
+    console.error("Failed to parse groceryList:", error);
+    return [];
+  }
+}
 
-      const recipeMap = new Map();
+async function loadAllRecipes() {
+  try {
+    allRecipes = await fetchAllRecipesFromSupabase();
+    allRecipes.sort((a, b) => a.name.localeCompare(b.name));
+  } catch (error) {
+    console.error("Failed to load recipes from Supabase:", error);
+    allRecipes = [];
+    throw error;
+  }
+}
 
-      jsonRecipes.forEach(recipe => recipeMap.set(recipe.slug, recipe));
-      userRecipes.forEach(recipe => recipeMap.set(recipe.slug, recipe));
-      editedRecipes.forEach(recipe => recipeMap.set(recipe.slug, recipe));
-
-      allRecipes = Array.from(recipeMap.values()).sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-    });
+async function loadMealPlan() {
+  try {
+    currentMealPlan = await fetchMealPlanFromSupabase();
+    renderMealPlan();
+  } catch (error) {
+    console.error("Failed to load meal plan from Supabase:", error);
+    mealPlanList.innerHTML = "<p>Failed to load meal plan.</p>";
+    throw error;
+  }
 }
 
 function renderRecipeSuggestions(searchTerm) {
@@ -111,99 +81,89 @@ function renderRecipeSuggestions(searchTerm) {
   recipeSuggestions.style.display = "block";
 }
 
-function buildGroceryListFromMealPlan() {
-  const mealPlan = getMealPlan();
-  const inventory = getInventory();
+async function buildGroceryListFromMealPlan() {
+  try {
+    const inventory = await fetchInventoryFromSupabase();
+    const neededMap = new Map();
 
-  const neededMap = new Map();
+    currentMealPlan.forEach(planItem => {
+      const recipe = planItem.recipe || allRecipes.find(r => r.slug === planItem.slug);
+      if (!recipe || !Array.isArray(recipe.ingredients)) return;
 
-  mealPlan.forEach(planItem => {
-    const recipe = allRecipes.find(r => r.slug === planItem.slug);
-    if (!recipe || !Array.isArray(recipe.ingredients)) return;
+      const multiplier = planItem.count || 1;
 
-    const multiplier = planItem.count || 1;
+      recipe.ingredients.forEach(ingredient => {
+        if (
+          !ingredient ||
+          typeof ingredient === "string" ||
+          !ingredient.ingredientId ||
+          ingredient.quantity == null ||
+          !ingredient.unit
+        ) {
+          return;
+        }
 
-    recipe.ingredients.forEach(ingredient => {
-      if (
-        !ingredient ||
-        typeof ingredient === "string" ||
-        !ingredient.ingredientId ||
-        ingredient.quantity == null ||
-        !ingredient.unit
-      ) {
-        return;
-      }
+        const key = `${ingredient.ingredientId}__${ingredient.unit}`;
+        const existing = neededMap.get(key);
+        const neededQuantity = ingredient.quantity * multiplier;
 
-      const key = `${ingredient.ingredientId}__${ingredient.unit}`;
-      const existing = neededMap.get(key);
-
-      const neededQuantity = ingredient.quantity * multiplier;
-
-      if (existing) {
-        existing.quantityNeeded += neededQuantity;
-      } else {
-        neededMap.set(key, {
-          ingredientId: ingredient.ingredientId,
-          name: ingredient.name,
-          unit: ingredient.unit,
-          quantityNeeded: neededQuantity
-        });
-      }
+        if (existing) {
+          existing.quantityNeeded += neededQuantity;
+        } else {
+          neededMap.set(key, {
+            ingredientId: ingredient.ingredientId,
+            name: ingredient.name,
+            unit: ingredient.unit,
+            quantityNeeded: neededQuantity
+          });
+        }
+      });
     });
-  });
 
-  const existingGroceryList = (() => {
-    try {
-        const saved = localStorage.getItem("groceryList");
-        return saved ? JSON.parse(saved) : [];
-    } catch (error) {
-        console.error("Failed to parse groceryList:", error);
-        return [];
-    }
-    })();
-
+    const existingGroceryList = getExistingGroceryList();
     const manualItems = existingGroceryList.filter(item => item.source === "manual");
-
     const mealPlanItems = [];
 
     neededMap.forEach(needed => {
-    const inventoryMatch = inventory.find(
+      const inventoryMatch = inventory.find(
         item => item.id === needed.ingredientId && item.unit === needed.unit
-    );
+      );
 
-    const quantityInInventory = inventoryMatch ? inventoryMatch.quantity : 0;
-    const quantityToBuy = needed.quantityNeeded - quantityInInventory;
+      const quantityInInventory = inventoryMatch ? inventoryMatch.quantity : 0;
+      const quantityToBuy = needed.quantityNeeded - quantityInInventory;
 
-    if (quantityToBuy > 0) {
+      if (quantityToBuy > 0) {
         mealPlanItems.push({
-        ingredientId: needed.ingredientId,
-        name: needed.name,
-        unit: needed.unit,
-        quantityNeeded: needed.quantityNeeded,
-        quantityInInventory,
-        quantityToBuy,
-        source: "meal-plan",
-        checked: false
+          ingredientId: needed.ingredientId,
+          name: needed.name,
+          unit: needed.unit,
+          quantityNeeded: needed.quantityNeeded,
+          quantityInInventory,
+          quantityToBuy,
+          source: "meal-plan",
+          checked: false
         });
-    }
+      }
     });
 
     const groceryList = [...manualItems, ...mealPlanItems];
     groceryList.sort((a, b) => a.name.localeCompare(b.name));
     saveGroceryList(groceryList);
+  } catch (error) {
+    console.error("Failed to build grocery list from meal plan:", error);
+  }
 }
 
 function renderMealPlan() {
-  const mealPlan = getMealPlan();
   mealPlanList.innerHTML = "";
 
-  if (!mealPlan.length) {
+  if (!currentMealPlan.length) {
     mealPlanList.innerHTML = "<p>No recipes in the meal plan yet.</p>";
     return;
   }
 
-  mealPlan.forEach(item => {
-    const recipe = allRecipes.find(r => r.slug === item.slug);
+  currentMealPlan.forEach(item => {
+    const recipe = item.recipe || allRecipes.find(r => r.slug === item.slug);
     if (!recipe) return;
 
     const row = document.createElement("div");
@@ -222,16 +182,18 @@ function renderMealPlan() {
     countInput.value = item.count || 1;
     countInput.className = "meal-plan-count-input";
 
-    countInput.addEventListener("change", () => {
-      const updatedPlan = getMealPlan().map(planItem =>
-        planItem.slug === item.slug
-          ? { ...planItem, count: Math.max(1, parseInt(countInput.value, 10) || 1) }
-          : planItem
-      );
-
-      saveMealPlan(updatedPlan);
-      buildGroceryListFromMealPlan();
-      renderMealPlan();
+    countInput.addEventListener("change", async () => {
+      try {
+        await updateMealPlanItemCountInSupabase(
+          item.id,
+          Math.max(1, parseInt(countInput.value, 10) || 1)
+        );
+        await loadMealPlan();
+        await buildGroceryListFromMealPlan();
+      } catch (error) {
+        console.error("Failed to update meal plan count:", error);
+        alert(error.message || "Failed to update meal plan.");
+      }
     });
 
     left.appendChild(title);
@@ -241,11 +203,15 @@ function renderMealPlan() {
     removeBtn.type = "button";
     removeBtn.textContent = "Remove";
 
-    removeBtn.addEventListener("click", () => {
-      const updatedPlan = getMealPlan().filter(planItem => planItem.slug !== item.slug);
-      saveMealPlan(updatedPlan);
-      buildGroceryListFromMealPlan();
-      renderMealPlan();
+    removeBtn.addEventListener("click", async () => {
+      try {
+        await deleteMealPlanItemFromSupabase(item.id);
+        await loadMealPlan();
+        await buildGroceryListFromMealPlan();
+      } catch (error) {
+        console.error("Failed to remove meal plan item:", error);
+        alert(error.message || "Failed to remove recipe.");
+      }
     });
 
     row.appendChild(left);
@@ -254,32 +220,25 @@ function renderMealPlan() {
   });
 }
 
-function addSelectedRecipeToMealPlan() {
+async function addSelectedRecipeToMealPlan() {
   if (!selectedRecipe) {
     alert("Select a recipe first.");
     return;
   }
 
-  const mealPlan = getMealPlan();
-  const existing = mealPlan.find(item => item.slug === selectedRecipe.slug);
+  try {
+    await upsertMealPlanItemInSupabase(selectedRecipe.slug, 1);
+    await loadMealPlan();
+    await buildGroceryListFromMealPlan();
 
-  if (existing) {
-    existing.count += 1;
-  } else {
-    mealPlan.push({
-      slug: selectedRecipe.slug,
-      count: 1
-    });
+    recipeSearchInput.value = "";
+    recipeSuggestions.innerHTML = "";
+    recipeSuggestions.style.display = "none";
+    selectedRecipe = null;
+  } catch (error) {
+    console.error("Failed to add recipe to meal plan:", error);
+    alert(error.message || "Failed to add recipe to meal plan.");
   }
-
-  saveMealPlan(mealPlan);
-  buildGroceryListFromMealPlan();
-  renderMealPlan();
-
-  recipeSearchInput.value = "";
-  recipeSuggestions.innerHTML = "";
-  recipeSuggestions.style.display = "none";
-  selectedRecipe = null;
 }
 
 recipeSearchInput.addEventListener("input", () => {
@@ -303,12 +262,9 @@ document.addEventListener("click", event => {
   }
 });
 
-loadAllRecipes()
-  .then(() => {
-    buildGroceryListFromMealPlan();
-    renderMealPlan();
-  })
+Promise.all([loadAllRecipes(), loadMealPlan()])
+  .then(() => buildGroceryListFromMealPlan())
   .catch(error => {
-    console.error("Failed to load recipes for meal plan:", error);
+    console.error("Failed to initialize meal plan page:", error);
     mealPlanList.innerHTML = "<p>Failed to load meal plan recipes.</p>";
   });

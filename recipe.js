@@ -77,7 +77,6 @@ function displayNotFound() {
 
 async function loadRecipe() {
   const slug = getSlugFromUrl();
-  console.log("Slug from URL:", slug);
 
   if (!slug) {
     displayNotFound();
@@ -85,39 +84,11 @@ async function loadRecipe() {
   }
 
   try {
-  const response = await fetch("all-recipes.json");
-  const jsonRecipes = await response.json();
-  const userRecipes = getUserRecipes();
-  const editedRecipes = getEditedRecipes();
-
-  const recipe =
-    editedRecipes.find(item => item.slug === slug) ||
-    userRecipes.find(item => item.slug === slug) ||
-    jsonRecipes.find(item => item.slug === slug);
-
-  console.log("Matched recipe:", recipe);
-
-  if (!recipe) {
-    displayNotFound();
-    return;
-  }
-
-  displayRecipe(recipe);
-} catch (error) {
-    console.error("Error loading recipe:", error);
-
-    const userRecipes = getUserRecipes();
-    const editedRecipes = getEditedRecipes();
-    const allRecipes = [...editedRecipes, ...userRecipes];
-
-    const recipe = allRecipes.find(item => item.slug === slug);
-
-    if (!recipe) {
-      displayNotFound();
-      return;
-    }
-
+    const recipe = await fetchRecipeBySlugFromSupabase(slug);
     displayRecipe(recipe);
+  } catch (error) {
+    console.error("Error loading recipe:", error);
+    displayNotFound();
   }
 }
 

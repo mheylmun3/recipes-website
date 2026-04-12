@@ -62,30 +62,6 @@ function slugify(text) {
     .replace(/-+/g, "-");
 }
 
-function getEditedRecipes() {
-  try {
-    const saved = localStorage.getItem("editedRecipes");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse editedRecipes:", error);
-    return [];
-  }
-}
-
-function saveEditedRecipes(recipes) {
-  localStorage.setItem("editedRecipes", JSON.stringify(recipes));
-}
-
-function getUserRecipes() {
-  try {
-    const saved = localStorage.getItem("userRecipes");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Failed to parse userRecipes:", error);
-    return [];
-  }
-}
-
 function getIngredientCatalog() {
   try {
     const fallbackDefaults =
@@ -388,15 +364,7 @@ async function loadRecipe() {
   backToRecipeLink.href = `recipe.html?slug=${encodeURIComponent(currentSlug)}`;
 
   try {
-    const response = await fetch("all-recipes.json");
-    const jsonRecipes = await response.json();
-    const userRecipes = getUserRecipes();
-    const editedRecipes = getEditedRecipes();
-
-    originalRecipe =
-      editedRecipes.find(recipe => recipe.slug === currentSlug) ||
-      userRecipes.find(recipe => recipe.slug === currentSlug) ||
-      jsonRecipes.find(recipe => recipe.slug === currentSlug);
+    originalRecipe = await fetchRecipeBySlugFromSupabase(currentSlug);
 
     if (!originalRecipe) {
       alert("Recipe not found.");
@@ -406,24 +374,11 @@ async function loadRecipe() {
     loadRecipeIntoForm(originalRecipe);
   } catch (error) {
     console.error("Error loading recipe:", error);
-
-    const userRecipes = getUserRecipes();
-    const editedRecipes = getEditedRecipes();
-
-    originalRecipe =
-      editedRecipes.find(recipe => recipe.slug === currentSlug) ||
-      userRecipes.find(recipe => recipe.slug === currentSlug);
-
-    if (!originalRecipe) {
-      alert("Recipe not found.");
-      return;
-    }
-
-    loadRecipeIntoForm(originalRecipe);
+    alert("Recipe not found.");
   }
 }
 
-editRecipeForm.addEventListener("submit", event => {
+editRecipeForm.addEventListener("submit", async event => {
   event.preventDefault();
 
   if (!originalRecipe) {
@@ -449,19 +404,13 @@ editRecipeForm.addEventListener("submit", event => {
     ingredients: collectIngredientsFromForm()
   };
 
-  const editedRecipes = getEditedRecipes();
-  const existingIndex = editedRecipes.findIndex(
-    recipe => recipe.slug === currentSlug
-  );
-
-  if (existingIndex >= 0) {
-    editedRecipes[existingIndex] = updatedRecipe;
-  } else {
-    editedRecipes.push(updatedRecipe);
+  try {
+    await updateRecipeInSupabase(updatedRecipe);
+    window.location.href = `recipe.html?slug=${encodeURIComponent(currentSlug)}`;
+  } catch (error) {
+    console.error("Failed to update recipe:", error);
+    alert(error.message || "Failed to update recipe.");
   }
-
-  saveEditedRecipes(editedRecipes);
-  window.location.href = `recipe.html?slug=${encodeURIComponent(currentSlug)}`;
 });
 
 addIngredientRowBtn.addEventListener("click", () => {
