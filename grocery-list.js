@@ -394,10 +394,6 @@ document.addEventListener("click", event => {
 });
 
 (async function initGroceryListPage() {
-  const groceryManageSection = document.getElementById("groceryManageSection");
-  if (groceryManageSection && !isSignedIn) {
-    groceryManageSection.style.display = "none";
-  }
   await refreshAuthState();
   await loadGroceryList();
 })();
