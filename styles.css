@@ -1939,3 +1939,45 @@ header.nav-scrolled .nav-logo {
 .grocery-list-item:hover {
   transform: translateY(-1px);
 }
+
+.grocery-search-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.grocery-search-row .ingredient-search-wrapper {
+  width: 100%;
+  margin: 0;
+}
+
+.grocery-search-row .ingredient-search-wrapper input {
+  width: 100%;
+}
+
+#addNewManualItemBtn {
+  height: 48px;
+  margin: 0;
+  padding: 0 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  line-height: 1;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  align-self: center;
+}
+
+@media (max-width: 700px) {
+  .grocery-search-row {
+    grid-template-columns: 1fr;
+  }
+
+  #addNewManualItemBtn {
+    width: 100%;
+  }
+}

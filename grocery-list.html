@@ -74,7 +74,7 @@
         <section class="grocery-manual-add" data-requires-auth="true">
           <h3>Add Household or Extra Items</h3>
 
-          <div class="meal-plan-add">
+          <div class="grocery-search-row">
             <div class="ingredient-search-wrapper">
               <input
                 type="text"
@@ -85,10 +85,10 @@
               <div id="grocerySuggestions" class="suggestions-list"></div>
             </div>
 
-            <button type="button" id="addManualGroceryBtn">Add to Grocery List</button>
+            <button type="button" id="addNewManualItemBtn">Add New Item Name</button>
           </div>
 
-          <div class="inventory-form-row">
+          <div class="inventory-form-row grocery-action-row">
             <div>
               <label for="groceryQuantity">Quantity</label>
               <input
@@ -122,10 +122,10 @@
                 <option value="container">Container</option>
               </select>
             </div>
-          </div>
 
-          <div class="inventory-actions">
-            <button type="button" id="addNewManualItemBtn">Add New Item Name</button>
+            <div class="grocery-submit-wrap">
+              <button type="button" id="addManualGroceryBtn">Add to Grocery List</button>
+            </div>
           </div>
         </section>
       </div>
