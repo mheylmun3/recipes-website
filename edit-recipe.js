@@ -472,7 +472,19 @@ editRecipeForm.addEventListener("submit", async event => {
     window.location.href = `recipe.html?slug=${encodeURIComponent(currentSlug)}`;
   } catch (error) {
     console.error("Failed to update recipe:", error);
-    alert(error.message || "Failed to update recipe.");
+
+    const message = error?.message || "";
+
+    if (
+      message.toLowerCase().includes("auth session missing") ||
+      message.toLowerCase().includes("you must be signed in") ||
+      message.toLowerCase().includes("jwt")
+    ) {
+      showAuthRequiredModal("Please login to add or change any recipes.");
+      return;
+    }
+
+    alert(message || "Failed to update recipe.");
   }
 });
 

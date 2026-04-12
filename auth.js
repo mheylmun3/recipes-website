@@ -4,6 +4,37 @@ const loginPassword = document.getElementById("loginPassword");
 const logoutBtn = document.getElementById("logoutBtn");
 const authStatus = document.getElementById("authStatus");
 
+const authMessageModal = document.getElementById("authMessageModal");
+const authMessageTitle = document.getElementById("authMessageTitle");
+const authMessageText = document.getElementById("authMessageText");
+const authMessageOkBtn = document.getElementById("authMessageOkBtn");
+
+function showAuthMessage(title, message) {
+  if (!authMessageModal || !authMessageTitle || !authMessageText) return;
+
+  authMessageTitle.textContent = title;
+  authMessageText.textContent = message;
+  authMessageModal.style.display = "flex";
+}
+
+function hideAuthMessage() {
+  if (authMessageModal) {
+    authMessageModal.style.display = "none";
+  }
+}
+
+if (authMessageOkBtn) {
+  authMessageOkBtn.addEventListener("click", hideAuthMessage);
+}
+
+if (authMessageModal) {
+  authMessageModal.addEventListener("click", event => {
+    if (event.target === authMessageModal) {
+      hideAuthMessage();
+    }
+  });
+}
+
 async function getCurrentUser() {
   const { data, error } = await supabaseClient.auth.getUser();
   if (error) {
@@ -39,10 +70,10 @@ if (loginForm) {
 
       loginPassword.value = "";
       await updateAuthStatus();
-      alert("Signed in successfully.");
+      showAuthMessage("Signed In", "You have successfully signed in.");
     } catch (error) {
       console.error("Login failed:", error);
-      alert(error.message || "Login failed.");
+      showAuthMessage("Sign In Failed", error.message || "Login failed.");
     }
   });
 }
@@ -54,10 +85,10 @@ if (logoutBtn) {
       if (error) throw error;
 
       await updateAuthStatus();
-      alert("Signed out.");
+      showAuthMessage("Signed Out", "You have successfully signed out.");
     } catch (error) {
       console.error("Logout failed:", error);
-      alert(error.message || "Logout failed.");
+      showAuthMessage("Sign Out Failed", error.message || "Logout failed.");
     }
   });
 }

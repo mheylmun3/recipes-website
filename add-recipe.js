@@ -11,6 +11,11 @@ const recipeFiberInput = document.getElementById("recipeFiber");
 const recipeImageInput = document.getElementById("recipeImage");
 const recipeImagePreview = document.getElementById("recipeImagePreview");
 
+const authRequiredModal = document.getElementById("authRequiredModal");
+const authRequiredMessage = document.getElementById("authRequiredMessage");
+const closeAuthRequiredBtn = document.getElementById("closeAuthRequiredBtn");
+const goToLoginBtn = document.getElementById("goToLoginBtn");
+
 let pendingRecipeImage = "";
 
 const ingredientUnits = [
@@ -362,7 +367,19 @@ addRecipeForm.addEventListener("submit", async event => {
     window.location.href = `recipe.html?slug=${encodeURIComponent(slug)}`;
   } catch (error) {
     console.error("Failed to save recipe:", error);
-    alert(error.message || "Failed to save recipe.");
+
+    const message = error?.message || "";
+
+    if (
+      message.toLowerCase().includes("auth session missing") ||
+      message.toLowerCase().includes("you must be signed in") ||
+      message.toLowerCase().includes("jwt")
+    ) {
+      showAuthRequiredModal("Please login to add or change any recipes.");
+      return;
+    }
+
+    alert(message || "Failed to save recipe.");
   }
 });
 
@@ -379,6 +396,22 @@ function readFileAsDataURL(file) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+function showAuthRequiredModal(
+  message = "Please login to add or change any recipes."
+) {
+  if (!authRequiredModal) return;
+  if (authRequiredMessage) {
+    authRequiredMessage.textContent = message;
+  }
+  authRequiredModal.style.display = "flex";
+}
+
+function hideAuthRequiredModal() {
+  if (authRequiredModal) {
+    authRequiredModal.style.display = "none";
+  }
 }
 
 recipeImageInput.addEventListener("change", async () => {
@@ -405,3 +438,21 @@ recipeImageInput.addEventListener("change", async () => {
     alert("Failed to load image.");
   }
 });
+
+if (closeAuthRequiredBtn) {
+  closeAuthRequiredBtn.addEventListener("click", hideAuthRequiredModal);
+}
+
+if (goToLoginBtn) {
+  goToLoginBtn.addEventListener("click", () => {
+    window.location.href = "login.html";
+  });
+}
+
+if (authRequiredModal) {
+  authRequiredModal.addEventListener("click", event => {
+    if (event.target === authRequiredModal) {
+      hideAuthRequiredModal();
+    }
+  });
+}
