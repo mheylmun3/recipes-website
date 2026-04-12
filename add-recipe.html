@@ -50,6 +50,7 @@
         <li><a href="meal-plan.html">Meal Plan</a></li>
         <li><a href="inventory.html">Inventory</a></li>
         <li><a href="grocery-list.html">Grocery List</a></li>
+        <li><a href="macro-tracker.html">Macros</a></li>
         <li><a href="login.html">Login</a></li>
       </ul>
     </nav>
@@ -60,6 +61,7 @@
       <a href="meal-plan.html">Meal Plan</a>
       <a href="inventory.html">Inventory</a>
       <a href="grocery-list.html">Grocery List</a>
+      <a href="macro-tracker.html">Macros</a>
       <a href="login.html">Login</a>
     </div>
   </header>
@@ -92,6 +94,41 @@
         placeholder="Enter number of servings"
         required
         />
+
+        <div class="inventory-form-row">
+          <div class="inventory-form-field">
+            <label for="recipeCalories">Calories</label>
+            <input
+              type="number"
+              id="recipeCalories"
+              step="any"
+              min="0"
+              placeholder="Per serving"
+            />
+          </div>
+
+          <div class="inventory-form-field">
+            <label for="recipeProtein">Protein (g)</label>
+            <input
+              type="number"
+              id="recipeProtein"
+              step="any"
+              min="0"
+              placeholder="Per serving"
+            />
+          </div>
+
+          <div class="inventory-form-field">
+            <label for="recipeFiber">Fiber (g)</label>
+            <input
+              type="number"
+              id="recipeFiber"
+              step="any"
+              min="0"
+              placeholder="Per serving"
+            />
+          </div>
+        </div>
 
         <label for="recipeImage">Recipe Image</label>
         <input

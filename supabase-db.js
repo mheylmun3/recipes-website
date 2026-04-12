@@ -21,24 +21,27 @@ async function fetchAllRecipesFromSupabase() {
   const { data: recipes, error } = await supabaseClient
     .from("recipes")
     .select(`
-      id,
-      slug,
-      name,
-      category,
-      servings,
-      instructions,
-      image_path,
-      recipe_ingredients (
-        sort_order,
-        quantity,
-        unit,
-        display_text,
-        ingredients (
-          id,
-          slug,
-          name
+        id,
+        slug,
+        name,
+        category,
+        servings,
+        calories,
+        protein,
+        fiber,
+        instructions,
+        image_path,
+        recipe_ingredients (
+            sort_order,
+            quantity,
+            unit,
+            display_text,
+            ingredients (
+            id,
+            slug,
+            name
+            )
         )
-      )
     `)
     .order("name", { ascending: true });
 
@@ -51,24 +54,27 @@ async function fetchRecipeBySlugFromSupabase(slug) {
   const { data, error } = await supabaseClient
     .from("recipes")
     .select(`
-      id,
-      slug,
-      name,
-      category,
-      servings,
-      instructions,
-      image_path,
-      recipe_ingredients (
-        sort_order,
-        quantity,
-        unit,
-        display_text,
-        ingredients (
-          id,
-          slug,
-          name
+        id,
+        slug,
+        name,
+        category,
+        servings,
+        calories,
+        protein,
+        fiber,
+        instructions,
+        image_path,
+        recipe_ingredients (
+            sort_order,
+            quantity,
+            unit,
+            display_text,
+            ingredients (
+            id,
+            slug,
+            name
+            )
         )
-      )
     `)
     .eq("slug", slug)
     .single();
@@ -102,6 +108,9 @@ function mapRecipeRowToFrontend(row) {
     name: row.name,
     category: row.category,
     servings: row.servings,
+    calories: row.calories ?? null,
+    protein: row.protein ?? null,
+    fiber: row.fiber ?? null,
     instructions: row.instructions,
     image: row.image_path || "",
     ingredients
@@ -148,12 +157,15 @@ async function createRecipeInSupabase(recipe) {
   const { data: insertedRecipe, error: recipeError } = await supabaseClient
     .from("recipes")
     .insert({
-      slug: recipeCore.slug,
-      name: recipeCore.name,
-      category: recipeCore.category,
-      servings: recipeCore.servings,
-      instructions: recipeCore.instructions,
-      image_path: image || null
+        slug: recipeCore.slug,
+        name: recipeCore.name,
+        category: recipeCore.category,
+        servings: recipeCore.servings,
+        calories: recipeCore.calories ?? null,
+        protein: recipeCore.protein ?? null,
+        fiber: recipeCore.fiber ?? null,
+        instructions: recipeCore.instructions,
+        image_path: image || null
     })
     .select("id")
     .single();
@@ -206,6 +218,9 @@ async function updateRecipeInSupabase(recipe) {
       name: recipeCore.name,
       category: recipeCore.category,
       servings: recipeCore.servings,
+      calories: recipeCore.calories ?? null,
+      protein: recipeCore.protein ?? null,
+      fiber: recipeCore.fiber ?? null,
       instructions: recipeCore.instructions,
       image_path: image || null,
       updated_at: new Date().toISOString()

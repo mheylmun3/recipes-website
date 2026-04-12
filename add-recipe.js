@@ -5,6 +5,9 @@ const recipeInstructionsInput = document.getElementById("recipeInstructions");
 const addIngredientsList = document.getElementById("addIngredientsList");
 const addIngredientRowBtn = document.getElementById("addIngredientRowBtn");
 const recipeServingsInput = document.getElementById("recipeServings");
+const recipeCaloriesInput = document.getElementById("recipeCalories");
+const recipeProteinInput = document.getElementById("recipeProtein");
+const recipeFiberInput = document.getElementById("recipeFiber");
 const recipeImageInput = document.getElementById("recipeImage");
 const recipeImagePreview = document.getElementById("recipeImagePreview");
 
@@ -296,6 +299,13 @@ addRecipeForm.addEventListener("submit", async event => {
   const name = recipeNameInput.value.trim();
   const category = recipeCategoryInput.value;
   const servings = parseInt(recipeServingsInput.value, 10);
+  const caloriesRaw = recipeCaloriesInput.value.trim();
+  const proteinRaw = recipeProteinInput.value.trim();
+  const fiberRaw = recipeFiberInput.value.trim();
+
+  const calories = caloriesRaw === "" ? null : parseFloat(caloriesRaw);
+  const protein = proteinRaw === "" ? null : parseFloat(proteinRaw);
+  const fiber = fiberRaw === "" ? null : parseFloat(fiberRaw);
   const instructions = recipeInstructionsInput.value.trim();
   const ingredients = collectIngredientsFromForm();
   const slug = slugify(name);
@@ -339,6 +349,9 @@ addRecipeForm.addEventListener("submit", async event => {
       slug,
       category,
       servings,
+      calories,
+      protein,
+      fiber,
       image: pendingRecipeImage || "",
       ingredients,
       instructions

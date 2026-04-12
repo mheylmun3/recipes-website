@@ -1,5 +1,6 @@
 const recipeTitle = document.getElementById("recipeTitle");
 const recipeServings = document.getElementById("recipeServings");
+const recipeMacros = document.getElementById("recipeMacros");
 const recipeImageDisplay = document.getElementById("recipeImageDisplay");
 const ingredientsList = document.getElementById("ingredientsList");
 const instructionsText = document.getElementById("instructionsText");
@@ -26,6 +27,26 @@ function displayRecipe(recipe) {
   recipeServings.textContent = recipe.servings
     ? `Servings: ${recipe.servings}`
     : "";
+  
+  if (recipeMacros) {
+    const parts = [];
+
+    if (recipe.calories != null) {
+      parts.push(`Calories: ${recipe.calories}`);
+    }
+
+    if (recipe.protein != null) {
+      parts.push(`Protein: ${recipe.protein}g`);
+    }
+
+    if (recipe.fiber != null) {
+      parts.push(`Fiber: ${recipe.fiber}g`);
+    }
+
+    recipeMacros.innerHTML = parts.length
+      ? parts.map(part => `<span class="macro-pill">${part}</span>`).join("")
+      : "";
+  }
 
   ingredientsList.innerHTML = "";
 
@@ -53,8 +74,8 @@ function displayRecipe(recipe) {
     recipeImageDisplay.style.display = "none";
   }
 
-    instructionsText.textContent = recipe.instructions || "";
-    }
+  instructionsText.textContent = recipe.instructions || "";
+}
 
 function getEditedRecipes() {
   try {

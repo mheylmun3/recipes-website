@@ -3,6 +3,9 @@ const editRecipeForm = document.getElementById("editRecipeForm");
 const recipeNameInput = document.getElementById("recipeName");
 const recipeCategoryInput = document.getElementById("recipeCategory");
 const recipeServingsInput = document.getElementById("recipeServings");
+const recipeCaloriesInput = document.getElementById("recipeCalories");
+const recipeProteinInput = document.getElementById("recipeProtein");
+const recipeFiberInput = document.getElementById("recipeFiber");
 const recipeInstructionsInput = document.getElementById("recipeInstructions");
 const editIngredientsList = document.getElementById("editIngredientsList");
 const addIngredientRowBtn = document.getElementById("addIngredientRowBtn");
@@ -252,6 +255,9 @@ function loadRecipeIntoForm(recipe) {
   recipeNameInput.value = recipe.name || "";
   recipeCategoryInput.value = recipe.category || "stove";
   recipeServingsInput.value = recipe.servings || 1;
+  recipeCaloriesInput.value = recipe.calories ?? "";
+  recipeProteinInput.value = recipe.protein ?? "";
+  recipeFiberInput.value = recipe.fiber ?? "";
   recipeInstructionsInput.value = recipe.instructions || "";
 
   removeRecipeImage = false;
@@ -393,12 +399,23 @@ editRecipeForm.addEventListener("submit", async event => {
     return;
   }
 
+  const caloriesRaw = recipeCaloriesInput.value.trim();
+  const proteinRaw = recipeProteinInput.value.trim();
+  const fiberRaw = recipeFiberInput.value.trim();
+
+  const calories = caloriesRaw === "" ? null : parseFloat(caloriesRaw);
+  const protein = proteinRaw === "" ? null : parseFloat(proteinRaw);
+  const fiber = fiberRaw === "" ? null : parseFloat(fiberRaw);
+
   const updatedRecipe = {
     ...originalRecipe,
     name: recipeNameInput.value.trim(),
     slug: currentSlug,
     category: recipeCategoryInput.value,
     servings,
+    calories,
+    protein,
+    fiber,
     image: removeRecipeImage ? "" : (pendingRecipeImage || originalRecipe.image || ""),
     instructions: recipeInstructionsInput.value.trim(),
     ingredients: collectIngredientsFromForm()
