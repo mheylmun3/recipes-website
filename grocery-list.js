@@ -7,6 +7,11 @@ const groceryUnit = document.getElementById("groceryUnit");
 const addManualGroceryBtn = document.getElementById("addManualGroceryBtn");
 const addNewManualItemBtn = document.getElementById("addNewManualItemBtn");
 
+const groceryMessageModal = document.getElementById("groceryMessageModal");
+const groceryMessageTitle = document.getElementById("groceryMessageTitle");
+const groceryMessageText = document.getElementById("groceryMessageText");
+const closeGroceryMessageBtn = document.getElementById("closeGroceryMessageBtn");
+
 let isSignedIn = false;
 let selectedCatalogItem = null;
 let currentGroceryList = [];
@@ -139,7 +144,7 @@ async function addManualItemToGroceryList(item) {
   const unit = groceryUnit.value;
 
   if (Number.isNaN(quantity) || quantity <= 0) {
-    alert("Enter a valid quantity greater than 0.");
+    showGroceryMessage("Invalid Quantity", "Enter a valid quantity greater than 0.");
     return;
   }
 
@@ -155,7 +160,7 @@ async function addManualItemToGroceryList(item) {
     await loadGroceryList();
   } catch (error) {
     console.error("Failed to add manual grocery item:", error);
-    alert(error.message || "Failed to add grocery item.");
+    showGroceryMessage("Unable to Add Item", error.message || "Failed to add grocery item.");
   }
 }
 
@@ -163,7 +168,7 @@ function addNewItemName() {
   const name = grocerySearchInput.value.trim();
 
   if (!name) {
-    alert("Enter an item name first.");
+    showGroceryMessage("Missing Item Name", "Enter an item name first.");
     return;
   }
 
@@ -234,6 +239,38 @@ function toggleLocalCheckedState(row, text, checkbox) {
     text.style.textDecoration = "";
     row.classList.remove("locally-checked");
   }
+}
+
+function showGroceryMessage(title, message) {
+  if (!groceryMessageModal) return;
+
+  if (groceryMessageTitle) {
+    groceryMessageTitle.textContent = title;
+  }
+
+  if (groceryMessageText) {
+    groceryMessageText.textContent = message;
+  }
+
+  groceryMessageModal.style.display = "flex";
+}
+
+function hideGroceryMessage() {
+  if (groceryMessageModal) {
+    groceryMessageModal.style.display = "none";
+  }
+}
+
+if (closeGroceryMessageBtn) {
+  closeGroceryMessageBtn.addEventListener("click", hideGroceryMessage);
+}
+
+if (groceryMessageModal) {
+  groceryMessageModal.addEventListener("click", event => {
+    if (event.target === groceryMessageModal) {
+      hideGroceryMessage();
+    }
+  });
 }
 
 async function refreshAuthState() {
@@ -360,7 +397,7 @@ addManualGroceryBtn.addEventListener("click", () => {
   if (!selectedCatalogItem) {
     const name = grocerySearchInput.value.trim();
     if (!name) {
-      alert("Select or enter an item first.");
+      showGroceryMessage("Missing Item", "Select or enter an item first.");
       return;
     }
 
@@ -370,7 +407,10 @@ addManualGroceryBtn.addEventListener("click", () => {
     );
 
     if (!match) {
-      alert("Select an item from the list or click Add New Item Name first.");
+      showGroceryMessage(
+        "Item Not Found",
+        "Select an item from the list or click Add New Item Name first."
+      );
       return;
     }
 
