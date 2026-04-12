@@ -70,66 +70,67 @@
       <h2>Grocery List</h2>
       <p>Generated from your current meal plan and inventory.</p>
 
-      <section class="grocery-manual-add" data-requires-auth="true">
-      <h3>Add Household or Extra Items</h3>
+      <div id="groceryManageSection">
+        <section class="grocery-manual-add" data-requires-auth="true">
+          <h3>Add Household or Extra Items</h3>
 
-      <div class="meal-plan-add">
-        <div class="ingredient-search-wrapper">
-        <input
-            type="text"
-            id="grocerySearchInput"
-            placeholder="Search item to add"
-            autocomplete="off"
-        />
-        <div id="grocerySuggestions" class="suggestions-list"></div>
-        </div>
+          <div class="meal-plan-add">
+            <div class="ingredient-search-wrapper">
+              <input
+                type="text"
+                id="grocerySearchInput"
+                placeholder="Search item to add"
+                autocomplete="off"
+              />
+              <div id="grocerySuggestions" class="suggestions-list"></div>
+            </div>
 
-        <button type="button" id="addManualGroceryBtn">Add to Grocery List</button>
+            <button type="button" id="addManualGroceryBtn">Add to Grocery List</button>
+          </div>
+
+          <div class="inventory-form-row">
+            <div>
+              <label for="groceryQuantity">Quantity</label>
+              <input
+                type="number"
+                id="groceryQuantity"
+                min="0"
+                step="1"
+                placeholder="Enter quantity"
+              />
+            </div>
+
+            <div>
+              <label for="groceryUnit">Unit</label>
+              <select id="groceryUnit">
+                <option value="count">Count</option>
+                <option value="tsp">tsp</option>
+                <option value="tbsp">tbsp</option>
+                <option value="cups">Cups</option>
+                <option value="oz">oz</option>
+                <option value="lbs">lbs</option>
+                <option value="ml">mL</option>
+                <option value="liters">Liters</option>
+                <option value="gallon">Gallon</option>
+                <option value="cans">Cans</option>
+                <option value="jars">Jars</option>
+                <option value="cloves">Cloves</option>
+                <option value="box">Box</option>
+                <option value="bag">Bag</option>
+                <option value="stick">Stick</option>
+                <option value="pint">Pint</option>
+                <option value="container">Container</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="inventory-actions">
+            <button type="button" id="addNewManualItemBtn">Add New Item Name</button>
+          </div>
+        </section>
       </div>
 
-      <div class="inventory-form-row">
-        <div>
-        <label for="groceryQuantity">Quantity</label>
-        <input
-            type="number"
-            id="groceryQuantity"
-            min="0"
-            step="1"
-            placeholder="Enter quantity"
-        />
-        </div>
-
-        <div>
-        <label for="groceryUnit">Unit</label>
-        <select id="groceryUnit">
-            <option value="count">Count</option>
-            <option value="tsp">tsp</option>
-            <option value="tbsp">tbsp</option>
-            <option value="cups">Cups</option>
-            <option value="oz">oz</option>
-            <option value="lbs">lbs</option>
-            <option value="ml">mL</option>
-            <option value="liters">Liters</option>
-            <option value="gallon">Gallon</option>
-            <option value="cans">Cans</option>
-            <option value="jars">Jars</option>
-            <option value="cloves">Cloves</option>
-            <option value="box">Box</option>
-            <option value="bag">Bag</option>
-            <option value="stick">Stick</option>
-            <option value="pint">Pint</option>
-            <option value="container">Container</option>
-        </select>
-        </div>
-      </div>
-
-      <div class="inventory-actions">
-        <button type="button" id="addNewManualItemBtn">Add New Item Name</button>
-      </div>
-    </section>
-
-    <div id="groceryListContainer" class="inventory-list"></div>
-
+      <div id="groceryListContainer" class="inventory-list"></div>
     </section>
   </main>
 

@@ -1927,3 +1927,15 @@ header.nav-scrolled .nav-logo {
   gap: 0.75rem;
   padding-top: 0.25rem;
 }
+
+.grocery-list-item {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.grocery-list-item.locally-checked {
+  opacity: 0.92;
+}
+
+.grocery-list-item:hover {
+  transform: translateY(-1px);
+}

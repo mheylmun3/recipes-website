@@ -7,6 +7,7 @@ const groceryUnit = document.getElementById("groceryUnit");
 const addManualGroceryBtn = document.getElementById("addManualGroceryBtn");
 const addNewManualItemBtn = document.getElementById("addNewManualItemBtn");
 
+let isSignedIn = false;
 let selectedCatalogItem = null;
 let currentGroceryList = [];
 
@@ -220,6 +221,32 @@ async function removeGroceryItem(targetItem) {
   }
 }
 
+function toggleLocalCheckedState(row, text, checkbox) {
+  const checked = !checkbox.checked;
+  checkbox.checked = checked;
+
+  if (checked) {
+    text.style.opacity = "0.5";
+    text.style.textDecoration = "line-through";
+    row.classList.add("locally-checked");
+  } else {
+    text.style.opacity = "";
+    text.style.textDecoration = "";
+    row.classList.remove("locally-checked");
+  }
+}
+
+async function refreshAuthState() {
+  try {
+    const { data, error } = await supabaseClient.auth.getUser();
+    if (error) throw error;
+    isSignedIn = !!data.user;
+  } catch (error) {
+    console.error("Failed to get auth state:", error);
+    isSignedIn = false;
+  }
+}
+
 function renderGroceryList() {
   groceryListContainer.innerHTML = "";
 
@@ -238,16 +265,6 @@ function renderGroceryList() {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = !!item.checked;
-
-    checkbox.addEventListener("change", async () => {
-      try {
-        await updateGroceryItemCheckedInSupabase(item.rowId, checkbox.checked);
-        await loadGroceryList();
-      } catch (error) {
-        console.error("Failed to update grocery item check state:", error);
-        alert(error.message || "Failed to update grocery item.");
-      }
-    });
 
     const text = document.createElement("div");
     const quantityText = `${item.quantityToBuy} ${formatUnit(item.quantityToBuy, item.unit)}`;
@@ -273,32 +290,59 @@ function renderGroceryList() {
       text.style.textDecoration = "line-through";
     }
 
+    if (isSignedIn) {
+      checkbox.addEventListener("change", async () => {
+        try {
+          await updateGroceryItemCheckedInSupabase(item.rowId, checkbox.checked);
+          await loadGroceryList();
+        } catch (error) {
+          console.error("Failed to update grocery item check state:", error);
+          if (!handleGroceryAuthError(error, "Failed to update grocery item.")) {
+            return;
+          }
+        }
+      });
+    } else {
+      checkbox.addEventListener("click", event => {
+        event.stopPropagation();
+      });
+
+      row.addEventListener("click", () => {
+        toggleLocalCheckedState(row, text, checkbox);
+      });
+    }
+
     left.appendChild(checkbox);
     left.appendChild(text);
 
-    const buttonGroup = document.createElement("div");
-    buttonGroup.className = "grocery-item-actions";
-
-    const addBtn = document.createElement("button");
-    addBtn.type = "button";
-    addBtn.textContent = "Add to Inventory";
-    addBtn.addEventListener("click", () => {
-      addItemToInventory(item);
-    });
-
-    const removeBtn = document.createElement("button");
-    removeBtn.type = "button";
-    removeBtn.textContent = "Remove";
-    removeBtn.className = "remove-btn";
-    removeBtn.addEventListener("click", () => {
-      removeGroceryItem(item);
-    });
-
-    buttonGroup.appendChild(addBtn);
-    buttonGroup.appendChild(removeBtn);
-
     row.appendChild(left);
-    row.appendChild(buttonGroup);
+
+    if (isSignedIn) {
+      const buttonGroup = document.createElement("div");
+      buttonGroup.className = "grocery-item-actions";
+
+      const addBtn = document.createElement("button");
+      addBtn.type = "button";
+      addBtn.textContent = "Add to Inventory";
+      addBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        addItemToInventory(item);
+      });
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.textContent = "Remove";
+      removeBtn.className = "remove-btn";
+      removeBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        removeGroceryItem(item);
+      });
+
+      buttonGroup.appendChild(addBtn);
+      buttonGroup.appendChild(removeBtn);
+      row.appendChild(buttonGroup);
+    }
+
     groceryListContainer.appendChild(row);
   });
 }
@@ -349,4 +393,11 @@ document.addEventListener("click", event => {
   }
 });
 
-loadGroceryList();
+(async function initGroceryListPage() {
+  const groceryManageSection = document.getElementById("groceryManageSection");
+  if (groceryManageSection && !isSignedIn) {
+    groceryManageSection.style.display = "none";
+  }
+  await refreshAuthState();
+  await loadGroceryList();
+})();
