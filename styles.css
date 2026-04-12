@@ -1565,3 +1565,25 @@ header.nav-scrolled .nav-logo {
     grid-template-columns: 1fr;
   }
 }
+
+.recipe-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.sort-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.sort-group label {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.sort-group select {
+  min-width: 180px;
+}

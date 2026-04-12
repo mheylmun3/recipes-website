@@ -370,6 +370,9 @@ async function fetchMealPlanFromSupabase() {
         name,
         category,
         servings,
+        calories,
+        protein,
+        fiber,
         instructions,
         image_path,
         recipe_ingredients (
