@@ -5,6 +5,7 @@ const ingredientUnit = document.getElementById("ingredientUnit");
 const addSelectedBtn = document.getElementById("addSelectedBtn");
 const addNewBtn = document.getElementById("addNewBtn");
 const inventoryList = document.getElementById("inventoryList");
+const inventorySearch = document.getElementById("inventorySearch");
 
 let selectedIngredient = null;
 
@@ -126,25 +127,60 @@ function formatUnit(quantity, unit) {
   return quantity === 1 ? forms[0] : forms[1];
 }
 
+function formatUnit(quantity, unit) {
+  const unitMap = {
+    count: ["item", "items"],
+    tsp: ["tsp", "tsp"],
+    tbsp: ["tbsp", "tbsp"],
+    cups: ["cup", "cups"],
+    oz: ["oz", "oz"],
+    lbs: ["lb", "lbs"],
+    ml: ["mL", "mL"],
+    liters: ["liter", "liters"],
+    gallon: ["gallon", "gallons"],
+    cans: ["can", "cans"],
+    jars: ["jar", "jars"],
+    cloves: ["clove", "cloves"],
+    box: ["box", "boxes"],
+    bag: ["bag", "bags"],
+    stick: ["stick", "sticks"],
+    pint: ["pint", "pints"],
+    container: ["container", "containers"]
+  };
+
+  const forms = unitMap[unit] || [unit, unit];
+  return quantity === 1 ? forms[0] : forms[1];
+}
+
 function renderInventory() {
   const items = getInventory();
+  const searchTerm = inventorySearch ? inventorySearch.value.trim().toLowerCase() : "";
+
   inventoryList.innerHTML = "";
 
-  if (!items.length) {
-    inventoryList.innerHTML = "<p>No ingredients in inventory yet.</p>";
+  let filteredItems = items;
+
+  if (searchTerm) {
+    filteredItems = items.filter(item =>
+      item.name.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  if (!filteredItems.length) {
+    inventoryList.innerHTML = searchTerm
+      ? "<p>No matching inventory items found.</p>"
+      : "<p>No ingredients in inventory yet.</p>";
     return;
   }
 
-  items
+  filteredItems
     .sort((a, b) => a.name.localeCompare(b.name))
     .forEach(item => {
       const row = document.createElement("div");
       row.className = "inventory-item";
 
       const name = document.createElement("span");
-
       const formattedUnit = formatUnit(item.quantity, item.unit);
-
       name.textContent = `${item.name} — ${item.quantity} ${formattedUnit}`;
 
       const removeBtn = document.createElement("button");
@@ -167,8 +203,8 @@ function addIngredientToInventory(ingredient) {
   const quantityValue = parseFloat(ingredientQuantity.value);
   const unitValue = ingredientUnit.value;
 
-  if (Number.isNaN(quantityValue) || quantityValue <= 0) {
-    alert("Enter a valid quantity greater than 0.");
+  if (Number.isNaN(quantityValue) || quantityValue === 0) {
+    alert("Enter a quantity greater than 0 or less than 0.");
     return;
   }
 
@@ -184,7 +220,20 @@ function addIngredientToInventory(ingredient) {
     }
 
     existingItem.quantity += quantityValue;
+
+    if (existingItem.quantity <= 0) {
+      const updatedInventory = currentInventory.filter(item => item.id !== ingredient.id);
+      saveInventory(updatedInventory);
+      renderInventory();
+      clearIngredientForm();
+      return;
+    }
   } else {
+    if (quantityValue < 0) {
+      alert("You cannot subtract an ingredient that is not currently in inventory.");
+      return;
+    }
+
     currentInventory.push({
       id: ingredient.id,
       name: ingredient.name,
@@ -256,6 +305,10 @@ document.addEventListener("click", event => {
   ) {
     ingredientSuggestions.style.display = "none";
   }
+});
+
+inventorySearch.addEventListener("input", () => {
+  renderInventory();
 });
 
 renderInventory();

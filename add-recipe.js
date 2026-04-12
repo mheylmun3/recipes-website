@@ -27,7 +27,8 @@ const ingredientUnits = [
   "box",
   "bag",
   "stick",
-  "pint"
+  "pint", 
+  "containers"
 ];
 
 function slugify(text) {
@@ -127,7 +128,7 @@ function createIngredientRow(ingredient = {}) {
       type="number"
       class="ingredient-quantity"
       placeholder="Quantity"
-      step="0.01"
+      step="any"
       value="${ingredient.quantity ?? ""}"
     />
 

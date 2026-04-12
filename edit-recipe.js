@@ -9,8 +9,10 @@ const addIngredientRowBtn = document.getElementById("addIngredientRowBtn");
 
 const recipeImageInput = document.getElementById("recipeImage");
 const recipeImagePreview = document.getElementById("recipeImagePreview");
+const removeRecipeImageBtn = document.getElementById("removeRecipeImageBtn");
 
 let pendingRecipeImage = "";
+let removeRecipeImage = false;
 
 const ingredientUnits = [
   "",
@@ -44,24 +46,6 @@ function readFileAsDataURL(file) {
     reader.readAsDataURL(file);
   });
 }
-
-recipeImageInput.addEventListener("change", async () => {
-  const file = recipeImageInput.files?.[0];
-  if (!file) return;
-
-  try {
-    const dataUrl = await readFileAsDataURL(file);
-    pendingRecipeImage = dataUrl;
-
-    if (recipeImagePreview) {
-      recipeImagePreview.src = dataUrl;
-      recipeImagePreview.style.display = "block";
-    }
-  } catch (error) {
-    console.error("Failed to read image:", error);
-    alert("Failed to load image.");
-  }
-});
 
 function getSlugFromUrl() {
   const params = new URLSearchParams(window.location.search);
@@ -177,7 +161,7 @@ function createIngredientRow(ingredient = {}) {
       type="number"
       class="ingredient-quantity"
       placeholder="Quantity"
-      step="1"
+      step="any"
       value="${ingredient.quantity ?? ""}"
     />
 
@@ -294,19 +278,24 @@ function loadRecipeIntoForm(recipe) {
   recipeServingsInput.value = recipe.servings || 1;
   recipeInstructionsInput.value = recipe.instructions || "";
 
-  editIngredientsList.innerHTML = "";
-
+  removeRecipeImage = false;
   pendingRecipeImage = recipe.image || "";
 
-   if (recipeImagePreview) {
+  if (recipeImagePreview) {
     if (pendingRecipeImage) {
-        recipeImagePreview.src = pendingRecipeImage;
-        recipeImagePreview.style.display = "block";
+      recipeImagePreview.src = pendingRecipeImage;
+      recipeImagePreview.style.display = "block";
     } else {
-        recipeImagePreview.src = "";
-        recipeImagePreview.style.display = "none";
+      recipeImagePreview.src = "";
+      recipeImagePreview.style.display = "none";
     }
   }
+
+  if (recipeImageInput) {
+    recipeImageInput.value = "";
+  }
+
+  editIngredientsList.innerHTML = "";
 
   if (Array.isArray(recipe.ingredients) && recipe.ingredients.length) {
     recipe.ingredients.forEach(ingredient => {
@@ -455,7 +444,7 @@ editRecipeForm.addEventListener("submit", event => {
     slug: currentSlug,
     category: recipeCategoryInput.value,
     servings,
-    image: pendingRecipeImage || originalRecipe.image || "", 
+    image: removeRecipeImage ? "" : (pendingRecipeImage || originalRecipe.image || ""),
     instructions: recipeInstructionsInput.value.trim(),
     ingredients: collectIngredientsFromForm()
   };
@@ -478,5 +467,81 @@ editRecipeForm.addEventListener("submit", event => {
 addIngredientRowBtn.addEventListener("click", () => {
   createIngredientRow();
 });
+
+recipeImageInput.addEventListener("change", async () => {
+  const file = recipeImageInput.files?.[0];
+  if (!file) return;
+
+  try {
+    const dataUrl = await readFileAsDataURL(file);
+    pendingRecipeImage = dataUrl;
+    removeRecipeImage = false;
+
+    if (recipeImagePreview) {
+      recipeImagePreview.src = dataUrl;
+      recipeImagePreview.style.display = "block";
+    }
+  } catch (error) {
+    console.error("Failed to read image:", error);
+    alert("Failed to load image.");
+  }
+});
+
+removeRecipeImageBtn.addEventListener("click", () => {
+  pendingRecipeImage = "";
+  removeRecipeImage = true;
+
+  if (recipeImageInput) {
+    recipeImageInput.value = "";
+  }
+
+  if (recipeImagePreview) {
+    recipeImagePreview.src = "";
+    recipeImagePreview.style.display = "none";
+  }
+});
+
+if (addIngredientRowBtn) {
+  addIngredientRowBtn.addEventListener("click", () => {
+    createIngredientRow();
+  });
+}
+
+if (recipeImageInput) {
+  recipeImageInput.addEventListener("change", async () => {
+    const file = recipeImageInput.files?.[0];
+    if (!file) return;
+
+    try {
+      const dataUrl = await readFileAsDataURL(file);
+      pendingRecipeImage = dataUrl;
+      removeRecipeImage = false;
+
+      if (recipeImagePreview) {
+        recipeImagePreview.src = dataUrl;
+        recipeImagePreview.style.display = "block";
+      }
+    } catch (error) {
+      console.error("Failed to read image:", error);
+      alert("Failed to load image.");
+    }
+  });
+}
+
+if (removeRecipeImageBtn) {
+  removeRecipeImageBtn.addEventListener("click", () => {
+    pendingRecipeImage = "";
+    removeRecipeImage = true;
+
+    if (recipeImageInput) {
+      recipeImageInput.value = "";
+    }
+
+    if (recipeImagePreview) {
+      recipeImagePreview.src = "";
+      recipeImagePreview.style.display = "none";
+    }
+  });
+}
 
 loadRecipe();

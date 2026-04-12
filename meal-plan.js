@@ -152,30 +152,45 @@ function buildGroceryListFromMealPlan() {
     });
   });
 
-  const groceryList = [];
+  const existingGroceryList = (() => {
+    try {
+        const saved = localStorage.getItem("groceryList");
+        return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+        console.error("Failed to parse groceryList:", error);
+        return [];
+    }
+    })();
 
-  neededMap.forEach(needed => {
+    const manualItems = existingGroceryList.filter(item => item.source === "manual");
+
+    const mealPlanItems = [];
+
+    neededMap.forEach(needed => {
     const inventoryMatch = inventory.find(
-      item => item.id === needed.ingredientId && item.unit === needed.unit
+        item => item.id === needed.ingredientId && item.unit === needed.unit
     );
 
     const quantityInInventory = inventoryMatch ? inventoryMatch.quantity : 0;
     const quantityToBuy = needed.quantityNeeded - quantityInInventory;
 
     if (quantityToBuy > 0) {
-      groceryList.push({
+        mealPlanItems.push({
         ingredientId: needed.ingredientId,
         name: needed.name,
         unit: needed.unit,
         quantityNeeded: needed.quantityNeeded,
         quantityInInventory,
-        quantityToBuy
-      });
+        quantityToBuy,
+        source: "meal-plan",
+        checked: false
+        });
     }
-  });
+    });
 
-  groceryList.sort((a, b) => a.name.localeCompare(b.name));
-  saveGroceryList(groceryList);
+    const groceryList = [...manualItems, ...mealPlanItems];
+    groceryList.sort((a, b) => a.name.localeCompare(b.name));
+    saveGroceryList(groceryList);
 }
 
 function renderMealPlan() {
