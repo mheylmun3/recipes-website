@@ -1,4 +1,4 @@
-const groceryListContainer = document.getElementById("groceryListContainer"); 
+const groceryListContainer = document.getElementById("groceryListContainer");
 
 const grocerySearchInput = document.getElementById("grocerySearchInput");
 const grocerySuggestions = document.getElementById("grocerySuggestions");
@@ -15,6 +15,7 @@ const closeGroceryMessageBtn = document.getElementById("closeGroceryMessageBtn")
 let isSignedIn = false;
 let selectedCatalogItem = null;
 let currentGroceryList = [];
+let localCheckedState = {};
 
 function slugify(text) {
   return text
@@ -75,6 +76,68 @@ function formatUnit(quantity, unit) {
 
   const forms = unitMap[unit] || [unit, unit];
   return quantity === 1 ? forms[0] : forms[1];
+}
+
+function showGroceryMessage(title, message) {
+  if (!groceryMessageModal) return;
+
+  if (groceryMessageTitle) {
+    groceryMessageTitle.textContent = title;
+  }
+
+  if (groceryMessageText) {
+    groceryMessageText.textContent = message;
+  }
+
+  groceryMessageModal.style.display = "flex";
+}
+
+function hideGroceryMessage() {
+  if (groceryMessageModal) {
+    groceryMessageModal.style.display = "none";
+  }
+}
+
+function handleGroceryAuthError(error, fallbackMessage) {
+  const message = error?.message || "";
+
+  if (
+    message.toLowerCase().includes("auth session missing") ||
+    message.toLowerCase().includes("you must be signed in") ||
+    message.toLowerCase().includes("jwt")
+  ) {
+    showGroceryMessage(
+      "Please Login",
+      "Please login to update the grocery list or inventory."
+    );
+    return true;
+  }
+
+  showGroceryMessage("Unable to Complete Action", fallbackMessage || message || "Something went wrong.");
+  return false;
+}
+
+if (closeGroceryMessageBtn) {
+  closeGroceryMessageBtn.addEventListener("click", hideGroceryMessage);
+}
+
+if (groceryMessageModal) {
+  groceryMessageModal.addEventListener("click", event => {
+    if (event.target === groceryMessageModal) {
+      hideGroceryMessage();
+    }
+  });
+}
+
+async function refreshAuthState() {
+  try {
+    const { data, error } = await supabaseClient.auth.getUser();
+    if (error) throw error;
+    isSignedIn = !!data.user;
+  } catch (error) {
+    console.error("Failed to get auth state:", error);
+    isSignedIn = false;
+  }
 }
 
 async function loadGroceryList() {
@@ -160,7 +223,9 @@ async function addManualItemToGroceryList(item) {
     await loadGroceryList();
   } catch (error) {
     console.error("Failed to add manual grocery item:", error);
-    showGroceryMessage("Unable to Add Item", error.message || "Failed to add grocery item.");
+    if (!handleGroceryAuthError(error, "Failed to add grocery item.")) {
+      return;
+    }
   }
 }
 
@@ -212,7 +277,9 @@ async function addItemToInventory(groceryItem) {
     await loadGroceryList();
   } catch (error) {
     console.error("Failed to add grocery item to inventory:", error);
-    alert(error.message || "Failed to add item to inventory.");
+    if (!handleGroceryAuthError(error, "Failed to add item to inventory.")) {
+      return;
+    }
   }
 }
 
@@ -222,66 +289,15 @@ async function removeGroceryItem(targetItem) {
     await loadGroceryList();
   } catch (error) {
     console.error("Failed to remove grocery item:", error);
-    alert(error.message || "Failed to remove grocery item.");
-  }
-}
-
-function toggleLocalCheckedState(row, text, checkbox) {
-  const checked = !checkbox.checked;
-  checkbox.checked = checked;
-
-  if (checked) {
-    text.style.opacity = "0.5";
-    text.style.textDecoration = "line-through";
-    row.classList.add("locally-checked");
-  } else {
-    text.style.opacity = "";
-    text.style.textDecoration = "";
-    row.classList.remove("locally-checked");
-  }
-}
-
-function showGroceryMessage(title, message) {
-  if (!groceryMessageModal) return;
-
-  if (groceryMessageTitle) {
-    groceryMessageTitle.textContent = title;
-  }
-
-  if (groceryMessageText) {
-    groceryMessageText.textContent = message;
-  }
-
-  groceryMessageModal.style.display = "flex";
-}
-
-function hideGroceryMessage() {
-  if (groceryMessageModal) {
-    groceryMessageModal.style.display = "none";
-  }
-}
-
-if (closeGroceryMessageBtn) {
-  closeGroceryMessageBtn.addEventListener("click", hideGroceryMessage);
-}
-
-if (groceryMessageModal) {
-  groceryMessageModal.addEventListener("click", event => {
-    if (event.target === groceryMessageModal) {
-      hideGroceryMessage();
+    if (!handleGroceryAuthError(error, "Failed to remove grocery item.")) {
+      return;
     }
-  });
+  }
 }
 
-async function refreshAuthState() {
-  try {
-    const { data, error } = await supabaseClient.auth.getUser();
-    if (error) throw error;
-    isSignedIn = !!data.user;
-  } catch (error) {
-    console.error("Failed to get auth state:", error);
-    isSignedIn = false;
-  }
+function toggleLocalCheckedState(itemId) {
+  localCheckedState[itemId] = !localCheckedState[itemId];
+  renderGroceryList();
 }
 
 function renderGroceryList() {
@@ -292,7 +308,27 @@ function renderGroceryList() {
     return;
   }
 
-  currentGroceryList.forEach(item => {
+  const sortedItems = [...currentGroceryList].sort((a, b) => {
+    if (!isSignedIn) {
+      const aChecked = !!localCheckedState[a.rowId];
+      const bChecked = !!localCheckedState[b.rowId];
+
+      if (aChecked !== bChecked) {
+        return aChecked - bChecked;
+      }
+    } else {
+      const aChecked = !!a.checked;
+      const bChecked = !!b.checked;
+
+      if (aChecked !== bChecked) {
+        return aChecked - bChecked;
+      }
+    }
+
+    return a.name.localeCompare(b.name);
+  });
+
+  sortedItems.forEach(item => {
     const row = document.createElement("div");
     row.className = "inventory-item grocery-list-item";
 
@@ -301,7 +337,6 @@ function renderGroceryList() {
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked = !!item.checked;
 
     const text = document.createElement("div");
     const quantityText = `${item.quantityToBuy} ${formatUnit(item.quantityToBuy, item.unit)}`;
@@ -322,12 +357,14 @@ function renderGroceryList() {
       `;
     }
 
-    if (item.checked) {
-      text.style.opacity = "0.5";
-      text.style.textDecoration = "line-through";
-    }
-
     if (isSignedIn) {
+      checkbox.checked = !!item.checked;
+
+      if (item.checked) {
+        text.style.opacity = "0.5";
+        text.style.textDecoration = "line-through";
+      }
+
       checkbox.addEventListener("change", async () => {
         try {
           await updateGroceryItemCheckedInSupabase(item.rowId, checkbox.checked);
@@ -340,18 +377,27 @@ function renderGroceryList() {
         }
       });
     } else {
+      const locallyChecked = !!localCheckedState[item.rowId];
+      checkbox.checked = locallyChecked;
+
+      if (locallyChecked) {
+        text.style.opacity = "0.5";
+        text.style.textDecoration = "line-through";
+        row.classList.add("locally-checked");
+      }
+
       checkbox.addEventListener("click", event => {
         event.stopPropagation();
+        toggleLocalCheckedState(item.rowId);
       });
 
       row.addEventListener("click", () => {
-        toggleLocalCheckedState(row, text, checkbox);
+        toggleLocalCheckedState(item.rowId);
       });
     }
 
     left.appendChild(checkbox);
     left.appendChild(text);
-
     row.appendChild(left);
 
     if (isSignedIn) {
@@ -396,6 +442,7 @@ grocerySearchInput.addEventListener("focus", () => {
 addManualGroceryBtn.addEventListener("click", () => {
   if (!selectedCatalogItem) {
     const name = grocerySearchInput.value.trim();
+
     if (!name) {
       showGroceryMessage("Missing Item", "Select or enter an item first.");
       return;
