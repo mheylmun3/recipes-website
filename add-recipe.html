@@ -2,32 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
   <title>Add Recipe</title>
+
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" type="image/png" sizes="32x32" href="images/logo2.png" />
-  <link rel="apple-touch-icon" href="images/logo2.png" />
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="32x32"
+    href="images/logo2.png"
+  />
+
+  <link
+    rel="apple-touch-icon"
+    href="images/logo2.png"
+  />
 </head>
+
 <body>
   <canvas id="fairy-canvas"></canvas>
-  <div class="vine vine-left" aria-hidden="true"></div>
 
-  <div class="vine vine-right" aria-hidden="true"></div>
+  <div
+    class="vine vine-left"
+    aria-hidden="true"
+  ></div>
 
-  <div class="corner-palm-wrap corner-palm-wrap-left" aria-hidden="true">
-    <img src="images/palm-leaf.png" alt="" class="corner-palm-img corner-palm-img-left" />
+  <div
+    class="vine vine-right"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="corner-palm-wrap corner-palm-wrap-left"
+    aria-hidden="true"
+  >
+    <img
+      src="images/palm-leaf.png"
+      alt=""
+      class="corner-palm-img corner-palm-img-left"
+    />
   </div>
 
-  <div class="corner-palm-wrap corner-palm-wrap-right" aria-hidden="true">
-    <img src="images/palm-leaf.png" alt="" class="corner-palm-img corner-palm-img-right" />
+  <div
+    class="corner-palm-wrap corner-palm-wrap-right"
+    aria-hidden="true"
+  >
+    <img
+      src="images/palm-leaf.png"
+      alt=""
+      class="corner-palm-img corner-palm-img-right"
+    />
   </div>
-
 
   <header>
     <nav class="navbar">
       <h1 class="nav-logo">
         <a href="index.html">
-          <img src="images/logo3.png" alt="Gab's Italian Kitchen" />
+          <img
+            src="images/logo3.png"
+            alt="Gab's Italian Kitchen"
+          />
         </a>
       </h1>
 
@@ -44,19 +83,48 @@
         <span></span>
       </button>
 
-      <ul class="nav-links" id="desktopNav">
-        <li><a href="all-recipes.html">All Recipes</a></li>
-        <li><a href="add-recipe.html">Add Recipe</a></li>
-        <li><a href="ingredients.html">Ingredients</a></li>
-        <li><a href="meal-plan.html">Meal Plan</a></li>
-        <li><a href="inventory.html">Inventory</a></li>
-        <li><a href="grocery-list.html">Grocery List</a></li>
-        <li><a href="macro-tracker.html">Macros</a></li>
-        <li><a href="login.html">Login</a></li>
+      <ul
+        class="nav-links"
+        id="desktopNav"
+      >
+        <li>
+          <a href="all-recipes.html">All Recipes</a>
+        </li>
+
+        <li>
+          <a href="add-recipe.html">Add Recipe</a>
+        </li>
+
+        <li>
+          <a href="ingredients.html">Ingredients</a>
+        </li>
+
+        <li>
+          <a href="meal-plan.html">Meal Plan</a>
+        </li>
+
+        <li>
+          <a href="inventory.html">Inventory</a>
+        </li>
+
+        <li>
+          <a href="grocery-list.html">Grocery List</a>
+        </li>
+
+        <li>
+          <a href="macro-tracker.html">Macros</a>
+        </li>
+
+        <li>
+          <a href="login.html">Login</a>
+        </li>
       </ul>
     </nav>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div
+      class="mobile-nav"
+      id="mobileNav"
+    >
       <a href="all-recipes.html">All Recipes</a>
       <a href="add-recipe.html">Add Recipe</a>
       <a href="ingredients.html">Ingredients</a>
@@ -73,33 +141,72 @@
       <h2>Add a New Recipe</h2>
 
       <form id="addRecipeForm">
-        <label for="recipeName">Recipe Name</label>
-        <input type="text" id="recipeName" required />
+        <label for="recipeName">
+          Recipe Name
+        </label>
 
-        <label for="recipeCategory">Category</label>
-        <select id="recipeCategory" required>
-          <option value="">Select a category</option>
-          <option value="breakfast">Breakfast</option>
-          <option value="soups">Soups</option>
-          <option value="crockpot-meals">Crockpot Meals</option>
-          <option value="stove">Stove Meals</option>
-          <option value="side-dishes">Side Dishes</option>
-          <option value="sweet-treats">Sweet Treats</option>
+        <input
+          type="text"
+          id="recipeName"
+          required
+        />
+
+        <label for="recipeCategory">
+          Category
+        </label>
+
+        <select
+          id="recipeCategory"
+          required
+        >
+          <option value="">
+            Select a category
+          </option>
+
+          <option value="breakfast">
+            Breakfast
+          </option>
+
+          <option value="soups">
+            Soups
+          </option>
+
+          <option value="crockpot-meals">
+            Crockpot Meals
+          </option>
+
+          <option value="stove">
+            Stove Meals
+          </option>
+
+          <option value="side-dishes">
+            Side Dishes
+          </option>
+
+          <option value="sweet-treats">
+            Sweet Treats
+          </option>
         </select>
 
-        <label for="recipeServings">Servings</label>
+        <label for="recipeServings">
+          Servings
+        </label>
+
         <input
-        type="number"
-        id="recipeServings"
-        min="1"
-        step="1"
-        placeholder="Enter number of servings"
-        required
+          type="number"
+          id="recipeServings"
+          min="1"
+          step="1"
+          placeholder="Enter number of servings"
+          required
         />
 
         <div class="inventory-form-row">
           <div class="inventory-form-field">
-            <label for="recipeCalories">Calories</label>
+            <label for="recipeCalories">
+              Calories
+            </label>
+
             <input
               type="number"
               id="recipeCalories"
@@ -110,7 +217,10 @@
           </div>
 
           <div class="inventory-form-field">
-            <label for="recipeProtein">Protein (g)</label>
+            <label for="recipeProtein">
+              Protein (g)
+            </label>
+
             <input
               type="number"
               id="recipeProtein"
@@ -121,7 +231,10 @@
           </div>
 
           <div class="inventory-form-field">
-            <label for="recipeFiber">Fiber (g)</label>
+            <label for="recipeFiber">
+              Fiber (g)
+            </label>
+
             <input
               type="number"
               id="recipeFiber"
@@ -132,14 +245,26 @@
           </div>
         </div>
 
-        <label for="recipeImage">Recipe Image</label>
+        <label for="recipeImage">
+          Recipe Image
+        </label>
+
         <input
           type="file"
           id="recipeImage"
           accept="image/*"
         />
 
-        <img id="recipeImagePreview" alt="Recipe preview" style="display: none; max-width: 260px; border-radius: 18px; margin-top: 0.75rem;" />
+        <img
+          id="recipeImagePreview"
+          alt="Recipe preview"
+          style="
+            display: none;
+            max-width: 260px;
+            border-radius: 18px;
+            margin-top: 0.75rem;
+          "
+        />
 
         <div class="recipe-section">
           <h3>Ingredients</h3>
@@ -152,40 +277,166 @@
             Add New Ingredient
           </button>
 
-          <div id="addIngredientsList" class="inventory-list"></div>
+          <div
+            id="addIngredientsList"
+            class="inventory-list"
+          ></div>
+
+          <button
+            type="button"
+            id="addIngredientRowBtn"
+          >
+            Add Ingredient Row
+          </button>
         </div>
 
-        <button type="button" id="addIngredientRowBtn">Add Ingredient Row</button>
+        <label for="recipeInstructions">
+          Instructions
+        </label>
 
-        <label for="recipeInstructions">Instructions</label>
-        <textarea id="recipeInstructions" rows="8" required></textarea>
+        <textarea
+          id="recipeInstructions"
+          rows="8"
+          required
+        ></textarea>
 
-        <button type="submit">Save Recipe</button>
+        <button type="submit">
+          Save Recipe
+        </button>
       </form>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2026 Gab's Italian Kitchen</p>
-  </footer>
+  <!-- Add New Ingredient Modal -->
+  <div
+    id="newIngredientModal"
+    class="custom-modal-overlay"
+    style="display: none;"
+  >
+    <div class="custom-modal ingredient-create-modal">
+      <button
+        type="button"
+        id="closeNewIngredientModalBtn"
+        class="modal-close-btn"
+        aria-label="Close"
+      >
+        &times;
+      </button>
 
-  <div id="authRequiredModal" class="custom-modal-overlay" style="display: none;">
-    <div class="custom-modal auth-message-modal">
-      <h3>Please Login</h3>
-      <p id="authRequiredMessage">Please login to add or change any recipes.</p>
+      <h3>Add New Ingredient</h3>
+
+      <p>
+        Search before adding to make sure the ingredient does not already
+        exist.
+      </p>
+
+      <div class="ingredient-modal-search">
+        <label for="modalIngredientName">
+          Ingredient Name
+        </label>
+
+        <input
+          type="text"
+          id="modalIngredientName"
+          placeholder="Enter ingredient name"
+          autocomplete="off"
+        />
+
+        <div
+          id="modalIngredientSuggestions"
+          class="suggestions-list ingredient-modal-suggestions"
+        ></div>
+      </div>
+
+      <div class="ingredient-modal-unit-field">
+        <label for="modalIngredientUnit">
+          Default Unit
+        </label>
+
+        <select id="modalIngredientUnit">
+          <option value="count">Count</option>
+          <option value="tsp">tsp</option>
+          <option value="tbsp">tbsp</option>
+          <option value="cups">Cups</option>
+          <option value="oz">oz</option>
+          <option value="lbs">lbs</option>
+          <option value="ml">mL</option>
+          <option value="liters">Liters</option>
+          <option value="gallon">Gallon</option>
+          <option value="cans">Cans</option>
+          <option value="jars">Jars</option>
+          <option value="cloves">Cloves</option>
+          <option value="box">Box</option>
+          <option value="bag">Bag</option>
+          <option value="stick">Stick</option>
+          <option value="pint">Pint</option>
+          <option value="container">Container</option>
+        </select>
+      </div>
+
+      <p
+        id="modalIngredientMessage"
+        class="ingredient-modal-message"
+      ></p>
+
       <div class="custom-modal-actions">
-        <button type="button" id="closeAuthRequiredBtn">Close</button>
-        <button type="button" id="goToLoginBtn">Go to Login</button>
+        <button
+          type="button"
+          id="cancelNewIngredientBtn"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          id="confirmNewIngredientBtn"
+        >
+          Add Ingredient
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Authentication Required Modal -->
+  <div
+    id="authRequiredModal"
+    class="custom-modal-overlay"
+    style="display: none;"
+  >
+    <div class="custom-modal auth-message-modal">
+      <h3>Please Login</h3>
+
+      <p id="authRequiredMessage">
+        Please login to add or change any recipes.
+      </p>
+
+      <div class="custom-modal-actions">
+        <button
+          type="button"
+          id="closeAuthRequiredBtn"
+        >
+          Close
+        </button>
+
+        <button
+          type="button"
+          id="goToLoginBtn"
+        >
+          Go to Login
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Gab's Italian Kitchen</p>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>
   <script src="supabase-db.js"></script>
   <script src="auth-guard.js"></script>
   <script src="ingredient-modal.js"></script>
-  <script src="ingredients.js"></script>
   <script src="add-recipe.js"></script>
   <script src="background.js"></script>
   <script src="nav-scroll.js"></script>
