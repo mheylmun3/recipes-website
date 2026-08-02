@@ -1,81 +1,230 @@
 const recipeGrid = document.getElementById("recipeGrid");
 const searchInput = document.getElementById("searchInput");
 const sortSelect = document.getElementById("sortSelect");
+
+const categoryFilterButtons = document.querySelectorAll(
+  ".category-filter-btn"
+);
+
 let allRecipes = [];
+let selectedCategory = "";
 
-console.log("all-recipes.js loaded");
-console.log("recipeGrid:", recipeGrid);
-console.log("searchInput:", searchInput);
-console.log("sortSelect:", sortSelect);
-
-// Track recipe clicks using localStorage
-function trackRecipeClick(slug) {
-  const key = `clicks-${slug}`;
-  const current = localStorage.getItem(key);
-  localStorage.setItem(key, current ? parseInt(current, 10) + 1 : 1);
+function normalizeText(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase();
 }
 
-// Render filtered recipe cards
-function displayRecipes(filter = "", sortBy = "alphabetical") {
-  console.log("displayRecipes called");
-  console.log("allRecipes length:", allRecipes.length);
+function trackRecipeClick(slug) {
+  const key = `clicks-${slug}`;
+  const currentCount =
+    parseInt(localStorage.getItem(key), 10) || 0;
+
+  localStorage.setItem(
+    key,
+    String(currentCount + 1)
+  );
+}
+
+function getRecipeClickCount(recipe) {
+  return (
+    parseInt(
+      localStorage.getItem(`clicks-${recipe.slug}`),
+      10
+    ) || 0
+  );
+}
+
+function recipeMatchesSearch(recipe, searchTerm) {
+  if (!searchTerm) {
+    return true;
+  }
+
+  const normalizedName = normalizeText(recipe.name);
+  const normalizedCategory = normalizeText(
+    recipe.category
+  );
+
+  return (
+    normalizedName.includes(searchTerm) ||
+    normalizedCategory.includes(searchTerm)
+  );
+}
+
+function recipeMatchesCategory(recipe) {
+  if (!selectedCategory) {
+    return true;
+  }
+
+  return (
+    normalizeText(recipe.category) ===
+    normalizeText(selectedCategory)
+  );
+}
+
+function sortRecipes(recipes, sortBy) {
+  const sortedRecipes = [...recipes];
+
+  if (sortBy === "popularity") {
+    sortedRecipes.sort((a, b) => {
+      const clickDifference =
+        getRecipeClickCount(b) -
+        getRecipeClickCount(a);
+
+      if (clickDifference !== 0) {
+        return clickDifference;
+      }
+
+      return a.name.localeCompare(b.name);
+    });
+
+    return sortedRecipes;
+  }
+
+  sortedRecipes.sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+
+  return sortedRecipes;
+}
+
+function createRecipeCard(recipe) {
+  const card = document.createElement("a");
+
+  card.className = "recipe-card";
+  card.href =
+    `recipe.html?slug=${encodeURIComponent(recipe.slug)}`;
+
+  const title = document.createElement("h4");
+  title.textContent = recipe.name;
+
+  card.appendChild(title);
+
+  card.addEventListener("click", () => {
+    trackRecipeClick(recipe.slug);
+  });
+
+  return card;
+}
+
+function displayRecipes() {
+  if (!recipeGrid) {
+    return;
+  }
+
+  const searchTerm = normalizeText(
+    searchInput?.value
+  );
+
+  const sortBy =
+    sortSelect?.value || "alphabetical";
+
+  const filteredRecipes = allRecipes.filter(
+    recipe =>
+      recipeMatchesSearch(recipe, searchTerm) &&
+      recipeMatchesCategory(recipe)
+  );
+
+  const sortedRecipes = sortRecipes(
+    filteredRecipes,
+    sortBy
+  );
 
   recipeGrid.innerHTML = "";
 
-  let filtered = allRecipes.filter(recipe =>
-    recipe.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  if (!sortedRecipes.length) {
+    const emptyMessage =
+      document.createElement("p");
 
-  console.log("filtered length:", filtered.length);
+    emptyMessage.className =
+      "recipe-grid-empty-message";
 
-  if (sortBy === "alphabetical") {
-    filtered.sort((a, b) => a.name.localeCompare(b.name));
-  } else if (sortBy === "popularity") {
-    filtered.sort((a, b) => {
-      const aClicks = parseInt(localStorage.getItem(`clicks-${a.slug}`), 10) || 0;
-      const bClicks = parseInt(localStorage.getItem(`clicks-${b.slug}`), 10) || 0;
-      return bClicks - aClicks;
-    });
+    emptyMessage.textContent =
+      selectedCategory || searchTerm
+        ? "No recipes match the selected filters."
+        : "No recipes found.";
+
+    recipeGrid.appendChild(emptyMessage);
+    return;
   }
 
-  filtered.forEach(recipe => {
-    const card = document.createElement("a");
-    card.className = "recipe-card";
-    card.href = `recipe.html?slug=${encodeURIComponent(recipe.slug)}`;
-    card.addEventListener("click", () => trackRecipeClick(recipe.slug));
+  const fragment =
+    document.createDocumentFragment();
 
-    card.innerHTML = `
-      <h4>${recipe.name}</h4>
-    `;
-
-    recipeGrid.appendChild(card);
+  sortedRecipes.forEach(recipe => {
+    fragment.appendChild(
+      createRecipeCard(recipe)
+    );
   });
 
-  if (!filtered.length) {
-    recipeGrid.innerHTML = "<p>No recipes found.</p>";
-  }
+  recipeGrid.appendChild(fragment);
+}
+
+function setSelectedCategory(selectedButton) {
+  selectedCategory =
+    selectedButton.dataset.category || "";
+
+  categoryFilterButtons.forEach(button => {
+    const isActive =
+      button === selectedButton;
+
+    button.classList.toggle(
+      "active",
+      isActive
+    );
+
+    button.setAttribute(
+      "aria-pressed",
+      String(isActive)
+    );
+  });
+
+  displayRecipes();
 }
 
 async function loadRecipes() {
-  try {
-    console.log("Loading recipes from Supabase...");
-    allRecipes = await fetchAllRecipesFromSupabase();
-    console.log("Recipes loaded from Supabase:", allRecipes.length);
+  if (!recipeGrid) {
+    return;
+  }
 
-    displayRecipes(searchInput.value, sortSelect?.value || "alphabetical");
-  } catch (err) {
-    console.error("Error loading recipes from Supabase:", err);
-    recipeGrid.innerHTML = "<p>Failed to load recipes.</p>";
+  try {
+    allRecipes =
+      await fetchAllRecipesFromSupabase();
+
+    if (!Array.isArray(allRecipes)) {
+      allRecipes = [];
+    }
+
+    displayRecipes();
+  } catch (error) {
+    console.error(
+      "Error loading recipes from Supabase:",
+      error
+    );
+
+    recipeGrid.innerHTML =
+      "<p>Failed to load recipes.</p>";
   }
 }
 
-// Event listeners
-searchInput.addEventListener("input", () => {
-  displayRecipes(searchInput.value, sortSelect?.value || "alphabetical");
-});
+if (searchInput) {
+  searchInput.addEventListener(
+    "input",
+    displayRecipes
+  );
+}
 
-sortSelect?.addEventListener("change", () => {
-  displayRecipes(searchInput.value, sortSelect.value);
+if (sortSelect) {
+  sortSelect.addEventListener(
+    "change",
+    displayRecipes
+  );
+}
+
+categoryFilterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    setSelectedCategory(button);
+  });
 });
 
 loadRecipes();

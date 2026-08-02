@@ -2,31 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
   <title>All Recipes</title>
+
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" type="image/png" sizes="32x32" href="images/logo2.png" />
-  <link rel="apple-touch-icon" href="images/logo2.png" />
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="32x32"
+    href="images/logo2.png"
+  />
+
+  <link
+    rel="apple-touch-icon"
+    href="images/logo2.png"
+  />
 </head>
+
 <body>
   <canvas id="fairy-canvas"></canvas>
-  <div class="vine vine-left" aria-hidden="true"></div>
 
-  <div class="vine vine-right" aria-hidden="true"></div>
+  <div
+    class="vine vine-left"
+    aria-hidden="true"
+  ></div>
 
-  <div class="corner-palm-wrap corner-palm-wrap-left" aria-hidden="true">
-    <img src="images/palm-leaf.png" alt="" class="corner-palm-img corner-palm-img-left" />
+  <div
+    class="vine vine-right"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="corner-palm-wrap corner-palm-wrap-left"
+    aria-hidden="true"
+  >
+    <img
+      src="images/palm-leaf.png"
+      alt=""
+      class="corner-palm-img corner-palm-img-left"
+    />
   </div>
 
-  <div class="corner-palm-wrap corner-palm-wrap-right" aria-hidden="true">
-    <img src="images/palm-leaf.png" alt="" class="corner-palm-img corner-palm-img-right" />
+  <div
+    class="corner-palm-wrap corner-palm-wrap-right"
+    aria-hidden="true"
+  >
+    <img
+      src="images/palm-leaf.png"
+      alt=""
+      class="corner-palm-img corner-palm-img-right"
+    />
   </div>
 
   <header>
     <nav class="navbar">
       <h1 class="nav-logo">
         <a href="index.html">
-          <img src="images/logo3.png" alt="Gab's Italian Kitchen" />
+          <img
+            src="images/logo3.png"
+            alt="Gab's Italian Kitchen"
+          />
         </a>
       </h1>
 
@@ -43,19 +83,48 @@
         <span></span>
       </button>
 
-      <ul class="nav-links" id="desktopNav">
-        <li><a href="all-recipes.html">All Recipes</a></li>
-        <li><a href="add-recipe.html">Add Recipe</a></li>
-        <li><a href="ingredients.html">Ingredients</a></li>
-        <li><a href="meal-plan.html">Meal Plan</a></li>
-        <li><a href="inventory.html">Inventory</a></li>
-        <li><a href="grocery-list.html">Grocery List</a></li>
-        <li><a href="macro-tracker.html">Macros</a></li>
-        <li><a href="login.html">Login</a></li>
+      <ul
+        class="nav-links"
+        id="desktopNav"
+      >
+        <li>
+          <a href="all-recipes.html">All Recipes</a>
+        </li>
+
+        <li>
+          <a href="add-recipe.html">Add Recipe</a>
+        </li>
+
+        <li>
+          <a href="ingredients.html">Ingredients</a>
+        </li>
+
+        <li>
+          <a href="meal-plan.html">Meal Plan</a>
+        </li>
+
+        <li>
+          <a href="inventory.html">Inventory</a>
+        </li>
+
+        <li>
+          <a href="grocery-list.html">Grocery List</a>
+        </li>
+
+        <li>
+          <a href="macro-tracker.html">Macros</a>
+        </li>
+
+        <li>
+          <a href="login.html">Login</a>
+        </li>
       </ul>
     </nav>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div
+      class="mobile-nav"
+      id="mobileNav"
+    >
       <a href="all-recipes.html">All Recipes</a>
       <a href="add-recipe.html">Add Recipe</a>
       <a href="ingredients.html">Ingredients</a>
@@ -70,20 +139,117 @@
   <main class="all-recipes-page">
     <div class="recipes-sort-bar">
       <div class="sort-inline">
-        <label for="sortSelect">Sort by:</label>
-        <select id="sortSelect" class="styled-select">
-          <option value="alphabetical">Alphabetical</option>
-          <option value="popularity">Popularity</option>
+        <label for="sortSelect">
+          Sort by:
+        </label>
+
+        <select
+          id="sortSelect"
+          class="styled-select"
+        >
+          <option value="alphabetical">
+            Alphabetical
+          </option>
+
+          <option value="popularity">
+            Popularity
+          </option>
         </select>
       </div>
     </div>
 
+    <section
+      class="all-recipes-category-filter"
+      aria-labelledby="categoryFilterHeading"
+    >
+      <h2 id="categoryFilterHeading">
+        Browse by Category
+      </h2>
+
+      <div
+        class="all-recipes-category-buttons"
+        id="categoryFilterButtons"
+      >
+        <button
+          type="button"
+          class="category-filter-btn active"
+          data-category=""
+          aria-pressed="true"
+        >
+          All Recipes
+        </button>
+
+        <button
+          type="button"
+          class="category-filter-btn"
+          data-category="sweet-treats"
+          aria-pressed="false"
+        >
+          Sweet Treats
+        </button>
+
+        <button
+          type="button"
+          class="category-filter-btn"
+          data-category="breakfast"
+          aria-pressed="false"
+        >
+          Breakfast
+        </button>
+
+        <button
+          type="button"
+          class="category-filter-btn"
+          data-category="soups"
+          aria-pressed="false"
+        >
+          Soups
+        </button>
+
+        <button
+          type="button"
+          class="category-filter-btn"
+          data-category="crockpot-meals"
+          aria-pressed="false"
+        >
+          Crockpot Meals
+        </button>
+
+        <button
+          type="button"
+          class="category-filter-btn"
+          data-category="stove"
+          aria-pressed="false"
+        >
+          Stove Meals
+        </button>
+
+        <button
+          type="button"
+          class="category-filter-btn"
+          data-category="side-dishes"
+          aria-pressed="false"
+        >
+          Side Dishes
+        </button>
+      </div>
+    </section>
+
     <section class="recipes-content">
       <div class="recipes-search-row">
-        <input type="text" id="searchInput" placeholder="Search recipes..." />
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search recipes..."
+          autocomplete="off"
+          aria-label="Search recipes"
+        />
       </div>
 
-      <div id="recipeGrid" class="recipe-grid"></div>
+      <div
+        id="recipeGrid"
+        class="recipe-grid"
+      ></div>
     </section>
   </main>
 
