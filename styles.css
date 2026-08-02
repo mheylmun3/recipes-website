@@ -1761,6 +1761,7 @@ header.nav-scrolled .nav-logo {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.25rem;
   margin-top: 2rem;
+  padding: 0 0 1.5rem;
 }
 
 .recipe-card {
