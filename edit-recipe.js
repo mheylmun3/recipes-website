@@ -1,4 +1,23 @@
 const editRecipeForm = document.getElementById("editRecipeForm");
+
+const addRecipeForm = document.getElementById("addRecipeForm");
+const recipeNameInput = document.getElementById("recipeName");
+const recipeCategoryInput = document.getElementById("recipeCategory");
+const recipeInstructionsInput = document.getElementById("recipeInstructions");
+const addIngredientsList = document.getElementById("addIngredientsList");
+const addIngredientRowBtn = document.getElementById("addIngredientRowBtn");
+const recipeServingsInput = document.getElementById("recipeServings");
+const recipeCaloriesInput = document.getElementById("recipeCalories");
+const recipeProteinInput = document.getElementById("recipeProtein");
+const recipeFiberInput = document.getElementById("recipeFiber");
+
+const authRequiredModal = document.getElementById("authRequiredModal");
+const authRequiredMessage = document.getElementById("authRequiredMessage");
+const closeAuthRequiredBtn = document.getElementById("closeAuthRequiredBtn");
+const goToLoginBtn = document.getElementById("goToLoginBtn");
+
+const openNewIngredientModalBtn = document.getElementById("openNewIngredientModalBtn");
+
 const recipeName = document.getElementById("recipeName");
 const recipeCategory = document.getElementById("recipeCategory");
 const recipeServings = document.getElementById("recipeServings");
