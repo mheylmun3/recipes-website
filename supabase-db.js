@@ -125,30 +125,19 @@ function formatIngredientText(name, quantity, unit) {
   return `${quantity} ${unit} ${name}`;
 }
 
-async function getOrCreateIngredient(nameOrSlug) {
-  const normalizedName = String(nameOrSlug).trim();
-  const slug = slugify(normalizedName);
+async function getOrCreateIngredient(nameOrSlug, defaultUnit = "count") {
+  const cleanedName = cleanIngredientName(nameOrSlug);
 
-  let { data: existing, error: selectError } = await supabaseClient
-    .from("ingredients")
-    .select("id, slug, name")
-    .eq("slug", slug)
-    .maybeSingle();
+  const existing = await findIngredientByNameFromSupabase(cleanedName);
 
-  if (selectError) throw selectError;
-  if (existing) return existing;
+  if (existing?.is_active) {
+    return existing;
+  }
 
-  const { data: created, error: insertError } = await supabaseClient
-    .from("ingredients")
-    .insert({
-      slug,
-      name: normalizedName
-    })
-    .select("id, slug, name")
-    .single();
-
-  if (insertError) throw insertError;
-  return created;
+  return createIngredientInSupabase({
+    name: cleanedName,
+    defaultUnit
+  });
 }
 
 async function createRecipeInSupabase(recipe) {
@@ -687,4 +676,344 @@ async function rebuildMealPlanGroceryListInSupabase() {
 
     if (insertError) throw insertError;
   }
+}
+
+function normalizeIngredientName(name) {
+  return name.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+async function fetchIngredientsFromSupabase(searchTerm = "") {
+  let query = supabaseClient
+    .from("ingredients")
+    .select("id, name, slug, default_unit, is_active")
+    .eq("is_active", true)
+    .order("name", { ascending: true });
+
+  if (searchTerm.trim()) {
+    query = query.ilike("name", `%${searchTerm.trim()}%`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) throw error;
+  return data || [];
+}
+
+async function createIngredientInSupabase({ name, defaultUnit }) {
+  await requireSignedInUser();
+
+  const cleanedName = name.trim().replace(/\s+/g, " ");
+
+  if (!cleanedName) {
+    throw new Error("Enter an ingredient name.");
+  }
+
+  const ingredient = {
+    name: cleanedName,
+    normalized_name: normalizeIngredientName(cleanedName),
+    slug: slugify(cleanedName),
+    default_unit: defaultUnit || "count",
+    is_active: true
+  };
+
+  const { data, error } = await supabaseClient
+    .from("ingredients")
+    .insert(ingredient)
+    .select("id, name, slug, default_unit")
+    .single();
+
+  if (error) {
+    if (error.code === "23505") {
+      throw new Error("That ingredient already exists.");
+    }
+
+    throw error;
+  }
+
+  return data;
+}
+
+async function updateIngredientInSupabase(id, { name, defaultUnit }) {
+  await requireSignedInUser();
+
+  const cleanedName = name.trim().replace(/\s+/g, " ");
+
+  const { data, error } = await supabaseClient
+    .from("ingredients")
+    .update({
+      name: cleanedName,
+      normalized_name: normalizeIngredientName(cleanedName),
+      slug: slugify(cleanedName),
+      default_unit: defaultUnit,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", id)
+    .select("id, name, slug, default_unit")
+    .single();
+
+  if (error) {
+    if (error.code === "23505") {
+      throw new Error("That ingredient already exists.");
+    }
+
+    throw error;
+  }
+
+  return data;
+}
+
+async function archiveIngredientInSupabase(id) {
+  await requireSignedInUser();
+
+  const { error } = await supabaseClient
+    .from("ingredients")
+    .update({
+      is_active: false,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", id);
+
+  if (error) throw error;
+}
+
+function normalizeIngredientName(name) {
+  return String(name)
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+function cleanIngredientName(name) {
+  return String(name)
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function isDuplicateIngredientError(error) {
+  return error?.code === "23505";
+}
+
+async function fetchIngredientsFromSupabase(searchTerm = "") {
+  let query = supabaseClient
+    .from("ingredients")
+    .select(`
+      id,
+      name,
+      normalized_name,
+      slug,
+      default_unit,
+      is_active,
+      created_at,
+      updated_at
+    `)
+    .eq("is_active", true)
+    .order("name", { ascending: true });
+
+  const cleanedSearch = cleanIngredientName(searchTerm);
+
+  if (cleanedSearch) {
+    query = query.ilike("name", `%${cleanedSearch}%`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) throw error;
+
+  return data || [];
+}
+
+async function fetchIngredientByIdFromSupabase(id) {
+  const { data, error } = await supabaseClient
+    .from("ingredients")
+    .select(`
+      id,
+      name,
+      normalized_name,
+      slug,
+      default_unit,
+      is_active,
+      created_at,
+      updated_at
+    `)
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+async function findIngredientByNameFromSupabase(name) {
+  const normalizedName = normalizeIngredientName(name);
+
+  if (!normalizedName) return null;
+
+  const { data, error } = await supabaseClient
+    .from("ingredients")
+    .select(`
+      id,
+      name,
+      normalized_name,
+      slug,
+      default_unit,
+      is_active
+    `)
+    .eq("normalized_name", normalizedName)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  return data || null;
+}
+
+async function createIngredientInSupabase({
+  name,
+  defaultUnit = "count"
+}) {
+  await requireSignedInUser();
+
+  const cleanedName = cleanIngredientName(name);
+
+  if (!cleanedName) {
+    throw new Error("Enter an ingredient name.");
+  }
+
+  const normalizedName = normalizeIngredientName(cleanedName);
+
+  const existing = await findIngredientByNameFromSupabase(cleanedName);
+
+  if (existing?.is_active) {
+    throw new Error("That ingredient already exists.");
+  }
+
+  /*
+   * If an ingredient with this name was archived previously,
+   * reactivate it instead of trying to insert a duplicate row.
+   */
+  if (existing && !existing.is_active) {
+    const { data, error } = await supabaseClient
+      .from("ingredients")
+      .update({
+        name: cleanedName,
+        slug: slugify(cleanedName),
+        default_unit: defaultUnit || "count",
+        is_active: true,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", existing.id)
+      .select(`
+        id,
+        name,
+        normalized_name,
+        slug,
+        default_unit,
+        is_active
+      `)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("ingredients")
+    .insert({
+      name: cleanedName,
+      normalized_name: normalizedName,
+      slug: slugify(cleanedName),
+      default_unit: defaultUnit || "count",
+      is_active: true
+    })
+    .select(`
+      id,
+      name,
+      normalized_name,
+      slug,
+      default_unit,
+      is_active
+    `)
+    .single();
+
+  if (error) {
+    if (isDuplicateIngredientError(error)) {
+      throw new Error("That ingredient already exists.");
+    }
+
+    throw error;
+  }
+
+  return data;
+}
+
+async function updateIngredientInSupabase(
+  id,
+  {
+    name,
+    defaultUnit
+  }
+) {
+  await requireSignedInUser();
+
+  const cleanedName = cleanIngredientName(name);
+
+  if (!cleanedName) {
+    throw new Error("Enter an ingredient name.");
+  }
+
+  const normalizedName = normalizeIngredientName(cleanedName);
+
+  const existing = await findIngredientByNameFromSupabase(cleanedName);
+
+  if (existing && existing.id !== id) {
+    throw new Error("That ingredient already exists.");
+  }
+
+  const { data, error } = await supabaseClient
+    .from("ingredients")
+    .update({
+      name: cleanedName,
+      normalized_name: normalizedName,
+      slug: slugify(cleanedName),
+      default_unit: defaultUnit || "count",
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", id)
+    .select(`
+      id,
+      name,
+      normalized_name,
+      slug,
+      default_unit,
+      is_active
+    `)
+    .single();
+
+  if (error) {
+    if (isDuplicateIngredientError(error)) {
+      throw new Error("That ingredient already exists.");
+    }
+
+    throw error;
+  }
+
+  return data;
+}
+
+async function archiveIngredientInSupabase(id) {
+  await requireSignedInUser();
+
+  const { data, error } = await supabaseClient
+    .from("ingredients")
+    .update({
+      is_active: false,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", id)
+    .select("id, name, is_active")
+    .single();
+
+  if (error) throw error;
+
+  return data;
 }
