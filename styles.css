@@ -2095,3 +2095,50 @@ header.nav-scrolled .nav-logo {
     flex: 1;
   }
 }
+
+.ingredient-section-action {
+  width: 100%;
+  margin: 0.25rem 0 1.25rem;
+}
+
+.edit-ingredient-row {
+  display: grid;
+  grid-template-columns:
+    minmax(220px, 1fr)
+    minmax(120px, 150px)
+    minmax(120px, 160px)
+    auto;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.ingredient-unit[readonly] {
+  cursor: default;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--text-main);
+}
+
+@media (max-width: 750px) {
+  .edit-ingredient-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ingredient-search-wrapper {
+    grid-column: 1 / -1;
+  }
+
+  .remove-ingredient-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-ingredient-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ingredient-search-wrapper {
+    grid-column: auto;
+  }
+}

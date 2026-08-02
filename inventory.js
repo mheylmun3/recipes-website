@@ -7,42 +7,34 @@ const addNewBtn = document.getElementById("addNewBtn");
 const inventoryList = document.getElementById("inventoryList");
 const inventorySearch = document.getElementById("inventorySearch");
 
+let ingredientCatalog = [];
 let selectedIngredient = null;
 let currentInventory = [];
 
-function slugify(text) {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/['"]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
-function getIngredientCatalog() {
+async function loadIngredientCatalog() {
   try {
-    const saved = localStorage.getItem("ingredientCatalog");
+    ingredientCatalog = await fetchIngredientsFromSupabase();
 
-    if (!saved) {
-      localStorage.setItem("ingredientCatalog", JSON.stringify(defaultIngredients));
-      return [...defaultIngredients];
-    }
-
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : [...defaultIngredients];
+    ingredientCatalog.sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
   } catch (error) {
     console.error("Failed to load ingredient catalog:", error);
-    return [...defaultIngredients];
+    ingredientCatalog = [];
   }
 }
 
-function saveIngredientCatalog(catalog) {
-  localStorage.setItem("ingredientCatalog", JSON.stringify(catalog));
+function selectIngredient(ingredient) {
+  selectedIngredient = ingredient;
+
+  ingredientSearch.value = ingredient.name;
+  ingredientUnit.value = ingredient.default_unit || "count";
+
+  ingredientSuggestions.innerHTML = "";
+  ingredientSuggestions.style.display = "none";
 }
 
 function renderSuggestions(searchTerm) {
-  const catalog = getIngredientCatalog();
   ingredientSuggestions.innerHTML = "";
   selectedIngredient = null;
 
@@ -53,9 +45,13 @@ function renderSuggestions(searchTerm) {
     return;
   }
 
-  const matches = catalog
-    .filter(item => item.name.toLowerCase().includes(trimmed))
-    .sort((a, b) => a.name.localeCompare(b.name))
+  const matches = ingredientCatalog
+    .filter(item =>
+      item.name.toLowerCase().includes(trimmed)
+    )
+    .sort((a, b) =>
+      a.name.localeCompare(b.name)
+    )
     .slice(0, 8);
 
   if (!matches.length) {
@@ -66,13 +62,18 @@ function renderSuggestions(searchTerm) {
   matches.forEach(item => {
     const option = document.createElement("div");
     option.className = "suggestion-item";
-    option.textContent = item.name;
+
+    const name = document.createElement("span");
+    name.textContent = item.name;
+
+    const unit = document.createElement("small");
+    unit.textContent = item.default_unit || "count";
+
+    option.appendChild(name);
+    option.appendChild(unit);
 
     option.addEventListener("click", () => {
-      selectedIngredient = item;
-      ingredientSearch.value = item.name;
-      ingredientSuggestions.innerHTML = "";
-      ingredientSuggestions.style.display = "none";
+      selectIngredient(item);
     });
 
     ingredientSuggestions.appendChild(option);
@@ -84,7 +85,7 @@ function renderSuggestions(searchTerm) {
 function clearIngredientForm() {
   ingredientSearch.value = "";
   ingredientQuantity.value = "";
-  ingredientUnit.value = "count";
+  ingredientUnit.value = "";
   ingredientSuggestions.innerHTML = "";
   ingredientSuggestions.style.display = "none";
   selectedIngredient = null;
@@ -112,18 +113,23 @@ function formatUnit(quantity, unit) {
   };
 
   const forms = unitMap[unit] || [unit, unit];
-  return quantity === 1 ? forms[0] : forms[1];
+
+  return quantity === 1
+    ? forms[0]
+    : forms[1];
 }
 
 function renderInventory() {
-  const searchTerm = inventorySearch ? inventorySearch.value.trim().toLowerCase() : "";
+  const searchTerm = inventorySearch
+    ? inventorySearch.value.trim().toLowerCase()
+    : "";
 
   inventoryList.innerHTML = "";
 
-  let filteredItems = currentInventory;
+  let filteredItems = [...currentInventory];
 
   if (searchTerm) {
-    filteredItems = currentInventory.filter(item =>
+    filteredItems = filteredItems.filter(item =>
       item.name.toLowerCase().includes(searchTerm)
     );
   }
@@ -132,19 +138,27 @@ function renderInventory() {
     inventoryList.innerHTML = searchTerm
       ? "<p>No matching inventory items found.</p>"
       : "<p>No ingredients in inventory yet.</p>";
+
     return;
   }
 
   filteredItems
-    .slice()
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a, b) =>
+      a.name.localeCompare(b.name)
+    )
     .forEach(item => {
       const row = document.createElement("div");
       row.className = "inventory-item";
 
       const name = document.createElement("span");
-      const formattedUnit = formatUnit(item.quantity, item.unit);
-      name.textContent = `${item.name} — ${item.quantity} ${formattedUnit}`;
+
+      const formattedUnit = formatUnit(
+        item.quantity,
+        item.unit
+      );
+
+      name.textContent =
+        `${item.name} — ${item.quantity} ${formattedUnit}`;
 
       row.appendChild(name);
       inventoryList.appendChild(row);
@@ -152,90 +166,122 @@ function renderInventory() {
 }
 
 async function addIngredientToInventory(ingredient) {
-  const quantityValue = parseFloat(ingredientQuantity.value);
-  const unitValue = ingredientUnit.value;
+  const quantityValue = parseFloat(
+    ingredientQuantity.value
+  );
 
-  if (Number.isNaN(quantityValue) || quantityValue === 0) {
-    alert("Enter a quantity greater than 0 or less than 0.");
+  const unitValue =
+    ingredient.default_unit ||
+    ingredientUnit.value;
+
+  if (
+    Number.isNaN(quantityValue) ||
+    quantityValue === 0
+  ) {
+    alert(
+      "Enter a quantity greater than 0 or less than 0."
+    );
+    return;
+  }
+
+  if (!unitValue) {
+    alert(
+      "The selected ingredient does not have a default unit."
+    );
     return;
   }
 
   try {
     await upsertInventoryItemInSupabase({
-      ingredientSlug: ingredient.id,
+      ingredientSlug: ingredient.slug,
       ingredientName: ingredient.name,
       quantity: quantityValue,
       unit: unitValue
     });
 
     clearIngredientForm();
+
     await loadInventory();
     await rebuildMealPlanGroceryListInSupabase();
   } catch (error) {
-    console.error("Failed to update inventory:", error);
-    alert(error.message || "Failed to update inventory.");
+    console.error(
+      "Failed to update inventory:",
+      error
+    );
+
+    alert(
+      error.message ||
+      "Failed to update inventory."
+    );
   }
-}
-
-function addNewIngredient() {
-  const name = ingredientSearch.value.trim();
-
-  if (!name) {
-    alert("Enter an ingredient name first.");
-    return;
-  }
-
-  const quantityValue = parseFloat(ingredientQuantity.value);
-  if (Number.isNaN(quantityValue) || quantityValue <= 0) {
-    alert("Enter a valid quantity greater than 0.");
-    return;
-  }
-
-  const catalog = getIngredientCatalog();
-  const existing = catalog.find(
-    item => item.name.toLowerCase() === name.toLowerCase()
-  );
-
-  if (existing) {
-    addIngredientToInventory(existing);
-    return;
-  }
-
-  const newIngredient = {
-    id: slugify(name),
-    name
-  };
-
-  catalog.push(newIngredient);
-  saveIngredientCatalog(catalog);
-  addIngredientToInventory(newIngredient);
 }
 
 async function loadInventory() {
   try {
-    currentInventory = await fetchInventoryFromSupabase();
+    currentInventory =
+      await fetchInventoryFromSupabase();
+
     renderInventory();
   } catch (error) {
-    console.error("Failed to load inventory from Supabase:", error);
-    inventoryList.innerHTML = "<p>Failed to load inventory.</p>";
+    console.error(
+      "Failed to load inventory from Supabase:",
+      error
+    );
+
+    inventoryList.innerHTML =
+      "<p>Failed to load inventory.</p>";
   }
 }
 
 ingredientSearch.addEventListener("input", () => {
-  renderSuggestions(ingredientSearch.value);
+  selectedIngredient = null;
+  ingredientUnit.value = "";
+
+  renderSuggestions(
+    ingredientSearch.value
+  );
+});
+
+ingredientSearch.addEventListener("focus", () => {
+  renderSuggestions(
+    ingredientSearch.value
+  );
 });
 
 addSelectedBtn.addEventListener("click", () => {
   if (!selectedIngredient) {
-    alert("Select an ingredient from the dropdown first.");
+    alert(
+      "Select an ingredient from the dropdown first."
+    );
     return;
   }
 
-  addIngredientToInventory(selectedIngredient);
+  addIngredientToInventory(
+    selectedIngredient
+  );
 });
 
 addNewBtn.addEventListener("click", () => {
-  addNewIngredient();
+  openIngredientModal({
+    initialName: ingredientSearch.value,
+    ingredients: ingredientCatalog,
+
+    onCreated: createdIngredient => {
+      ingredientCatalog.push(
+        createdIngredient
+      );
+
+      ingredientCatalog.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
+      selectIngredient(
+        createdIngredient
+      );
+
+      ingredientQuantity.focus();
+    }
+  });
 });
 
 document.addEventListener("click", event => {
@@ -251,4 +297,9 @@ inventorySearch.addEventListener("input", () => {
   renderInventory();
 });
 
-loadInventory();
+(async function initInventoryPage() {
+  await Promise.all([
+    loadIngredientCatalog(),
+    loadInventory()
+  ]);
+})();

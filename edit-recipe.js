@@ -19,6 +19,8 @@ const deleteRecipeModal = document.getElementById("deleteRecipeModal");
 const cancelDeleteRecipeBtn = document.getElementById("cancelDeleteRecipeBtn");
 const confirmDeleteRecipeBtn = document.getElementById("confirmDeleteRecipeBtn");
 
+const openNewIngredientModalBtn = document.getElementById("openNewIngredientModalBtn");
+
 let pendingRecipeImage = "";
 let removeRecipeImage = false;
 
@@ -112,17 +114,9 @@ function createIngredientRow(ingredient = {}) {
   const row = document.createElement("div");
   row.className = "edit-ingredient-row";
 
-  const catalog = getIngredientCatalog();
-
-  const unitOptions = ingredientUnits
-    .map(unit => {
-      const selected = (ingredient.unit || "") === unit ? "selected" : "";
-      const label = unit === "" ? "No Unit" : unit;
-      return `<option value="${unit}" ${selected}>${label}</option>`;
-    })
-    .join("");
-
-  const suggestionsId = `suggestions-${Math.random().toString(36).slice(2, 9)}`;
+  const suggestionsId = `suggestions-${Math.random()
+    .toString(36)
+    .slice(2, 9)}`;
 
   row.innerHTML = `
     <div class="ingredient-search-wrapper">
@@ -133,12 +127,17 @@ function createIngredientRow(ingredient = {}) {
         value="${ingredient.name || ""}"
         autocomplete="off"
       />
+
       <input
         type="hidden"
         class="ingredient-id-hidden"
-        value="${ingredient.ingredientId || ""}"
+        value="${ingredient.ingredientId || ingredient.slug || ""}"
       />
-      <div id="${suggestionsId}" class="ingredient-suggestions suggestions-list"></div>
+
+      <div
+        id="${suggestionsId}"
+        class="ingredient-suggestions suggestions-list"
+      ></div>
     </div>
 
     <input
@@ -149,38 +148,39 @@ function createIngredientRow(ingredient = {}) {
       value="${ingredient.quantity ?? ""}"
     />
 
-    <select class="ingredient-unit">
-      ${unitOptions}
-    </select>
+    <input
+      type="text"
+      class="ingredient-unit"
+      value="${ingredient.unit || ingredient.default_unit || ""}"
+      placeholder="Unit"
+      readonly
+      tabindex="-1"
+    />
 
-    <button type="button" class="add-new-ingredient-btn">Add New</button>
-    <button type="button" class="remove-ingredient-btn">Remove</button>
+    <button type="button" class="remove-ingredient-btn">
+      Remove
+    </button>
   `;
 
   const searchInput = row.querySelector(".ingredient-search-input");
   const hiddenId = row.querySelector(".ingredient-id-hidden");
+  const unitInput = row.querySelector(".ingredient-unit");
   const suggestionsBox = row.querySelector(`#${suggestionsId}`);
-  const addNewBtn = row.querySelector(".add-new-ingredient-btn");
   const removeBtn = row.querySelector(".remove-ingredient-btn");
 
+  function selectIngredient(selectedIngredient) {
+    searchInput.value = selectedIngredient.name;
+    hiddenId.value = selectedIngredient.slug;
+    unitInput.value = selectedIngredient.default_unit || "count";
+
+    suggestionsBox.innerHTML = "";
+    suggestionsBox.style.display = "none";
+  }
+
   function renderSuggestions(searchTerm) {
-    const currentCatalog = getIngredientCatalog();
     suggestionsBox.innerHTML = "";
 
-    const trimmed = searchTerm.trim().toLowerCase();
-
-    let matches;
-    if (!trimmed) {
-      matches = currentCatalog
-        .slice()
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .slice(0, 8);
-    } else {
-      matches = currentCatalog
-        .filter(item => item.name.toLowerCase().includes(trimmed))
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .slice(0, 8);
-    }
+    const matches = getIngredientMatches(searchTerm);
 
     if (!matches.length) {
       suggestionsBox.style.display = "none";
@@ -190,13 +190,18 @@ function createIngredientRow(ingredient = {}) {
     matches.forEach(item => {
       const option = document.createElement("div");
       option.className = "suggestion-item";
-      option.textContent = item.name;
+
+      const name = document.createElement("span");
+      name.textContent = item.name;
+
+      const unit = document.createElement("small");
+      unit.textContent = item.default_unit || "count";
+
+      option.appendChild(name);
+      option.appendChild(unit);
 
       option.addEventListener("click", () => {
-        searchInput.value = item.name;
-        hiddenId.value = item.id;
-        suggestionsBox.innerHTML = "";
-        suggestionsBox.style.display = "none";
+        selectIngredient(item);
       });
 
       suggestionsBox.appendChild(option);
@@ -207,6 +212,7 @@ function createIngredientRow(ingredient = {}) {
 
   searchInput.addEventListener("input", () => {
     hiddenId.value = "";
+    unitInput.value = "";
     renderSuggestions(searchInput.value);
   });
 
@@ -214,151 +220,65 @@ function createIngredientRow(ingredient = {}) {
     renderSuggestions(searchInput.value);
   });
 
-  addNewBtn.addEventListener("click", () => {
-    const name = searchInput.value.trim();
-
-    if (!name) {
-      alert("Enter an ingredient name first.");
-      return;
-    }
-
-    const currentCatalog = getIngredientCatalog();
-    const existing = currentCatalog.find(
-      item => item.name.toLowerCase() === name.toLowerCase()
-    );
-
-    if (existing) {
-      searchInput.value = existing.name;
-      hiddenId.value = existing.id;
-      suggestionsBox.innerHTML = "";
-      suggestionsBox.style.display = "none";
-      return;
-    }
-
-    const newIngredient = {
-      id: slugify(name),
-      name
-    };
-
-    currentCatalog.push(newIngredient);
-    saveIngredientCatalog(currentCatalog);
-
-    searchInput.value = newIngredient.name;
-    hiddenId.value = newIngredient.id;
-    suggestionsBox.innerHTML = "";
-    suggestionsBox.style.display = "none";
-  });
-
   removeBtn.addEventListener("click", () => {
     row.remove();
   });
 
+  document.addEventListener("click", event => {
+    if (!row.contains(event.target)) {
+      suggestionsBox.style.display = "none";
+    }
+  });
+
   editIngredientsList.appendChild(row);
-}
 
-function loadRecipeIntoForm(recipe) {
-  recipeNameInput.value = recipe.name || "";
-  recipeCategoryInput.value = recipe.category || "stove";
-  recipeServingsInput.value = recipe.servings || 1;
-  recipeCaloriesInput.value = recipe.calories ?? "";
-  recipeProteinInput.value = recipe.protein ?? "";
-  recipeFiberInput.value = recipe.fiber ?? "";
-  recipeInstructionsInput.value = recipe.instructions || "";
+  if (ingredient.name) {
+    const existingIngredient = ingredientCatalog.find(
+      item =>
+        item.slug === ingredient.ingredientId ||
+        normalizeIngredientName(item.name) ===
+          normalizeIngredientName(ingredient.name)
+    );
 
-  removeRecipeImage = false;
-  pendingRecipeImage = recipe.image || "";
+    if (existingIngredient) {
+      hiddenId.value = existingIngredient.slug;
 
-  if (recipeImagePreview) {
-    if (pendingRecipeImage) {
-      recipeImagePreview.src = pendingRecipeImage;
-      recipeImagePreview.style.display = "block";
-    } else {
-      recipeImagePreview.src = "";
-      recipeImagePreview.style.display = "none";
+      if (!unitInput.value) {
+        unitInput.value =
+          existingIngredient.default_unit || "count";
+      }
     }
   }
 
-  if (recipeImageInput) {
-    recipeImageInput.value = "";
-  }
-
-  editIngredientsList.innerHTML = "";
-
-  if (Array.isArray(recipe.ingredients) && recipe.ingredients.length) {
-    recipe.ingredients.forEach(ingredient => {
-      if (typeof ingredient === "string") {
-        createIngredientRow({
-          name: ingredient,
-          ingredientId: "",
-          quantity: null,
-          unit: ""
-        });
-      } else {
-        createIngredientRow({
-          name: ingredient.name || "",
-          ingredientId: ingredient.ingredientId || "",
-          quantity: ingredient.quantity ?? null,
-          unit: ingredient.unit || ""
-        });
-      }
-    });
-  } else {
-    createIngredientRow();
-  }
+  return row;
 }
 
 function collectIngredientsFromForm() {
-  const rows = Array.from(editIngredientsList.querySelectorAll(".edit-ingredient-row"));
-  const catalog = getIngredientCatalog();
+  const rows = document.querySelectorAll(".edit-ingredient-row");
 
-  return rows
+  return Array.from(rows)
     .map(row => {
-      const nameInput = row.querySelector(".ingredient-search-input").value.trim();
-      const ingredientId = row.querySelector(".ingredient-id-hidden").value.trim();
-      const quantityRaw = row.querySelector(".ingredient-quantity").value.trim();
-      const unit = row.querySelector(".ingredient-unit").value.trim();
+      const searchInput = row.querySelector(".ingredient-search-input");
+      const hiddenId = row.querySelector(".ingredient-id-hidden");
+      const quantityInput = row.querySelector(".ingredient-quantity");
+      const unitInput = row.querySelector(".ingredient-unit");
 
-      if (!nameInput && !ingredientId && !quantityRaw && !unit) {
+      const name = searchInput.value.trim();
+      const ingredientId = hiddenId.value;
+      const unit = unitInput.value.trim();
+
+      if (!name || !ingredientId) {
         return null;
       }
 
-      let selectedIngredient = null;
-
-      if (ingredientId) {
-        selectedIngredient = catalog.find(item => item.id === ingredientId);
-      }
-
-      if (!selectedIngredient && nameInput) {
-        selectedIngredient = catalog.find(
-          item => item.name.toLowerCase() === nameInput.toLowerCase()
-        );
-      }
-
-      if (!selectedIngredient) {
-        const newIngredient = {
-          id: slugify(nameInput),
-          name: nameInput
-        };
-
-        const updatedCatalog = getIngredientCatalog();
-        const exists = updatedCatalog.some(item => item.id === newIngredient.id);
-
-        if (!exists) {
-          updatedCatalog.push(newIngredient);
-          saveIngredientCatalog(updatedCatalog);
-        }
-
-        selectedIngredient = newIngredient;
-      }
-
-      const quantity = quantityRaw === "" ? null : parseFloat(quantityRaw);
-
       return {
-        ingredientId: selectedIngredient.id,
-        name: selectedIngredient.name,
-        quantity,
-        unit: unit || null,
-        text: formatIngredientText(selectedIngredient.name, quantity, unit)
+        ingredientId,
+        name,
+        quantity:
+          quantityInput.value === ""
+            ? null
+            : parseFloat(quantityInput.value),
+        unit
       };
     })
     .filter(Boolean);
@@ -563,5 +483,32 @@ if (removeRecipeImageBtn) {
     }
   });
 }
+
+openNewIngredientModalBtn?.addEventListener("click", () => {
+  openIngredientModal({
+    ingredients: ingredientCatalog,
+
+    onCreated: createdIngredient => {
+      ingredientCatalog.push(createdIngredient);
+
+      ingredientCatalog.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
+      const newRow = createIngredientRow({
+        ingredientId: createdIngredient.slug,
+        name: createdIngredient.name,
+        quantity: "",
+        unit: createdIngredient.default_unit
+      });
+
+      const searchInput = newRow.querySelector(
+        ".ingredient-search-input"
+      );
+
+      searchInput?.focus();
+    }
+  });
+});
 
 loadRecipe();
