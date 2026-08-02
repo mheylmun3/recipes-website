@@ -2265,3 +2265,44 @@ header.nav-scrolled .nav-logo {
 .ingredient-create-modal .custom-modal-actions {
   margin-top: 1.25rem;
 }
+
+#addIngredientRowBtn {
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+
+  display: block;
+
+  padding: 0.95rem 1.5rem;
+
+  border: none;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    #e2c7ff 0%,
+    #f7d3df 100%
+  );
+
+  color: #4f4558;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+
+  box-shadow: 0 10px 25px rgba(104, 75, 120, 0.12);
+}
+
+#addIngredientRowBtn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+  box-shadow: 0 16px 30px rgba(104, 75, 120, 0.18);
+}
+
+#addIngredientRowBtn:active {
+  transform: translateY(0);
+}
