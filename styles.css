@@ -2266,44 +2266,140 @@ header.nav-scrolled .nav-logo {
   margin-top: 1.25rem;
 }
 
-#addIngredientRowBtn {
-  display: block;
-  width: 100%;
+/* =====================================
+   Final recipe ingredient row alignment
+===================================== */
 
-  margin: 1rem 0 1.5rem;
-  padding: 1rem 1.5rem;
+.edit-ingredient-row {
+  display: grid;
+  grid-template-columns:
+    minmax(220px, 1fr)
+    minmax(120px, 150px)
+    minmax(120px, 160px)
+    auto;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/*
+ * The general ingredient-search-wrapper rule elsewhere adds
+ * margin-bottom: 1rem. Remove it only inside recipe rows.
+ */
+.edit-ingredient-row .ingredient-search-wrapper {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  margin: 0;
+  align-self: center;
+}
+
+.edit-ingredient-row .ingredient-search-input,
+.edit-ingredient-row .ingredient-quantity,
+.edit-ingredient-row .ingredient-unit {
+  width: 100%;
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+.edit-ingredient-row .remove-ingredient-btn {
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  white-space: nowrap;
+  font-family: inherit;
+  line-height: 1;
+}
+
+/* Keep the suggestion menu directly below the ingredient field */
+.edit-ingredient-row .ingredient-suggestions {
+  top: calc(100% + 0.35rem);
+}
+
+/* =====================================
+   Matching full-width recipe buttons
+===================================== */
+
+#addRecipeForm #addIngredientRowBtn,
+#editRecipeForm #addIngredientRowBtn,
+#addRecipeForm button[type="submit"],
+#editRecipeForm button[type="submit"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 42px;
+  margin: 0;
+  padding: 0.8rem 1.1rem;
 
   border: none;
   border-radius: 999px;
 
-  background: linear-gradient(
-    90deg,
-    #e2c7ff 0%,
-    #f7d3df 100%
-  );
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
 
-  color: #4f4558;
-  font: inherit;          /* Match the rest of the site */
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.2;
+  color: var(--text-main);
+  background: var(--button-main);
+  box-shadow: 0 6px 18px rgba(163, 139, 182, 0.14);
 
   cursor: pointer;
 
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
-    filter 0.2s ease;
-
-  box-shadow: 0 10px 25px rgba(104, 75, 120, 0.12);
+    background 0.2s ease;
 }
 
-#addIngredientRowBtn:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.03);
-  box-shadow: 0 16px 30px rgba(104, 75, 120, 0.18);
+#addRecipeForm #addIngredientRowBtn:hover,
+#editRecipeForm #addIngredientRowBtn:hover,
+#addRecipeForm button[type="submit"]:hover,
+#editRecipeForm button[type="submit"]:hover {
+  background: var(--button-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(163, 139, 182, 0.18);
 }
 
-#addIngredientRowBtn:active {
-  transform: translateY(0);
+/* Preserve spacing between Add Ingredient Row and Save */
+#addRecipeForm #addIngredientRowBtn,
+#editRecipeForm #addIngredientRowBtn {
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+/* Mobile recipe ingredient rows */
+@media (max-width: 750px) {
+  .edit-ingredient-row {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+
+  .edit-ingredient-row .ingredient-search-wrapper {
+    grid-column: 1 / -1;
+  }
+
+  .edit-ingredient-row .remove-ingredient-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-ingredient-row {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-ingredient-row .ingredient-search-wrapper {
+    grid-column: auto;
+  }
 }
