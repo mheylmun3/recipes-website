@@ -2326,56 +2326,26 @@ header.nav-scrolled .nav-logo {
 }
 
 /* =====================================
-   Matching full-width recipe buttons
+   Full-width recipe action buttons
 ===================================== */
 
-#addRecipeForm #addIngredientRowBtn,
-#editRecipeForm #addIngredientRowBtn,
-#addRecipeForm button[type="submit"],
-#editRecipeForm button[type="submit"] {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  min-height: 42px;
-  margin: 0;
-  padding: 0.8rem 1.1rem;
-
-  border: none;
-  border-radius: 999px;
-
-  font-family: inherit;
-  font-size: 0.875rem;
-  font-weight: 600;
-  line-height: 1;
-
-  color: var(--text-main);
-  background: var(--button-main);
-  box-shadow: 0 6px 18px rgba(163, 139, 182, 0.14);
-
-  cursor: pointer;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
-}
-
-#addRecipeForm #addIngredientRowBtn:hover,
-#editRecipeForm #addIngredientRowBtn:hover,
-#addRecipeForm button[type="submit"]:hover,
-#editRecipeForm button[type="submit"]:hover {
-  background: var(--button-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(163, 139, 182, 0.18);
-}
-
-/* Preserve spacing between Add Ingredient Row and Save */
+/*
+ * These buttons intentionally inherit all typography, padding, colors,
+ * shadows, and hover behavior from the shared button rules above.
+ * Only their width and spacing are changed here.
+ */
 #addRecipeForm #addIngredientRowBtn,
 #editRecipeForm #addIngredientRowBtn {
-  margin-top: 0.25rem;
-  margin-bottom: 1rem;
+  display: block;
+  width: 100%;
+  margin: 0.25rem 0 1rem;
+}
+
+#addRecipeForm button[type="submit"],
+#editRecipeForm button[type="submit"] {
+  display: block;
+  width: 100%;
+  margin: 0;
 }
 
 /* Mobile recipe ingredient rows */
