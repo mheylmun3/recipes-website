@@ -1,69 +1,59 @@
 const editRecipeForm = document.getElementById("editRecipeForm");
 
-const addRecipeForm = document.getElementById("addRecipeForm");
 const recipeNameInput = document.getElementById("recipeName");
 const recipeCategoryInput = document.getElementById("recipeCategory");
-const recipeInstructionsInput = document.getElementById("recipeInstructions");
-const addIngredientsList = document.getElementById("addIngredientsList");
-const addIngredientRowBtn = document.getElementById("addIngredientRowBtn");
 const recipeServingsInput = document.getElementById("recipeServings");
 const recipeCaloriesInput = document.getElementById("recipeCalories");
 const recipeProteinInput = document.getElementById("recipeProtein");
 const recipeFiberInput = document.getElementById("recipeFiber");
+const recipeInstructionsInput = document.getElementById("recipeInstructions");
+
+const recipeImageInput = document.getElementById("recipeImage");
+const recipeImagePreview = document.getElementById("recipeImagePreview");
+const removeRecipeImageBtn = document.getElementById("removeRecipeImageBtn");
+
+const editIngredientsList = document.getElementById("editIngredientsList");
+const addIngredientRowBtn = document.getElementById("addIngredientRowBtn");
+const openNewIngredientModalBtn = document.getElementById(
+  "openNewIngredientModalBtn"
+);
+
+const backToRecipeLink = document.getElementById("backToRecipeLink");
 
 const authRequiredModal = document.getElementById("authRequiredModal");
 const authRequiredMessage = document.getElementById("authRequiredMessage");
 const closeAuthRequiredBtn = document.getElementById("closeAuthRequiredBtn");
 const goToLoginBtn = document.getElementById("goToLoginBtn");
 
-const openNewIngredientModalBtn = document.getElementById("openNewIngredientModalBtn");
-
-const recipeName = document.getElementById("recipeName");
-const recipeCategory = document.getElementById("recipeCategory");
-const recipeServings = document.getElementById("recipeServings");
-const recipeImageInput = document.getElementById("recipeImage");
-const recipeImagePreview = document.getElementById("recipeImagePreview");
-const removeRecipeImageBtn = document.getElementById("removeRecipeImageBtn");
-const recipeInstructions = document.getElementById("recipeInstructions");
-const editIngredientsList = document.getElementById("editIngredientsList");
-const backToRecipeLink = document.getElementById("backToRecipeLink");
-
-const recipeCalories = document.getElementById("recipeCalories");
-const recipeProtein = document.getElementById("recipeProtein");
-const recipeFiber = document.getElementById("recipeFiber");
-
-let currentImagePath = "";
-let removeExistingImage = false;
-
-const ingredientUnits = [
-  "",
-  "count",
-  "tsp",
-  "tbsp",
-  "cups",
-  "oz",
-  "lbs",
-  "ml",
-  "liters",
-  "gallon",
-  "cans",
-  "jars",
-  "cloves",
-  "box",
-  "bag",
-  "stick",
-  "pint", 
-  "container"
-];
+const deleteRecipeBtn = document.getElementById("deleteRecipeBtn");
+const deleteRecipeModal = document.getElementById("deleteRecipeModal");
+const cancelDeleteRecipeBtn = document.getElementById(
+  "cancelDeleteRecipeBtn"
+);
+const confirmDeleteRecipeBtn = document.getElementById(
+  "confirmDeleteRecipeBtn"
+);
 
 let currentSlug = null;
 let originalRecipe = null;
+let ingredientCatalog = [];
+
+let currentImagePath = "";
+let pendingRecipeImage = null;
+let removeRecipeImage = false;
 
 function readFileAsDataURL(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
+
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = () => {
+      reject(reader.error || new Error("Failed to read image."));
+    };
+
     reader.readAsDataURL(file);
   });
 }
@@ -73,40 +63,20 @@ function getSlugFromUrl() {
   return params.get("slug");
 }
 
-function slugify(text) {
-  return text
-    .toLowerCase()
+function normalizeName(name) {
+  return String(name || "")
     .trim()
-    .replace(/['"]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
+    .replace(/\s+/g, " ")
+    .toLowerCase();
 }
 
-function getIngredientCatalog() {
-  try {
-    const fallbackDefaults =
-      typeof defaultIngredients !== "undefined" && Array.isArray(defaultIngredients)
-        ? defaultIngredients
-        : [];
-
-    const saved = localStorage.getItem("ingredientCatalog");
-
-    if (!saved) {
-      localStorage.setItem("ingredientCatalog", JSON.stringify(fallbackDefaults));
-      return [...fallbackDefaults];
-    }
-
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : [...fallbackDefaults];
-  } catch (error) {
-    console.error("Failed to load ingredient catalog:", error);
-    return [];
-  }
-}
-
-function saveIngredientCatalog(catalog) {
-  localStorage.setItem("ingredientCatalog", JSON.stringify(catalog));
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function formatIngredientText(name, quantity, unit) {
@@ -121,7 +91,114 @@ function formatIngredientText(name, quantity, unit) {
   return `${quantity} ${unit} ${name}`;
 }
 
+function showAuthRequiredModal(
+  message = "Please login to add or change any recipes."
+) {
+  if (!authRequiredModal) {
+    alert(message);
+    return;
+  }
+
+  if (authRequiredMessage) {
+    authRequiredMessage.textContent = message;
+  }
+
+  authRequiredModal.style.display = "flex";
+}
+
+function hideAuthRequiredModal() {
+  if (authRequiredModal) {
+    authRequiredModal.style.display = "none";
+  }
+}
+
+function isAuthenticationError(error) {
+  const message = String(error?.message || "").toLowerCase();
+
+  return (
+    message.includes("auth session missing") ||
+    message.includes("you must be signed in") ||
+    message.includes("jwt") ||
+    message.includes("not authenticated")
+  );
+}
+
+async function loadIngredientCatalog() {
+  try {
+    ingredientCatalog = await fetchIngredientsFromSupabase();
+
+    ingredientCatalog.sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+  } catch (error) {
+    console.error("Failed to load ingredient catalog:", error);
+    ingredientCatalog = [];
+    throw error;
+  }
+}
+
+function getIngredientMatches(searchTerm) {
+  const trimmed = normalizeName(searchTerm);
+
+  if (!trimmed) {
+    return ingredientCatalog.slice(0, 8);
+  }
+
+  return ingredientCatalog
+    .filter(ingredient =>
+      normalizeName(ingredient.name).includes(trimmed)
+    )
+    .slice(0, 8);
+}
+
+function findCatalogIngredient(ingredient = {}) {
+  const possibleId =
+    ingredient.ingredientId ||
+    ingredient.ingredient_id ||
+    ingredient.slug ||
+    "";
+
+  return ingredientCatalog.find(item => {
+    const idMatches =
+      item.slug === possibleId ||
+      item.id === possibleId;
+
+    const nameMatches =
+      normalizeName(item.name) === normalizeName(ingredient.name);
+
+    return idMatches || nameMatches;
+  });
+}
+
 function createIngredientRow(ingredient = {}) {
+  if (!editIngredientsList) {
+    console.error("editIngredientsList was not found.");
+    return null;
+  }
+
+  const catalogMatch = findCatalogIngredient(ingredient);
+
+  const initialName =
+    catalogMatch?.name ||
+    ingredient.name ||
+    ingredient.ingredient_name ||
+    "";
+
+  const initialSlug =
+    catalogMatch?.slug ||
+    ingredient.ingredientId ||
+    ingredient.ingredient_id ||
+    ingredient.slug ||
+    "";
+
+  const initialUnit =
+    catalogMatch?.default_unit ||
+    ingredient.unit ||
+    ingredient.default_unit ||
+    "";
+
+  const initialQuantity = ingredient.quantity ?? "";
+
   const row = document.createElement("div");
   row.className = "edit-ingredient-row";
 
@@ -135,14 +212,14 @@ function createIngredientRow(ingredient = {}) {
         type="text"
         class="ingredient-search-input"
         placeholder="Search ingredient"
-        value="${ingredient.name || ""}"
+        value="${escapeHtml(initialName)}"
         autocomplete="off"
       />
 
       <input
         type="hidden"
         class="ingredient-id-hidden"
-        value="${ingredient.ingredientId || ingredient.slug || ""}"
+        value="${escapeHtml(initialSlug)}"
       />
 
       <div
@@ -156,19 +233,22 @@ function createIngredientRow(ingredient = {}) {
       class="ingredient-quantity"
       placeholder="Quantity"
       step="any"
-      value="${ingredient.quantity ?? ""}"
+      value="${escapeHtml(initialQuantity)}"
     />
 
     <input
       type="text"
       class="ingredient-unit"
-      value="${ingredient.unit || ingredient.default_unit || ""}"
-      placeholder="Unit"
+      value="${escapeHtml(initialUnit)}"
+      placeholder=""
       readonly
       tabindex="-1"
     />
 
-    <button type="button" class="remove-ingredient-btn">
+    <button
+      type="button"
+      class="remove-ingredient-btn"
+    >
       Remove
     </button>
   `;
@@ -179,13 +259,17 @@ function createIngredientRow(ingredient = {}) {
   const suggestionsBox = row.querySelector(`#${suggestionsId}`);
   const removeBtn = row.querySelector(".remove-ingredient-btn");
 
+  function hideSuggestions() {
+    suggestionsBox.innerHTML = "";
+    suggestionsBox.style.display = "none";
+  }
+
   function selectIngredient(selectedIngredient) {
     searchInput.value = selectedIngredient.name;
     hiddenId.value = selectedIngredient.slug;
-    unitInput.value = selectedIngredient.default_unit || "count";
+    unitInput.value = selectedIngredient.default_unit || "";
 
-    suggestionsBox.innerHTML = "";
-    suggestionsBox.style.display = "none";
+    hideSuggestions();
   }
 
   function renderSuggestions(searchTerm) {
@@ -202,16 +286,12 @@ function createIngredientRow(ingredient = {}) {
       const option = document.createElement("div");
       option.className = "suggestion-item";
 
-      const name = document.createElement("span");
-      name.textContent = item.name;
+      // Only show the ingredient name.
+      // The unit is autofilled after selection.
+      option.textContent = item.name;
 
-      const unit = document.createElement("small");
-      unit.textContent = item.default_unit || "count";
-
-      option.appendChild(name);
-      option.appendChild(unit);
-
-      option.addEventListener("click", () => {
+      option.addEventListener("click", event => {
+        event.stopPropagation();
         selectIngredient(item);
       });
 
@@ -237,103 +317,75 @@ function createIngredientRow(ingredient = {}) {
 
   document.addEventListener("click", event => {
     if (!row.contains(event.target)) {
-      suggestionsBox.style.display = "none";
+      hideSuggestions();
     }
   });
 
   editIngredientsList.appendChild(row);
 
-  if (ingredient.name) {
-    const existingIngredient = ingredientCatalog.find(
-      item =>
-        item.slug === ingredient.ingredientId ||
-        normalizeIngredientName(item.name) ===
-          normalizeIngredientName(ingredient.name)
-    );
-
-    if (existingIngredient) {
-      hiddenId.value = existingIngredient.slug;
-
-      if (!unitInput.value) {
-        unitInput.value =
-          existingIngredient.default_unit || "count";
-      }
-    }
-  }
-
   return row;
 }
 
 function collectIngredientsFromForm() {
-  const rows = document.querySelectorAll(".edit-ingredient-row");
+  const rows = editIngredientsList.querySelectorAll(
+    ".edit-ingredient-row"
+  );
 
-  return Array.from(rows)
-    .map(row => {
-      const searchInput = row.querySelector(".ingredient-search-input");
-      const hiddenId = row.querySelector(".ingredient-id-hidden");
-      const quantityInput = row.querySelector(".ingredient-quantity");
-      const unitInput = row.querySelector(".ingredient-unit");
+  const ingredients = [];
 
-      const name = searchInput.value.trim();
-      const ingredientId = hiddenId.value;
-      const unit = unitInput.value.trim();
+  for (const row of rows) {
+    const searchInput = row.querySelector(".ingredient-search-input");
+    const hiddenId = row.querySelector(".ingredient-id-hidden");
+    const quantityInput = row.querySelector(".ingredient-quantity");
+    const unitInput = row.querySelector(".ingredient-unit");
 
-      if (!name || !ingredientId) {
-        return null;
+    const name = searchInput.value.trim();
+    const ingredientId = hiddenId.value.trim();
+    const unit = unitInput.value.trim();
+    const quantityText = quantityInput.value.trim();
+
+    const rowIsEmpty =
+      !name &&
+      !ingredientId &&
+      !quantityText &&
+      !unit;
+
+    if (rowIsEmpty) {
+      continue;
+    }
+
+    if (!name || !ingredientId) {
+      throw new Error(
+        `Select "${name || "the ingredient"}" from the ingredient suggestions.`
+      );
+    }
+
+    if (!unit) {
+      throw new Error(
+        `${name} does not have a default unit. Update it on the Ingredients page.`
+      );
+    }
+
+    let quantity = null;
+
+    if (quantityText !== "") {
+      quantity = parseFloat(quantityText);
+
+      if (Number.isNaN(quantity)) {
+        throw new Error(`Enter a valid quantity for ${name}.`);
       }
-
-      return {
-        ingredientId,
-        name,
-        quantity:
-          quantityInput.value === ""
-            ? null
-            : parseFloat(quantityInput.value),
-        unit
-      };
-    })
-    .filter(Boolean);
-}
-
-if (deleteRecipeBtn) {
-  deleteRecipeBtn.addEventListener("click", () => {
-    if (deleteRecipeModal) {
-      deleteRecipeModal.style.display = "flex";
-    }
-  });
-}
-
-if (cancelDeleteRecipeBtn) {
-  cancelDeleteRecipeBtn.addEventListener("click", () => {
-    if (deleteRecipeModal) {
-      deleteRecipeModal.style.display = "none";
-    }
-  });
-}
-
-if (deleteRecipeModal) {
-  deleteRecipeModal.addEventListener("click", event => {
-    if (event.target === deleteRecipeModal) {
-      deleteRecipeModal.style.display = "none";
-    }
-  });
-}
-
-if (confirmDeleteRecipeBtn) {
-  confirmDeleteRecipeBtn.addEventListener("click", async () => {
-    if (!currentSlug) {
-      alert("No recipe found to hide.");
-      return;
     }
 
-    try {
-      await softDeleteRecipeInSupabase(currentSlug);
-      window.location.href = "all-recipes.html";
-    } catch (error) {
-      console.error("Failed to hide recipe:", error);
-      alert(error.message || "Failed to hide recipe.");
-    }
-  });
+    ingredients.push({
+      ingredientId,
+      name,
+      quantity,
+      unit,
+      displayText: formatIngredientText(name, quantity, unit)
+    });
+  }
+
+  return ingredients;
 }
 
 function loadRecipeIntoForm(recipe) {
@@ -341,29 +393,34 @@ function loadRecipeIntoForm(recipe) {
     throw new Error("Recipe data is missing.");
   }
 
-  recipeName.value = recipe.name || "";
-  recipeCategory.value = recipe.category || "";
-  recipeServings.value = recipe.servings ?? "";
-  recipeInstructions.value = recipe.instructions || "";
+  recipeNameInput.value = recipe.name || "";
+  recipeCategoryInput.value = recipe.category || "";
+  recipeServingsInput.value = recipe.servings ?? "";
+  recipeInstructionsInput.value = recipe.instructions || "";
 
-  if (recipeCalories) {
-    recipeCalories.value = recipe.calories ?? "";
+  if (recipeCaloriesInput) {
+    recipeCaloriesInput.value = recipe.calories ?? "";
   }
 
-  if (recipeProtein) {
-    recipeProtein.value = recipe.protein ?? "";
+  if (recipeProteinInput) {
+    recipeProteinInput.value = recipe.protein ?? "";
   }
 
-  if (recipeFiber) {
-    recipeFiber.value = recipe.fiber ?? "";
+  if (recipeFiberInput) {
+    recipeFiberInput.value = recipe.fiber ?? "";
   }
 
-  currentImagePath = recipe.image_path || "";
-  removeExistingImage = false;
+  currentImagePath =
+    recipe.image_path ||
+    recipe.image ||
+    "";
+
+  pendingRecipeImage = null;
+  removeRecipeImage = false;
 
   if (recipeImagePreview) {
-    if (recipe.image_path) {
-      recipeImagePreview.src = recipe.image_path;
+    if (currentImagePath) {
+      recipeImagePreview.src = currentImagePath;
       recipeImagePreview.style.display = "block";
     } else {
       recipeImagePreview.removeAttribute("src");
@@ -372,13 +429,14 @@ function loadRecipeIntoForm(recipe) {
   }
 
   if (removeRecipeImageBtn) {
-    removeRecipeImageBtn.style.display =
-      recipe.image_path ? "inline-flex" : "none";
+    removeRecipeImageBtn.style.display = currentImagePath
+      ? "inline-flex"
+      : "none";
   }
 
   if (backToRecipeLink) {
     backToRecipeLink.href =
-      `recipe.html?slug=${encodeURIComponent(recipe.slug)}`;
+      `recipe.html?slug=${encodeURIComponent(recipe.slug || currentSlug)}`;
   }
 
   editIngredientsList.innerHTML = "";
@@ -389,22 +447,7 @@ function loadRecipeIntoForm(recipe) {
 
   if (ingredients.length) {
     ingredients.forEach(ingredient => {
-      createIngredientRow({
-        ingredientId:
-          ingredient.ingredientId ||
-          ingredient.ingredient_id ||
-          ingredient.slug ||
-          "",
-        name:
-          ingredient.name ||
-          ingredient.ingredient_name ||
-          "",
-        quantity: ingredient.quantity ?? "",
-        unit:
-          ingredient.unit ||
-          ingredient.default_unit ||
-          ""
-      });
+      createIngredientRow(ingredient);
     });
   } else {
     createIngredientRow();
@@ -415,32 +458,36 @@ async function loadRecipe() {
   currentSlug = getSlugFromUrl();
 
   if (!currentSlug) {
-    alert("No recipe slug found.");
-    return;
+    throw new Error("No recipe slug was found in the URL.");
   }
 
-  backToRecipeLink.href = `recipe.html?slug=${encodeURIComponent(currentSlug)}`;
-
-  try {
-    originalRecipe = await fetchRecipeBySlugFromSupabase(currentSlug);
-
-    if (!originalRecipe) {
-      alert("Recipe not found.");
-      return;
-    }
-
-    loadRecipeIntoForm(originalRecipe);
-  } catch (error) {
-    console.error("Error loading recipe:", error);
-    alert(error.message || "Failed to load recipe.");
+  if (backToRecipeLink) {
+    backToRecipeLink.href =
+      `recipe.html?slug=${encodeURIComponent(currentSlug)}`;
   }
+
+  originalRecipe =
+    await fetchRecipeBySlugFromSupabase(currentSlug);
+
+  if (!originalRecipe) {
+    throw new Error("Recipe not found.");
+  }
+
+  loadRecipeIntoForm(originalRecipe);
 }
 
-editRecipeForm.addEventListener("submit", async event => {
+async function handleRecipeSubmit(event) {
   event.preventDefault();
 
   if (!originalRecipe) {
-    alert("No recipe loaded to edit.");
+    alert("No recipe has been loaded to edit.");
+    return;
+  }
+
+  const name = recipeNameInput.value.trim();
+
+  if (!name) {
+    alert("Enter a recipe name.");
     return;
   }
 
@@ -451,70 +498,118 @@ editRecipeForm.addEventListener("submit", async event => {
     return;
   }
 
-  const caloriesRaw = recipeCaloriesInput.value.trim();
-  const proteinRaw = recipeProteinInput.value.trim();
-  const fiberRaw = recipeFiberInput.value.trim();
+  const caloriesText = recipeCaloriesInput?.value.trim() || "";
+  const proteinText = recipeProteinInput?.value.trim() || "";
+  const fiberText = recipeFiberInput?.value.trim() || "";
 
-  const calories = caloriesRaw === "" ? null : parseFloat(caloriesRaw);
-  const protein = proteinRaw === "" ? null : parseFloat(proteinRaw);
-  const fiber = fiberRaw === "" ? null : parseFloat(fiberRaw);
+  const calories =
+    caloriesText === ""
+      ? null
+      : parseFloat(caloriesText);
+
+  const protein =
+    proteinText === ""
+      ? null
+      : parseFloat(proteinText);
+
+  const fiber =
+    fiberText === ""
+      ? null
+      : parseFloat(fiberText);
+
+  if (caloriesText !== "" && Number.isNaN(calories)) {
+    alert("Enter a valid calorie value.");
+    return;
+  }
+
+  if (proteinText !== "" && Number.isNaN(protein)) {
+    alert("Enter a valid protein value.");
+    return;
+  }
+
+  if (fiberText !== "" && Number.isNaN(fiber)) {
+    alert("Enter a valid fiber value.");
+    return;
+  }
+
+  let ingredients;
+
+  try {
+    ingredients = collectIngredientsFromForm();
+  } catch (error) {
+    alert(error.message);
+    return;
+  }
+
+  let finalImage = currentImagePath;
+
+  if (removeRecipeImage) {
+    finalImage = "";
+  } else if (pendingRecipeImage !== null) {
+    finalImage = pendingRecipeImage;
+  }
 
   const updatedRecipe = {
     ...originalRecipe,
-    name: recipeNameInput.value.trim(),
+    name,
     slug: currentSlug,
     category: recipeCategoryInput.value,
     servings,
     calories,
     protein,
     fiber,
-    image: removeRecipeImage ? "" : (pendingRecipeImage || originalRecipe.image || ""),
+    image: finalImage,
     instructions: recipeInstructionsInput.value.trim(),
-    ingredients: collectIngredientsFromForm()
+    ingredients
   };
 
   try {
     await updateRecipeInSupabase(updatedRecipe);
-    window.location.href = `recipe.html?slug=${encodeURIComponent(currentSlug)}`;
+
+    window.location.href =
+      `recipe.html?slug=${encodeURIComponent(currentSlug)}`;
   } catch (error) {
     console.error("Failed to update recipe:", error);
 
-    const message = error?.message || "";
-
-    if (
-      message.toLowerCase().includes("auth session missing") ||
-      message.toLowerCase().includes("you must be signed in") ||
-      message.toLowerCase().includes("jwt")
-    ) {
-      showAuthRequiredModal("Please login to add or change any recipes.");
+    if (isAuthenticationError(error)) {
+      showAuthRequiredModal(
+        "Please login to add or change any recipes."
+      );
       return;
     }
 
-    alert(message || "Failed to update recipe.");
+    alert(error.message || "Failed to update recipe.");
   }
-});
+}
 
-recipeImageInput.addEventListener("change", async () => {
-  const file = recipeImageInput.files?.[0];
-  if (!file) return;
+async function handleImageSelection() {
+  const file = recipeImageInput?.files?.[0];
+
+  if (!file) {
+    return;
+  }
 
   try {
-    const dataUrl = await readFileAsDataURL(file);
-    pendingRecipeImage = dataUrl;
+    pendingRecipeImage = await readFileAsDataURL(file);
     removeRecipeImage = false;
 
     if (recipeImagePreview) {
-      recipeImagePreview.src = dataUrl;
+      recipeImagePreview.src = pendingRecipeImage;
       recipeImagePreview.style.display = "block";
+    }
+
+    if (removeRecipeImageBtn) {
+      removeRecipeImageBtn.style.display = "inline-flex";
     }
   } catch (error) {
     console.error("Failed to read image:", error);
     alert("Failed to load image.");
   }
-});
+}
 
-removeRecipeImageBtn.addEventListener("click", () => {
-  pendingRecipeImage = "";
+function handleRemoveImage() {
+  pendingRecipeImage = null;
+  currentImagePath = "";
   removeRecipeImage = true;
 
   if (recipeImageInput) {
@@ -522,10 +617,110 @@ removeRecipeImageBtn.addEventListener("click", () => {
   }
 
   if (recipeImagePreview) {
-    recipeImagePreview.src = "";
+    recipeImagePreview.removeAttribute("src");
     recipeImagePreview.style.display = "none";
   }
-});
+
+  if (removeRecipeImageBtn) {
+    removeRecipeImageBtn.style.display = "none";
+  }
+}
+
+function openDeleteRecipeModal() {
+  if (deleteRecipeModal) {
+    deleteRecipeModal.style.display = "flex";
+  }
+}
+
+function closeDeleteRecipeModal() {
+  if (deleteRecipeModal) {
+    deleteRecipeModal.style.display = "none";
+  }
+}
+
+async function confirmRecipeDeletion() {
+  if (!currentSlug) {
+    alert("No recipe was found to hide.");
+    return;
+  }
+
+  try {
+    await softDeleteRecipeInSupabase(currentSlug);
+    window.location.href = "all-recipes.html";
+  } catch (error) {
+    console.error("Failed to hide recipe:", error);
+
+    if (isAuthenticationError(error)) {
+      closeDeleteRecipeModal();
+
+      showAuthRequiredModal(
+        "Please login to add or change any recipes."
+      );
+
+      return;
+    }
+
+    alert(error.message || "Failed to hide recipe.");
+  }
+}
+
+function openNewIngredientModal() {
+  if (typeof openIngredientModal !== "function") {
+    console.error(
+      "openIngredientModal is unavailable. Confirm ingredient-modal.js is loaded before edit-recipe.js."
+    );
+
+    alert("The Add Ingredient window could not be opened.");
+    return;
+  }
+
+  openIngredientModal({
+    ingredients: ingredientCatalog,
+
+    onCreated: createdIngredient => {
+      const alreadyLoaded = ingredientCatalog.some(
+        ingredient => ingredient.id === createdIngredient.id
+      );
+
+      if (!alreadyLoaded) {
+        ingredientCatalog.push(createdIngredient);
+
+        ingredientCatalog.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+      }
+
+      const newRow = createIngredientRow({
+        ingredientId: createdIngredient.slug,
+        name: createdIngredient.name,
+        quantity: "",
+        unit: createdIngredient.default_unit || ""
+      });
+
+      newRow
+        ?.querySelector(".ingredient-quantity")
+        ?.focus();
+    }
+  });
+}
+
+if (editRecipeForm) {
+  editRecipeForm.addEventListener("submit", handleRecipeSubmit);
+}
+
+if (recipeImageInput) {
+  recipeImageInput.addEventListener(
+    "change",
+    handleImageSelection
+  );
+}
+
+if (removeRecipeImageBtn) {
+  removeRecipeImageBtn.addEventListener(
+    "click",
+    handleRemoveImage
+  );
+}
 
 if (addIngredientRowBtn) {
   addIngredientRowBtn.addEventListener("click", () => {
@@ -533,68 +728,75 @@ if (addIngredientRowBtn) {
   });
 }
 
-if (recipeImageInput) {
-  recipeImageInput.addEventListener("change", async () => {
-    const file = recipeImageInput.files?.[0];
-    if (!file) return;
+if (openNewIngredientModalBtn) {
+  openNewIngredientModalBtn.addEventListener(
+    "click",
+    openNewIngredientModal
+  );
+}
 
-    try {
-      const dataUrl = await readFileAsDataURL(file);
-      pendingRecipeImage = dataUrl;
-      removeRecipeImage = false;
+if (deleteRecipeBtn) {
+  deleteRecipeBtn.addEventListener(
+    "click",
+    openDeleteRecipeModal
+  );
+}
 
-      if (recipeImagePreview) {
-        recipeImagePreview.src = dataUrl;
-        recipeImagePreview.style.display = "block";
-      }
-    } catch (error) {
-      console.error("Failed to read image:", error);
-      alert("Failed to load image.");
+if (cancelDeleteRecipeBtn) {
+  cancelDeleteRecipeBtn.addEventListener(
+    "click",
+    closeDeleteRecipeModal
+  );
+}
+
+if (confirmDeleteRecipeBtn) {
+  confirmDeleteRecipeBtn.addEventListener(
+    "click",
+    confirmRecipeDeletion
+  );
+}
+
+if (deleteRecipeModal) {
+  deleteRecipeModal.addEventListener("click", event => {
+    if (event.target === deleteRecipeModal) {
+      closeDeleteRecipeModal();
     }
   });
 }
 
-if (removeRecipeImageBtn) {
-  removeRecipeImageBtn.addEventListener("click", () => {
-    pendingRecipeImage = "";
-    removeRecipeImage = true;
+if (closeAuthRequiredBtn) {
+  closeAuthRequiredBtn.addEventListener(
+    "click",
+    hideAuthRequiredModal
+  );
+}
 
-    if (recipeImageInput) {
-      recipeImageInput.value = "";
-    }
+if (goToLoginBtn) {
+  goToLoginBtn.addEventListener("click", () => {
+    window.location.href = "login.html";
+  });
+}
 
-    if (recipeImagePreview) {
-      recipeImagePreview.src = "";
-      recipeImagePreview.style.display = "none";
+if (authRequiredModal) {
+  authRequiredModal.addEventListener("click", event => {
+    if (event.target === authRequiredModal) {
+      hideAuthRequiredModal();
     }
   });
 }
 
-openNewIngredientModalBtn?.addEventListener("click", () => {
-  openIngredientModal({
-    ingredients: ingredientCatalog,
+async function initializeEditRecipePage() {
+  try {
+    /*
+     * The catalog must load first because existing recipe ingredient rows
+     * use it to locate the canonical ingredient and its default unit.
+     */
+    await loadIngredientCatalog();
+    await loadRecipe();
+  } catch (error) {
+    console.error("Failed to initialize edit recipe page:", error);
+    alert(error.message || "Failed to load recipe.");
+  }
+}
 
-    onCreated: createdIngredient => {
-      ingredientCatalog.push(createdIngredient);
-
-      ingredientCatalog.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-
-      const newRow = createIngredientRow({
-        ingredientId: createdIngredient.slug,
-        name: createdIngredient.name,
-        quantity: "",
-        unit: createdIngredient.default_unit
-      });
-
-      const searchInput = newRow.querySelector(
-        ".ingredient-search-input"
-      );
-
-      searchInput?.focus();
-    }
-  });
-});
-
-loadRecipe();
+initializeEditRecipePage();
