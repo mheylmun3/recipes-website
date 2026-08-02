@@ -1,5 +1,7 @@
 const ingredientSearch = document.getElementById("ingredientSearch");
-const ingredientSuggestions = document.getElementById("ingredientSuggestions");
+const ingredientSuggestions = document.getElementById(
+  "ingredientSuggestions"
+);
 const ingredientQuantity = document.getElementById("ingredientQuantity");
 const ingredientUnit = document.getElementById("ingredientUnit");
 const addSelectedBtn = document.getElementById("addSelectedBtn");
@@ -11,6 +13,24 @@ let ingredientCatalog = [];
 let selectedIngredient = null;
 let currentInventory = [];
 
+function normalizeName(value) {
+  return String(value || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+function isAuthenticationError(error) {
+  const message = String(error?.message || "").toLowerCase();
+
+  return (
+    message.includes("auth session missing") ||
+    message.includes("you must be signed in") ||
+    message.includes("not authenticated") ||
+    message.includes("jwt")
+  );
+}
+
 async function loadIngredientCatalog() {
   try {
     ingredientCatalog = await fetchIngredientsFromSupabase();
@@ -19,7 +39,11 @@ async function loadIngredientCatalog() {
       a.name.localeCompare(b.name)
     );
   } catch (error) {
-    console.error("Failed to load ingredient catalog:", error);
+    console.error(
+      "Failed to load ingredient catalog:",
+      error
+    );
+
     ingredientCatalog = [];
   }
 }
@@ -28,31 +52,49 @@ function selectIngredient(ingredient) {
   selectedIngredient = ingredient;
 
   ingredientSearch.value = ingredient.name;
-  ingredientUnit.value = ingredient.default_unit || "count";
+  ingredientUnit.value =
+    ingredient.default_unit || "";
 
   ingredientSuggestions.innerHTML = "";
   ingredientSuggestions.style.display = "none";
 }
 
-function renderSuggestions(searchTerm) {
-  ingredientSuggestions.innerHTML = "";
-  selectedIngredient = null;
+function getIngredientMatches(searchTerm) {
+  const normalizedSearch = normalizeName(searchTerm);
 
-  const trimmed = searchTerm.trim().toLowerCase();
-
-  if (!trimmed) {
-    ingredientSuggestions.style.display = "none";
-    return;
+  if (!normalizedSearch) {
+    return [];
   }
 
-  const matches = ingredientCatalog
+  return ingredientCatalog
     .filter(item =>
-      item.name.toLowerCase().includes(trimmed)
+      normalizeName(item.name).includes(
+        normalizedSearch
+      )
     )
-    .sort((a, b) =>
-      a.name.localeCompare(b.name)
-    )
+    .sort((a, b) => {
+      const aName = normalizeName(a.name);
+      const bName = normalizeName(b.name);
+
+      const aStarts =
+        aName.startsWith(normalizedSearch);
+      const bStarts =
+        bName.startsWith(normalizedSearch);
+
+      if (aStarts !== bStarts) {
+        return aStarts ? -1 : 1;
+      }
+
+      return a.name.localeCompare(b.name);
+    })
     .slice(0, 8);
+}
+
+function renderSuggestions(searchTerm) {
+  ingredientSuggestions.innerHTML = "";
+
+  const matches =
+    getIngredientMatches(searchTerm);
 
   if (!matches.length) {
     ingredientSuggestions.style.display = "none";
@@ -63,16 +105,14 @@ function renderSuggestions(searchTerm) {
     const option = document.createElement("div");
     option.className = "suggestion-item";
 
-    const name = document.createElement("span");
-    name.textContent = item.name;
+    // Only show the ingredient name.
+    // The default unit is filled after selection.
+    option.textContent = item.name;
 
-    const unit = document.createElement("small");
-    unit.textContent = item.default_unit || "count";
+    option.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    option.appendChild(name);
-    option.appendChild(unit);
-
-    option.addEventListener("click", () => {
       selectIngredient(item);
     });
 
@@ -86,8 +126,10 @@ function clearIngredientForm() {
   ingredientSearch.value = "";
   ingredientQuantity.value = "";
   ingredientUnit.value = "";
+
   ingredientSuggestions.innerHTML = "";
   ingredientSuggestions.style.display = "none";
+
   selectedIngredient = null;
 }
 
@@ -121,7 +163,7 @@ function formatUnit(quantity, unit) {
 
 function renderInventory() {
   const searchTerm = inventorySearch
-    ? inventorySearch.value.trim().toLowerCase()
+    ? normalizeName(inventorySearch.value)
     : "";
 
   inventoryList.innerHTML = "";
@@ -130,7 +172,7 @@ function renderInventory() {
 
   if (searchTerm) {
     filteredItems = filteredItems.filter(item =>
-      item.name.toLowerCase().includes(searchTerm)
+      normalizeName(item.name).includes(searchTerm)
     );
   }
 
@@ -184,6 +226,13 @@ async function addIngredientToInventory(ingredient) {
     return;
   }
 
+  if (!ingredient?.slug) {
+    alert(
+      "Select an ingredient from the dropdown first."
+    );
+    return;
+  }
+
   if (!unitValue) {
     alert(
       "The selected ingredient does not have a default unit."
@@ -209,6 +258,13 @@ async function addIngredientToInventory(ingredient) {
       error
     );
 
+    if (isAuthenticationError(error)) {
+      alert(
+        "Please login to make changes to inventory."
+      );
+      return;
+    }
+
     alert(
       error.message ||
       "Failed to update inventory."
@@ -228,64 +284,118 @@ async function loadInventory() {
       error
     );
 
+    currentInventory = [];
+
     inventoryList.innerHTML =
       "<p>Failed to load inventory.</p>";
   }
 }
 
-ingredientSearch.addEventListener("input", () => {
-  selectedIngredient = null;
-  ingredientUnit.value = "";
-
-  renderSuggestions(
-    ingredientSearch.value
-  );
-});
-
-ingredientSearch.addEventListener("focus", () => {
-  renderSuggestions(
-    ingredientSearch.value
-  );
-});
-
-addSelectedBtn.addEventListener("click", () => {
-  if (!selectedIngredient) {
-    alert(
-      "Select an ingredient from the dropdown first."
+function openNewIngredientModal() {
+  if (
+    typeof openIngredientModal !== "function"
+  ) {
+    console.error(
+      "openIngredientModal is unavailable. Confirm ingredient-modal.js loads before inventory.js."
     );
+
+    alert(
+      "The Add Ingredient window could not be opened."
+    );
+
     return;
   }
 
-  addIngredientToInventory(
-    selectedIngredient
-  );
-});
-
-addNewBtn.addEventListener("click", () => {
   openIngredientModal({
     initialName: ingredientSearch.value,
     ingredients: ingredientCatalog,
 
     onCreated: createdIngredient => {
-      ingredientCatalog.push(
-        createdIngredient
-      );
+      const alreadyLoaded =
+        ingredientCatalog.some(
+          ingredient =>
+            ingredient.id === createdIngredient.id
+        );
 
-      ingredientCatalog.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
+      if (!alreadyLoaded) {
+        ingredientCatalog.push(
+          createdIngredient
+        );
 
-      selectIngredient(
-        createdIngredient
-      );
+        ingredientCatalog.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+      }
+
+      selectIngredient(createdIngredient);
 
       ingredientQuantity.focus();
     }
   });
-});
+}
+
+if (ingredientSearch) {
+  ingredientSearch.addEventListener(
+    "input",
+    () => {
+      selectedIngredient = null;
+      ingredientUnit.value = "";
+
+      renderSuggestions(
+        ingredientSearch.value
+      );
+    }
+  );
+
+  ingredientSearch.addEventListener(
+    "focus",
+    () => {
+      renderSuggestions(
+        ingredientSearch.value
+      );
+    }
+  );
+
+  ingredientSearch.addEventListener(
+    "keydown",
+    event => {
+      if (event.key === "Escape") {
+        ingredientSuggestions.style.display =
+          "none";
+      }
+    }
+  );
+}
+
+if (addSelectedBtn) {
+  addSelectedBtn.addEventListener(
+    "click",
+    () => {
+      if (!selectedIngredient) {
+        alert(
+          "Select an ingredient from the dropdown first. If it does not exist, use Add New Ingredient."
+        );
+        return;
+      }
+
+      addIngredientToInventory(
+        selectedIngredient
+      );
+    }
+  );
+}
+
+if (addNewBtn) {
+  addNewBtn.addEventListener(
+    "click",
+    openNewIngredientModal
+  );
+}
 
 document.addEventListener("click", event => {
   if (
+    ingredientSearch &&
+    ingredientSuggestions &&
     !ingredientSearch.contains(event.target) &&
     !ingredientSuggestions.contains(event.target)
   ) {
@@ -293,13 +403,18 @@ document.addEventListener("click", event => {
   }
 });
 
-inventorySearch.addEventListener("input", () => {
-  renderInventory();
-});
+if (inventorySearch) {
+  inventorySearch.addEventListener(
+    "input",
+    renderInventory
+  );
+}
 
-(async function initInventoryPage() {
+async function initializeInventoryPage() {
   await Promise.all([
     loadIngredientCatalog(),
     loadInventory()
   ]);
-})();
+}
+
+initializeInventoryPage();

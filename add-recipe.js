@@ -1,49 +1,48 @@
 const addRecipeForm = document.getElementById("addRecipeForm");
+
 const recipeNameInput = document.getElementById("recipeName");
 const recipeCategoryInput = document.getElementById("recipeCategory");
-const recipeInstructionsInput = document.getElementById("recipeInstructions");
-const addIngredientsList = document.getElementById("addIngredientsList");
-const addIngredientRowBtn = document.getElementById("addIngredientRowBtn");
 const recipeServingsInput = document.getElementById("recipeServings");
 const recipeCaloriesInput = document.getElementById("recipeCalories");
 const recipeProteinInput = document.getElementById("recipeProtein");
 const recipeFiberInput = document.getElementById("recipeFiber");
+const recipeInstructionsInput = document.getElementById(
+  "recipeInstructions"
+);
+
 const recipeImageInput = document.getElementById("recipeImage");
-const recipeImagePreview = document.getElementById("recipeImagePreview");
+const recipeImagePreview = document.getElementById(
+  "recipeImagePreview"
+);
 
-const authRequiredModal = document.getElementById("authRequiredModal");
-const authRequiredMessage = document.getElementById("authRequiredMessage");
-const closeAuthRequiredBtn = document.getElementById("closeAuthRequiredBtn");
-const goToLoginBtn = document.getElementById("goToLoginBtn");
+const addIngredientsList = document.getElementById(
+  "addIngredientsList"
+);
+const addIngredientRowBtn = document.getElementById(
+  "addIngredientRowBtn"
+);
+const openNewIngredientModalBtn = document.getElementById(
+  "openNewIngredientModalBtn"
+);
 
-const openNewIngredientModalBtn = document.getElementById("openNewIngredientModalBtn");
+const authRequiredModal = document.getElementById(
+  "authRequiredModal"
+);
+const authRequiredMessage = document.getElementById(
+  "authRequiredMessage"
+);
+const closeAuthRequiredBtn = document.getElementById(
+  "closeAuthRequiredBtn"
+);
+const goToLoginBtn = document.getElementById(
+  "goToLoginBtn"
+);
 
 let pendingRecipeImage = "";
 let ingredientCatalog = [];
 
-const ingredientUnits = [
-  "",
-  "count",
-  "tsp",
-  "tbsp",
-  "cups",
-  "oz",
-  "lbs",
-  "ml",
-  "liters",
-  "gallon",
-  "cans",
-  "jars",
-  "cloves",
-  "box",
-  "bag",
-  "stick",
-  "pint", 
-  "containers"
-];
-
 function slugify(text) {
-  return text
+  return String(text || "")
     .toLowerCase()
     .trim()
     .replace(/['"]/g, "")
@@ -52,32 +51,20 @@ function slugify(text) {
     .replace(/-+/g, "-");
 }
 
-
-
-function getIngredientCatalog() {
-  try {
-    const fallbackDefaults =
-      typeof defaultIngredients !== "undefined" && Array.isArray(defaultIngredients)
-        ? defaultIngredients
-        : [];
-
-    const saved = localStorage.getItem("ingredientCatalog");
-
-    if (!saved) {
-      localStorage.setItem("ingredientCatalog", JSON.stringify(fallbackDefaults));
-      return [...fallbackDefaults];
-    }
-
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : [...fallbackDefaults];
-  } catch (error) {
-    console.error("Failed to load ingredient catalog:", error);
-    return [];
-  }
+function normalizeName(name) {
+  return String(name || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
 }
 
-function saveIngredientCatalog(catalog) {
-  localStorage.setItem("ingredientCatalog", JSON.stringify(catalog));
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function formatIngredientText(name, quantity, unit) {
@@ -92,7 +79,124 @@ function formatIngredientText(name, quantity, unit) {
   return `${quantity} ${unit} ${name}`;
 }
 
+function showAuthRequiredModal(
+  message = "Please login to add or change any recipes."
+) {
+  if (!authRequiredModal) {
+    alert(message);
+    return;
+  }
+
+  if (authRequiredMessage) {
+    authRequiredMessage.textContent = message;
+  }
+
+  authRequiredModal.style.display = "flex";
+}
+
+function hideAuthRequiredModal() {
+  if (authRequiredModal) {
+    authRequiredModal.style.display = "none";
+  }
+}
+
+function isAuthenticationError(error) {
+  const message = String(error?.message || "").toLowerCase();
+
+  return (
+    message.includes("auth session missing") ||
+    message.includes("you must be signed in") ||
+    message.includes("jwt") ||
+    message.includes("not authenticated")
+  );
+}
+
+async function loadIngredientCatalog() {
+  try {
+    ingredientCatalog =
+      await fetchIngredientsFromSupabase();
+
+    ingredientCatalog.sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+  } catch (error) {
+    console.error(
+      "Failed to load ingredients from Supabase:",
+      error
+    );
+
+    ingredientCatalog = [];
+    throw error;
+  }
+}
+
+function getIngredientMatches(searchTerm) {
+  const normalizedSearch = normalizeName(searchTerm);
+
+  if (!normalizedSearch) {
+    return ingredientCatalog.slice(0, 8);
+  }
+
+  return ingredientCatalog
+    .filter(ingredient =>
+      normalizeName(ingredient.name).includes(
+        normalizedSearch
+      )
+    )
+    .slice(0, 8);
+}
+
+function findCatalogIngredient(ingredient = {}) {
+  const possibleId =
+    ingredient.ingredientId ||
+    ingredient.ingredient_id ||
+    ingredient.slug ||
+    "";
+
+  return ingredientCatalog.find(item => {
+    const idMatches =
+      item.slug === possibleId ||
+      item.id === possibleId;
+
+    const nameMatches =
+      normalizeName(item.name) ===
+      normalizeName(ingredient.name);
+
+    return idMatches || nameMatches;
+  });
+}
+
 function createIngredientRow(ingredient = {}) {
+  if (!addIngredientsList) {
+    console.error("addIngredientsList was not found.");
+    return null;
+  }
+
+  const catalogMatch =
+    findCatalogIngredient(ingredient);
+
+  const initialName =
+    catalogMatch?.name ||
+    ingredient.name ||
+    ingredient.ingredient_name ||
+    "";
+
+  const initialSlug =
+    catalogMatch?.slug ||
+    ingredient.ingredientId ||
+    ingredient.ingredient_id ||
+    ingredient.slug ||
+    "";
+
+  const initialUnit =
+    catalogMatch?.default_unit ||
+    ingredient.unit ||
+    ingredient.default_unit ||
+    "";
+
+  const initialQuantity =
+    ingredient.quantity ?? "";
+
   const row = document.createElement("div");
   row.className = "edit-ingredient-row";
 
@@ -106,14 +210,14 @@ function createIngredientRow(ingredient = {}) {
         type="text"
         class="ingredient-search-input"
         placeholder="Search ingredient"
-        value="${ingredient.name || ""}"
+        value="${escapeHtml(initialName)}"
         autocomplete="off"
       />
 
       <input
         type="hidden"
         class="ingredient-id-hidden"
-        value="${ingredient.ingredientId || ingredient.slug || ""}"
+        value="${escapeHtml(initialSlug)}"
       />
 
       <div
@@ -127,42 +231,61 @@ function createIngredientRow(ingredient = {}) {
       class="ingredient-quantity"
       placeholder="Quantity"
       step="any"
-      value="${ingredient.quantity ?? ""}"
+      value="${escapeHtml(initialQuantity)}"
     />
 
     <input
       type="text"
       class="ingredient-unit"
-      value="${ingredient.unit || ingredient.default_unit || ""}"
-      placeholder="Unit"
+      value="${escapeHtml(initialUnit)}"
+      placeholder=""
       readonly
       tabindex="-1"
     />
 
-    <button type="button" class="remove-ingredient-btn">
+    <button
+      type="button"
+      class="remove-ingredient-btn"
+    >
       Remove
     </button>
   `;
 
-  const searchInput = row.querySelector(".ingredient-search-input");
-  const hiddenId = row.querySelector(".ingredient-id-hidden");
-  const unitInput = row.querySelector(".ingredient-unit");
-  const suggestionsBox = row.querySelector(`#${suggestionsId}`);
-  const removeBtn = row.querySelector(".remove-ingredient-btn");
+  const searchInput = row.querySelector(
+    ".ingredient-search-input"
+  );
+  const hiddenId = row.querySelector(
+    ".ingredient-id-hidden"
+  );
+  const unitInput = row.querySelector(
+    ".ingredient-unit"
+  );
+  const suggestionsBox = row.querySelector(
+    `#${suggestionsId}`
+  );
+  const removeBtn = row.querySelector(
+    ".remove-ingredient-btn"
+  );
+
+  function hideSuggestions() {
+    suggestionsBox.innerHTML = "";
+    suggestionsBox.style.display = "none";
+  }
 
   function selectIngredient(selectedIngredient) {
     searchInput.value = selectedIngredient.name;
     hiddenId.value = selectedIngredient.slug;
-    unitInput.value = selectedIngredient.default_unit || "count";
+    unitInput.value =
+      selectedIngredient.default_unit || "";
 
-    suggestionsBox.innerHTML = "";
-    suggestionsBox.style.display = "none";
+    hideSuggestions();
   }
 
   function renderSuggestions(searchTerm) {
     suggestionsBox.innerHTML = "";
 
-    const matches = getIngredientMatches(searchTerm);
+    const matches =
+      getIngredientMatches(searchTerm);
 
     if (!matches.length) {
       suggestionsBox.style.display = "none";
@@ -173,16 +296,14 @@ function createIngredientRow(ingredient = {}) {
       const option = document.createElement("div");
       option.className = "suggestion-item";
 
-      const name = document.createElement("span");
-      name.textContent = item.name;
+      // Only display the ingredient name.
+      // The unit fills after selection.
+      option.textContent = item.name;
 
-      const unit = document.createElement("small");
-      unit.textContent = item.default_unit || "count";
+      option.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
 
-      option.appendChild(name);
-      option.appendChild(unit);
-
-      option.addEventListener("click", () => {
         selectIngredient(item);
       });
 
@@ -195,6 +316,7 @@ function createIngredientRow(ingredient = {}) {
   searchInput.addEventListener("input", () => {
     hiddenId.value = "";
     unitInput.value = "";
+
     renderSuggestions(searchInput.value);
   });
 
@@ -208,85 +330,158 @@ function createIngredientRow(ingredient = {}) {
 
   document.addEventListener("click", event => {
     if (!row.contains(event.target)) {
-      suggestionsBox.style.display = "none";
+      hideSuggestions();
     }
   });
 
   addIngredientsList.appendChild(row);
 
-  if (ingredient.name) {
-    const existingIngredient = ingredientCatalog.find(
-      item =>
-        item.slug === ingredient.ingredientId ||
-        normalizeIngredientName(item.name) ===
-          normalizeIngredientName(ingredient.name)
-    );
-
-    if (existingIngredient) {
-      hiddenId.value = existingIngredient.slug;
-
-      if (!unitInput.value) {
-        unitInput.value =
-          existingIngredient.default_unit || "count";
-      }
-    }
-  }
-
   return row;
 }
 
 function collectIngredientsFromForm() {
-  const rows = document.querySelectorAll(".edit-ingredient-row");
+  const rows = addIngredientsList.querySelectorAll(
+    ".edit-ingredient-row"
+  );
 
-  return Array.from(rows)
-    .map(row => {
-      const searchInput = row.querySelector(".ingredient-search-input");
-      const hiddenId = row.querySelector(".ingredient-id-hidden");
-      const quantityInput = row.querySelector(".ingredient-quantity");
-      const unitInput = row.querySelector(".ingredient-unit");
+  const ingredients = [];
 
-      const name = searchInput.value.trim();
-      const ingredientId = hiddenId.value;
-      const unit = unitInput.value.trim();
+  for (const row of rows) {
+    const searchInput = row.querySelector(
+      ".ingredient-search-input"
+    );
+    const hiddenId = row.querySelector(
+      ".ingredient-id-hidden"
+    );
+    const quantityInput = row.querySelector(
+      ".ingredient-quantity"
+    );
+    const unitInput = row.querySelector(
+      ".ingredient-unit"
+    );
 
-      if (!name || !ingredientId) {
-        return null;
+    const name = searchInput.value.trim();
+    const ingredientId = hiddenId.value.trim();
+    const quantityText =
+      quantityInput.value.trim();
+    const unit = unitInput.value.trim();
+
+    const rowIsEmpty =
+      !name &&
+      !ingredientId &&
+      !quantityText &&
+      !unit;
+
+    if (rowIsEmpty) {
+      continue;
+    }
+
+    if (!name || !ingredientId) {
+      throw new Error(
+        `Select "${name || "the ingredient"}" from the ingredient suggestions.`
+      );
+    }
+
+    if (!unit) {
+      throw new Error(
+        `${name} does not have a default unit. Update it on the Ingredients page.`
+      );
+    }
+
+    let quantity = null;
+
+    if (quantityText !== "") {
+      quantity = parseFloat(quantityText);
+
+      if (Number.isNaN(quantity)) {
+        throw new Error(
+          `Enter a valid quantity for ${name}.`
+        );
       }
+    }
 
-      return {
-        ingredientId,
+    ingredients.push({
+      ingredientId,
+      name,
+      quantity,
+      unit,
+      displayText: formatIngredientText(
         name,
-        quantity:
-          quantityInput.value === ""
-            ? null
-            : parseFloat(quantityInput.value),
+        quantity,
         unit
-      };
-    })
-    .filter(Boolean);
+      )
+    });
+  }
+
+  return ingredients;
 }
 
-addRecipeForm.addEventListener("submit", async event => {
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = () => {
+      reject(
+        reader.error ||
+          new Error("Failed to read image.")
+      );
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleImageSelection() {
+  const file = recipeImageInput?.files?.[0];
+
+  if (!file) {
+    pendingRecipeImage = "";
+
+    if (recipeImagePreview) {
+      recipeImagePreview.removeAttribute("src");
+      recipeImagePreview.style.display = "none";
+    }
+
+    return;
+  }
+
+  try {
+    pendingRecipeImage =
+      await readFileAsDataURL(file);
+
+    if (recipeImagePreview) {
+      recipeImagePreview.src =
+        pendingRecipeImage;
+
+      recipeImagePreview.style.display =
+        "block";
+    }
+  } catch (error) {
+    console.error(
+      "Failed to read image:",
+      error
+    );
+
+    alert("Failed to load image.");
+  }
+}
+
+async function handleRecipeSubmit(event) {
   event.preventDefault();
 
   const name = recipeNameInput.value.trim();
-  const category = recipeCategoryInput.value;
-  const servings = parseInt(recipeServingsInput.value, 10);
-  const caloriesRaw = recipeCaloriesInput.value.trim();
-  const proteinRaw = recipeProteinInput.value.trim();
-  const fiberRaw = recipeFiberInput.value.trim();
-
-  const calories = caloriesRaw === "" ? null : parseFloat(caloriesRaw);
-  const protein = proteinRaw === "" ? null : parseFloat(proteinRaw);
-  const fiber = fiberRaw === "" ? null : parseFloat(fiberRaw);
-  const instructions = recipeInstructionsInput.value.trim();
-  const ingredients = collectIngredientsFromForm();
-  const slug = slugify(name);
-
-  if (!Number.isInteger(servings) || servings < 1) {
-    alert("Enter a valid servings value.");
-    return;
-  }
+  const category =
+    recipeCategoryInput.value;
+  const servings = parseInt(
+    recipeServingsInput.value,
+    10
+  );
+  const instructions =
+    recipeInstructionsInput.value.trim();
 
   if (!name) {
     alert("Enter a recipe name.");
@@ -298,8 +493,71 @@ addRecipeForm.addEventListener("submit", async event => {
     return;
   }
 
+  if (
+    !Number.isInteger(servings) ||
+    servings < 1
+  ) {
+    alert("Enter a valid servings value.");
+    return;
+  }
+
   if (!instructions) {
     alert("Enter recipe instructions.");
+    return;
+  }
+
+  const caloriesText =
+    recipeCaloriesInput?.value.trim() || "";
+  const proteinText =
+    recipeProteinInput?.value.trim() || "";
+  const fiberText =
+    recipeFiberInput?.value.trim() || "";
+
+  const calories =
+    caloriesText === ""
+      ? null
+      : parseFloat(caloriesText);
+
+  const protein =
+    proteinText === ""
+      ? null
+      : parseFloat(proteinText);
+
+  const fiber =
+    fiberText === ""
+      ? null
+      : parseFloat(fiberText);
+
+  if (
+    caloriesText !== "" &&
+    Number.isNaN(calories)
+  ) {
+    alert("Enter a valid calorie value.");
+    return;
+  }
+
+  if (
+    proteinText !== "" &&
+    Number.isNaN(protein)
+  ) {
+    alert("Enter a valid protein value.");
+    return;
+  }
+
+  if (
+    fiberText !== "" &&
+    Number.isNaN(fiber)
+  ) {
+    alert("Enter a valid fiber value.");
+    return;
+  }
+
+  let ingredients;
+
+  try {
+    ingredients = collectIngredientsFromForm();
+  } catch (error) {
+    alert(error.message);
     return;
   }
 
@@ -308,12 +566,21 @@ addRecipeForm.addEventListener("submit", async event => {
     return;
   }
 
+  const slug = slugify(name);
+
   try {
-    const existingRecipes = await fetchAllRecipesFromSupabase();
-    const slugAlreadyExists = existingRecipes.some(recipe => recipe.slug === slug);
+    const existingRecipes =
+      await fetchAllRecipesFromSupabase();
+
+    const slugAlreadyExists =
+      existingRecipes.some(
+        recipe => recipe.slug === slug
+      );
 
     if (slugAlreadyExists) {
-      alert("A recipe with this name already exists.");
+      alert(
+        "A recipe with this name already exists."
+      );
       return;
     }
 
@@ -332,188 +599,159 @@ addRecipeForm.addEventListener("submit", async event => {
 
     await createRecipeInSupabase(newRecipe);
 
-    window.location.href = `recipe.html?slug=${encodeURIComponent(slug)}`;
+    window.location.href =
+      `recipe.html?slug=${encodeURIComponent(slug)}`;
   } catch (error) {
-    console.error("Failed to save recipe:", error);
+    console.error(
+      "Failed to save recipe:",
+      error
+    );
 
-    const message = error?.message || "";
-
-    if (
-      message.toLowerCase().includes("auth session missing") ||
-      message.toLowerCase().includes("you must be signed in") ||
-      message.toLowerCase().includes("jwt")
-    ) {
-      showAuthRequiredModal("Please login to add or change any recipes.");
+    if (isAuthenticationError(error)) {
+      showAuthRequiredModal(
+        "Please login to add or change any recipes."
+      );
       return;
     }
 
-    alert(message || "Failed to save recipe.");
-  }
-});
-
-addIngredientRowBtn.addEventListener("click", () => {
-  createIngredientRow();
-});
-
-createIngredientRow();
-
-function readFileAsDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-function showAuthRequiredModal(
-  message = "Please login to add or change any recipes."
-) {
-  if (!authRequiredModal) return;
-  if (authRequiredMessage) {
-    authRequiredMessage.textContent = message;
-  }
-  authRequiredModal.style.display = "flex";
-}
-
-function hideAuthRequiredModal() {
-  if (authRequiredModal) {
-    authRequiredModal.style.display = "none";
+    alert(
+      error.message ||
+        "Failed to save recipe."
+    );
   }
 }
 
-recipeImageInput.addEventListener("change", async () => {
-  const file = recipeImageInput.files?.[0];
-  if (!file) {
-    pendingRecipeImage = "";
-    if (recipeImagePreview) {
-      recipeImagePreview.style.display = "none";
-      recipeImagePreview.src = "";
-    }
+function openNewIngredientModal() {
+  if (
+    typeof openIngredientModal !== "function"
+  ) {
+    console.error(
+      "openIngredientModal is unavailable. Confirm ingredient-modal.js loads before add-recipe.js."
+    );
+
+    alert(
+      "The Add Ingredient window could not be opened."
+    );
+
     return;
   }
 
-  try {
-    const dataUrl = await readFileAsDataURL(file);
-    pendingRecipeImage = dataUrl;
+  openIngredientModal({
+    ingredients: ingredientCatalog,
 
-    if (recipeImagePreview) {
-      recipeImagePreview.src = dataUrl;
-      recipeImagePreview.style.display = "block";
+    onCreated: createdIngredient => {
+      const alreadyLoaded =
+        ingredientCatalog.some(
+          ingredient =>
+            ingredient.id ===
+            createdIngredient.id
+        );
+
+      if (!alreadyLoaded) {
+        ingredientCatalog.push(
+          createdIngredient
+        );
+
+        ingredientCatalog.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+      }
+
+      const newRow = createIngredientRow({
+        ingredientId:
+          createdIngredient.slug,
+        name: createdIngredient.name,
+        quantity: "",
+        unit:
+          createdIngredient.default_unit || ""
+      });
+
+      newRow
+        ?.querySelector(
+          ".ingredient-quantity"
+        )
+        ?.focus();
     }
-  } catch (error) {
-    console.error("Failed to read image:", error);
-    alert("Failed to load image.");
-  }
-});
+  });
+}
+
+if (addRecipeForm) {
+  addRecipeForm.addEventListener(
+    "submit",
+    handleRecipeSubmit
+  );
+}
+
+if (recipeImageInput) {
+  recipeImageInput.addEventListener(
+    "change",
+    handleImageSelection
+  );
+}
+
+if (addIngredientRowBtn) {
+  addIngredientRowBtn.addEventListener(
+    "click",
+    () => {
+      createIngredientRow();
+    }
+  );
+}
+
+if (openNewIngredientModalBtn) {
+  openNewIngredientModalBtn.addEventListener(
+    "click",
+    openNewIngredientModal
+  );
+}
 
 if (closeAuthRequiredBtn) {
-  closeAuthRequiredBtn.addEventListener("click", hideAuthRequiredModal);
+  closeAuthRequiredBtn.addEventListener(
+    "click",
+    hideAuthRequiredModal
+  );
 }
 
 if (goToLoginBtn) {
-  goToLoginBtn.addEventListener("click", () => {
-    window.location.href = "login.html";
-  });
+  goToLoginBtn.addEventListener(
+    "click",
+    () => {
+      window.location.href = "login.html";
+    }
+  );
 }
 
 if (authRequiredModal) {
-  authRequiredModal.addEventListener("click", event => {
-    if (event.target === authRequiredModal) {
-      hideAuthRequiredModal();
+  authRequiredModal.addEventListener(
+    "click",
+    event => {
+      if (event.target === authRequiredModal) {
+        hideAuthRequiredModal();
+      }
     }
-  });
+  );
 }
 
-async function loadIngredientCatalog() {
+async function initializeAddRecipePage() {
   try {
-    ingredientCatalog = await fetchIngredientsFromSupabase();
+    /*
+     * Load Supabase ingredients before creating the initial row,
+     * so search suggestions and unit autofill work immediately.
+     */
+    await loadIngredientCatalog();
+
+    createIngredientRow();
   } catch (error) {
-    console.error("Failed to load ingredients from Supabase:", error);
-    ingredientCatalog = [];
+    console.error(
+      "Failed to initialize Add Recipe page:",
+      error
+    );
+
+    alert(
+      error.message ||
+        "Failed to load ingredients."
+    );
   }
 }
 
-function getIngredientMatches(searchTerm) {
-  const cleanedSearch = searchTerm.trim().toLowerCase();
-
-  if (!cleanedSearch) {
-    return ingredientCatalog.slice(0, 8);
-  }
-
-  return ingredientCatalog
-    .filter(ingredient =>
-      ingredient.name.toLowerCase().includes(cleanedSearch)
-    )
-    .slice(0, 8);
-}
-
-matches.forEach(ingredient => {
-  const option = document.createElement("div");
-  option.className = "suggestion-item";
-  option.textContent = ingredient.name;
-
-  option.addEventListener("click", () => {
-    nameInput.value = ingredient.name;
-    nameInput.dataset.ingredientId = ingredient.slug;
-    unitSelect.value = ingredient.default_unit || "count";
-
-    suggestions.innerHTML = "";
-    suggestions.style.display = "none";
-  });
-
-  suggestions.appendChild(option);
-});
-
-openNewIngredientModalBtn?.addEventListener("click", () => {
-  openIngredientModal({
-    ingredients: ingredientCatalog,
-
-    onCreated: createdIngredient => {
-      ingredientCatalog.push(createdIngredient);
-
-      ingredientCatalog.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-
-      const newRow = createIngredientRow({
-        ingredientId: createdIngredient.slug,
-        name: createdIngredient.name,
-        quantity: "",
-        unit: createdIngredient.default_unit
-      });
-
-      const searchInput = newRow.querySelector(
-        ".ingredient-search-input"
-      );
-
-      searchInput?.focus();
-    }
-  });
-});
-
-(async function initAddRecipePage() {
-  await loadIngredientCatalog();
-  createIngredientRow();
-})();
-
-openNewIngredientModalBtn?.addEventListener("click", () => {
-  openIngredientModal({
-    ingredients: ingredientCatalog,
-
-    onCreated: createdIngredient => {
-      ingredientCatalog.push(createdIngredient);
-
-      ingredientCatalog.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-
-      createIngredientRow({
-        ingredientId: createdIngredient.slug,
-        name: createdIngredient.name,
-        quantity: "",
-        unit: createdIngredient.default_unit
-      });
-    }
-  });
-});
+initializeAddRecipePage();
