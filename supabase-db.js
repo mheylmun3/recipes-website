@@ -1003,17 +1003,18 @@ async function updateIngredientInSupabase(
 async function archiveIngredientInSupabase(id) {
   await requireSignedInUser();
 
-  const { data, error } = await supabaseClient
+  const { error } = await supabaseClient
     .from("ingredients")
     .update({
       is_active: false,
       updated_at: new Date().toISOString()
     })
-    .eq("id", id)
-    .select("id, name, is_active")
-    .single();
+    .eq("id", id);
 
   if (error) throw error;
 
-  return data;
+  return {
+    id,
+    is_active: false
+  };
 }
