@@ -4,7 +4,7 @@ let ingredientModalState = {
 };
 
 function normalizeModalIngredientName(name) {
-  return String(name)
+  return String(name || "")
     .trim()
     .replace(/\s+/g, " ")
     .toLowerCase();
@@ -24,41 +24,61 @@ function getIngredientModalElements() {
 }
 
 function showIngredientModalMessage(message) {
-  const { message: messageElement } = getIngredientModalElements();
+  const elements = getIngredientModalElements();
 
-  if (messageElement) {
-    messageElement.textContent = message;
+  if (elements.message) {
+    elements.message.textContent = message;
   }
 }
 
 function clearIngredientModalMessage() {
-  const { message } = getIngredientModalElements();
+  const elements = getIngredientModalElements();
 
-  if (message) {
-    message.textContent = "";
+  if (elements.message) {
+    elements.message.textContent = "";
   }
+}
+
+function getModalIngredientMatches(searchTerm) {
+  const normalizedSearch =
+    normalizeModalIngredientName(searchTerm);
+
+  if (!normalizedSearch) {
+    return [];
+  }
+
+  return ingredientModalState.existingIngredients
+    .filter(ingredient =>
+      normalizeModalIngredientName(
+        ingredient.name
+      ).includes(normalizedSearch)
+    )
+    .sort((a, b) => {
+      const aName = normalizeModalIngredientName(a.name);
+      const bName = normalizeModalIngredientName(b.name);
+
+      const aStarts = aName.startsWith(normalizedSearch);
+      const bStarts = bName.startsWith(normalizedSearch);
+
+      if (aStarts !== bStarts) {
+        return aStarts ? -1 : 1;
+      }
+
+      return a.name.localeCompare(b.name);
+    })
+    .slice(0, 8);
 }
 
 function renderModalIngredientSuggestions(searchTerm) {
   const { suggestions } = getIngredientModalElements();
 
-  if (!suggestions) return;
-
-  suggestions.innerHTML = "";
-
-  const normalizedSearch = normalizeModalIngredientName(searchTerm);
-
-  if (!normalizedSearch) {
-    suggestions.style.display = "none";
+  if (!suggestions) {
     return;
   }
 
-  const matches = ingredientModalState.existingIngredients
-    .filter(ingredient =>
-      normalizeModalIngredientName(ingredient.name).includes(normalizedSearch)
-    )
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .slice(0, 8);
+  suggestions.innerHTML = "";
+
+  const matches = getModalIngredientMatches(searchTerm);
 
   if (!matches.length) {
     suggestions.style.display = "none";
@@ -67,20 +87,25 @@ function renderModalIngredientSuggestions(searchTerm) {
 
   matches.forEach(ingredient => {
     const option = document.createElement("div");
-    option.className = "suggestion-item ingredient-modal-suggestion";
+    option.className =
+      "suggestion-item ingredient-modal-suggestion";
 
     const name = document.createElement("strong");
     name.textContent = ingredient.name;
 
     const unit = document.createElement("span");
-    unit.textContent = ingredient.default_unit || "count";
+    unit.textContent =
+      ingredient.default_unit || "count";
 
     option.appendChild(name);
     option.appendChild(unit);
 
-    option.addEventListener("click", () => {
+    option.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+
       showIngredientModalMessage(
-        `${ingredient.name} already exists. Select it from the ingredient search instead.`
+        `${ingredient.name} already exists. Use the existing ingredient instead.`
       );
     });
 
@@ -103,13 +128,20 @@ function openIngredientModal({
   } = getIngredientModalElements();
 
   if (!modal || !nameInput || !unitSelect) {
-    console.error("The Add Ingredient modal HTML is missing from this page.");
+    console.error(
+      "The Add Ingredient modal HTML is missing."
+    );
     return;
   }
 
   ingredientModalState = {
-    existingIngredients: Array.isArray(ingredients) ? ingredients : [],
-    onCreated: typeof onCreated === "function" ? onCreated : null
+    existingIngredients: Array.isArray(ingredients)
+      ? ingredients
+      : [],
+    onCreated:
+      typeof onCreated === "function"
+        ? onCreated
+        : null
   };
 
   nameInput.value = initialName;
@@ -126,10 +158,12 @@ function openIngredientModal({
 
   requestAnimationFrame(() => {
     nameInput.focus();
-    nameInput.select();
-  });
 
-  renderModalIngredientSuggestions(initialName);
+    if (initialName) {
+      nameInput.select();
+      renderModalIngredientSuggestions(initialName);
+    }
+  });
 }
 
 function closeIngredientModal() {
@@ -178,30 +212,40 @@ async function submitNewIngredientModal() {
     confirmBtn
   } = getIngredientModalElements();
 
-  if (!nameInput || !unitSelect || !confirmBtn) return;
+  if (!nameInput || !unitSelect || !confirmBtn) {
+    return;
+  }
 
-  const name = String(nameInput.value)
+  const name = String(nameInput.value || "")
     .trim()
     .replace(/\s+/g, " ");
 
   const defaultUnit = unitSelect.value || "count";
 
   if (!name) {
-    showIngredientModalMessage("Enter an ingredient name.");
+    showIngredientModalMessage(
+      "Enter an ingredient name."
+    );
     return;
   }
 
-  const normalizedName = normalizeModalIngredientName(name);
+  const normalizedName =
+    normalizeModalIngredientName(name);
 
-  const existing = ingredientModalState.existingIngredients.find(
-    ingredient =>
-      normalizeModalIngredientName(ingredient.name) === normalizedName
-  );
+  const existing =
+    ingredientModalState.existingIngredients.find(
+      ingredient =>
+        normalizeModalIngredientName(
+          ingredient.name
+        ) === normalizedName
+    );
 
   if (existing) {
     showIngredientModalMessage(
-      `${existing.name} already exists. Select it from the ingredient search instead.`
+      `${existing.name} already exists. Use the existing ingredient instead.`
     );
+
+    renderModalIngredientSuggestions(name);
     return;
   }
 
@@ -209,12 +253,14 @@ async function submitNewIngredientModal() {
     confirmBtn.disabled = true;
     confirmBtn.textContent = "Adding...";
 
-    const createdIngredient = await createIngredientInSupabase({
-      name,
-      defaultUnit
-    });
+    const createdIngredient =
+      await createIngredientInSupabase({
+        name,
+        defaultUnit
+      });
 
-    const callback = ingredientModalState.onCreated;
+    const callback =
+      ingredientModalState.onCreated;
 
     closeIngredientModal();
 
@@ -222,10 +268,14 @@ async function submitNewIngredientModal() {
       callback(createdIngredient);
     }
   } catch (error) {
-    console.error("Failed to create ingredient:", error);
+    console.error(
+      "Failed to create ingredient:",
+      error
+    );
 
     showIngredientModalMessage(
-      error.message || "The ingredient could not be added."
+      error.message ||
+      "The ingredient could not be added."
     );
 
     confirmBtn.disabled = false;
@@ -243,14 +293,25 @@ function initializeIngredientModal() {
     confirmBtn
   } = getIngredientModalElements();
 
-  if (!modal) return;
+  if (!modal || !nameInput) {
+    return;
+  }
 
-  nameInput?.addEventListener("input", () => {
+  nameInput.addEventListener("input", () => {
     clearIngredientModalMessage();
-    renderModalIngredientSuggestions(nameInput.value);
+
+    renderModalIngredientSuggestions(
+      nameInput.value
+    );
   });
 
-  nameInput?.addEventListener("keydown", event => {
+  nameInput.addEventListener("focus", () => {
+    renderModalIngredientSuggestions(
+      nameInput.value
+    );
+  });
+
+  nameInput.addEventListener("keydown", event => {
     if (event.key === "Enter") {
       event.preventDefault();
       submitNewIngredientModal();
@@ -261,9 +322,20 @@ function initializeIngredientModal() {
     }
   });
 
-  closeBtn?.addEventListener("click", closeIngredientModal);
-  cancelBtn?.addEventListener("click", closeIngredientModal);
-  confirmBtn?.addEventListener("click", submitNewIngredientModal);
+  closeBtn?.addEventListener(
+    "click",
+    closeIngredientModal
+  );
+
+  cancelBtn?.addEventListener(
+    "click",
+    closeIngredientModal
+  );
+
+  confirmBtn?.addEventListener(
+    "click",
+    submitNewIngredientModal
+  );
 
   modal.addEventListener("click", event => {
     if (event.target === modal) {
@@ -273,7 +345,6 @@ function initializeIngredientModal() {
 
   document.addEventListener("click", event => {
     if (
-      nameInput &&
       suggestions &&
       !nameInput.contains(event.target) &&
       !suggestions.contains(event.target)
@@ -283,4 +354,11 @@ function initializeIngredientModal() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", initializeIngredientModal);
+if (document.readyState === "loading") {
+  document.addEventListener(
+    "DOMContentLoaded",
+    initializeIngredientModal
+  );
+} else {
+  initializeIngredientModal();
+}
