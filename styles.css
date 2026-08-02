@@ -2267,13 +2267,11 @@ header.nav-scrolled .nav-logo {
 }
 
 #addIngredientRowBtn {
-  width: 100%;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-
   display: block;
+  width: 100%;
 
-  padding: 0.95rem 1.5rem;
+  margin: 1rem 0 1.5rem;
+  padding: 1rem 1.5rem;
 
   border: none;
   border-radius: 999px;
@@ -2285,8 +2283,11 @@ header.nav-scrolled .nav-logo {
   );
 
   color: #4f4558;
-  font-size: 1rem;
+  font: inherit;          /* Match the rest of the site */
   font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
+
   cursor: pointer;
 
   transition:
