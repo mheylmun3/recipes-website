@@ -491,3 +491,29 @@ openNewIngredientModalBtn?.addEventListener("click", () => {
     }
   });
 });
+
+(async function initAddRecipePage() {
+  await loadIngredientCatalog();
+  createIngredientRow();
+})();
+
+openNewIngredientModalBtn?.addEventListener("click", () => {
+  openIngredientModal({
+    ingredients: ingredientCatalog,
+
+    onCreated: createdIngredient => {
+      ingredientCatalog.push(createdIngredient);
+
+      ingredientCatalog.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
+      createIngredientRow({
+        ingredientId: createdIngredient.slug,
+        name: createdIngredient.name,
+        quantity: "",
+        unit: createdIngredient.default_unit
+      });
+    }
+  });
+});
