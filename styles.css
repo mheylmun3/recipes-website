@@ -1981,3 +1981,117 @@ header.nav-scrolled .nav-logo {
     width: 100%;
   }
 }
+
+.ingredients-card {
+  width: min(1100px, calc(100% - 2rem));
+}
+
+.ingredient-create-section,
+.ingredient-list-section {
+  margin-top: 2rem;
+}
+
+.ingredient-management-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.ingredient-management-field {
+  position: relative;
+  min-width: 0;
+}
+
+.ingredient-management-field label {
+  display: block;
+  margin-bottom: 0.45rem;
+}
+
+.ingredient-management-field input,
+.ingredient-management-field select {
+  width: 100%;
+}
+
+.ingredient-management-suggestions {
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+}
+
+.ingredient-management-suggestions .suggestion-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ingredient-management-suggestions .suggestion-item span {
+  color: var(--text-soft);
+}
+
+.ingredient-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ingredient-list-header h3 {
+  margin: 0;
+}
+
+.ingredient-list-header input {
+  width: min(320px, 100%);
+}
+
+.ingredient-management-item {
+  align-items: center;
+}
+
+.ingredient-management-edit-fields {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 190px;
+  gap: 1rem;
+  flex: 1;
+}
+
+.ingredient-management-edit-fields input,
+.ingredient-management-edit-fields select {
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  .ingredient-management-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ingredient-management-row button {
+    width: 100%;
+  }
+
+  .ingredient-list-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ingredient-list-header input {
+    width: 100%;
+  }
+
+  .ingredient-management-item {
+    align-items: stretch;
+  }
+
+  .ingredient-management-edit-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .ingredient-management-item .grocery-item-actions {
+    width: 100%;
+  }
+
+  .ingredient-management-item .grocery-item-actions button {
+    flex: 1;
+  }
+}

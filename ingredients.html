@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ingredients</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="images/logo2.png" />
+  <link rel="apple-touch-icon" href="images/logo2.png" />
+</head>
+
+<body>
+  <canvas id="fairy-canvas"></canvas>
+
+  <div class="vine vine-left" aria-hidden="true"></div>
+  <div class="vine vine-right" aria-hidden="true"></div>
+
+  <div class="corner-palm-wrap corner-palm-wrap-left" aria-hidden="true">
+    <img
+      src="images/palm-leaf.png"
+      alt=""
+      class="corner-palm-img corner-palm-img-left"
+    />
+  </div>
+
+  <div class="corner-palm-wrap corner-palm-wrap-right" aria-hidden="true">
+    <img
+      src="images/palm-leaf.png"
+      alt=""
+      class="corner-palm-img corner-palm-img-right"
+    />
+  </div>
+
+  <header>
+    <nav class="navbar">
+      <h1 class="nav-logo">
+        <a href="index.html">
+          <img src="images/logo3.png" alt="Gab's Italian Kitchen" />
+        </a>
+      </h1>
+
+      <button
+        class="hamburger"
+        id="hamburgerBtn"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="mobileNav"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-links" id="desktopNav">
+        <li><a href="all-recipes.html">All Recipes</a></li>
+        <li><a href="add-recipe.html">Add Recipe</a></li>
+        <li><a href="meal-plan.html">Meal Plan</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="grocery-list.html">Grocery List</a></li>
+        <li><a href="ingredients.html">Ingredients</a></li>
+        <li><a href="macro-tracker.html">Macros</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="all-recipes.html">All Recipes</a>
+      <a href="add-recipe.html">Add Recipe</a>
+      <a href="meal-plan.html">Meal Plan</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="grocery-list.html">Grocery List</a>
+      <a href="ingredients.html">Ingredients</a>
+      <a href="macro-tracker.html">Macros</a>
+      <a href="login.html">Login</a>
+    </div>
+  </header>
+
+  <main class="form-page ingredients-page">
+    <section class="form-card ingredients-card">
+      <h2>Ingredients</h2>
+      <p>Add, edit, or archive ingredients used throughout the website.</p>
+
+      <section class="ingredient-create-section">
+        <h3>Add Ingredient</h3>
+
+        <div class="ingredient-management-row">
+          <div class="ingredient-management-field">
+            <label for="newIngredientName">Ingredient Name</label>
+            <input
+              type="text"
+              id="newIngredientName"
+              placeholder="Enter ingredient name"
+              autocomplete="off"
+            />
+
+            <div
+              id="newIngredientSuggestions"
+              class="suggestions-list ingredient-management-suggestions"
+            ></div>
+          </div>
+
+          <div class="ingredient-management-field">
+            <label for="newIngredientUnit">Default Unit</label>
+            <select id="newIngredientUnit">
+              <option value="count">Count</option>
+              <option value="tsp">tsp</option>
+              <option value="tbsp">tbsp</option>
+              <option value="cups">Cups</option>
+              <option value="oz">oz</option>
+              <option value="lbs">lbs</option>
+              <option value="ml">mL</option>
+              <option value="liters">Liters</option>
+              <option value="gallon">Gallon</option>
+              <option value="cans">Cans</option>
+              <option value="jars">Jars</option>
+              <option value="cloves">Cloves</option>
+              <option value="box">Box</option>
+              <option value="bag">Bag</option>
+              <option value="stick">Stick</option>
+              <option value="pint">Pint</option>
+              <option value="container">Container</option>
+            </select>
+          </div>
+
+          <button type="button" id="createIngredientBtn">
+            Add Ingredient
+          </button>
+        </div>
+      </section>
+
+      <section class="ingredient-list-section">
+        <div class="ingredient-list-header">
+          <h3>Current Ingredients</h3>
+
+          <input
+            type="text"
+            id="ingredientListSearch"
+            placeholder="Search ingredients..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div id="ingredientList" class="inventory-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <div
+    id="ingredientMessageModal"
+    class="custom-modal-overlay"
+    style="display: none;"
+  >
+    <div class="custom-modal auth-message-modal">
+      <h3 id="ingredientMessageTitle">Notice</h3>
+      <p id="ingredientMessageText"></p>
+
+      <div class="custom-modal-actions">
+        <button type="button" id="closeIngredientMessageBtn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="archiveIngredientModal"
+    class="custom-modal-overlay"
+    style="display: none;"
+  >
+    <div class="custom-modal">
+      <h3>Archive Ingredient?</h3>
+
+      <p>
+        This ingredient will no longer appear in ingredient searches, but
+        existing recipes and inventory records will remain connected to it.
+      </p>
+
+      <div class="custom-modal-actions">
+        <button type="button" id="cancelArchiveIngredientBtn">Cancel</button>
+
+        <button
+          type="button"
+          id="confirmArchiveIngredientBtn"
+          class="danger-btn"
+        >
+          Archive Ingredient
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Gab's Italian Kitchen</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script src="supabase-db.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="ingredients-page.js"></script>
+  <script src="background.js"></script>
+  <script src="nav-scroll.js"></script>
+  <script src="nav-menu.js"></script>
+</body>
+</html>
