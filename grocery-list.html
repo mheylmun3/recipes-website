@@ -2,31 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
   <title>Grocery List</title>
+
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" type="image/png" sizes="32x32" href="images/logo2.png" />
-  <link rel="apple-touch-icon" href="images/logo2.png" />
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="32x32"
+    href="images/logo2.png"
+  />
+
+  <link
+    rel="apple-touch-icon"
+    href="images/logo2.png"
+  />
 </head>
+
 <body>
   <canvas id="fairy-canvas"></canvas>
-  <div class="vine vine-left" aria-hidden="true"></div>
 
-  <div class="vine vine-right" aria-hidden="true"></div>
+  <div
+    class="vine vine-left"
+    aria-hidden="true"
+  ></div>
 
-  <div class="corner-palm-wrap corner-palm-wrap-left" aria-hidden="true">
-    <img src="images/palm-leaf.png" alt="" class="corner-palm-img corner-palm-img-left" />
+  <div
+    class="vine vine-right"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="corner-palm-wrap corner-palm-wrap-left"
+    aria-hidden="true"
+  >
+    <img
+      src="images/palm-leaf.png"
+      alt=""
+      class="corner-palm-img corner-palm-img-left"
+    />
   </div>
 
-  <div class="corner-palm-wrap corner-palm-wrap-right" aria-hidden="true">
-    <img src="images/palm-leaf.png" alt="" class="corner-palm-img corner-palm-img-right" />
+  <div
+    class="corner-palm-wrap corner-palm-wrap-right"
+    aria-hidden="true"
+  >
+    <img
+      src="images/palm-leaf.png"
+      alt=""
+      class="corner-palm-img corner-palm-img-right"
+    />
   </div>
 
   <header>
     <nav class="navbar">
       <h1 class="nav-logo">
         <a href="index.html">
-          <img src="images/logo3.png" alt="Gab's Italian Kitchen" />
+          <img
+            src="images/logo3.png"
+            alt="Gab's Italian Kitchen"
+          />
         </a>
       </h1>
 
@@ -43,7 +83,10 @@
         <span></span>
       </button>
 
-      <ul class="nav-links" id="desktopNav">
+      <ul
+        class="nav-links"
+        id="desktopNav"
+      >
         <li><a href="all-recipes.html">All Recipes</a></li>
         <li><a href="add-recipe.html">Add Recipe</a></li>
         <li><a href="ingredients.html">Ingredients</a></li>
@@ -55,7 +98,10 @@
       </ul>
     </nav>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div
+      class="mobile-nav"
+      id="mobileNav"
+    >
       <a href="all-recipes.html">All Recipes</a>
       <a href="add-recipe.html">Add Recipe</a>
       <a href="ingredients.html">Ingredients</a>
@@ -70,10 +116,16 @@
   <main class="grocery-list-page">
     <section class="grocery-list-card">
       <h2>Grocery List</h2>
-      <p>Generated from your current meal plan and inventory.</p>
+
+      <p>
+        Generated from your current meal plan and inventory.
+      </p>
 
       <div id="groceryManageSection">
-        <section class="grocery-manual-add" data-requires-auth="true">
+        <section
+          class="grocery-manual-add"
+          data-requires-auth="true"
+        >
           <h3>Add Household or Extra Items</h3>
 
           <div class="grocery-search-row">
@@ -84,76 +136,202 @@
                 placeholder="Search item to add"
                 autocomplete="off"
               />
-              <div id="grocerySuggestions" class="suggestions-list"></div>
+
+              <div
+                id="grocerySuggestions"
+                class="suggestions-list"
+              ></div>
             </div>
 
-            <button type="button" id="addNewManualItemBtn">Add New Item Name</button>
+            <button
+              type="button"
+              id="addNewManualItemBtn"
+            >
+              Add New Item Name
+            </button>
           </div>
 
           <div class="inventory-form-row grocery-action-row">
             <div>
-              <label for="groceryQuantity">Quantity</label>
+              <label for="groceryQuantity">
+                Quantity
+              </label>
+
               <input
                 type="number"
                 id="groceryQuantity"
                 min="0"
-                step="1"
+                step="any"
                 placeholder="Enter quantity"
               />
             </div>
 
             <div>
-              <label for="groceryUnit">Unit</label>
-              <select id="groceryUnit">
-                <option value="count">Count</option>
-                <option value="tsp">tsp</option>
-                <option value="tbsp">tbsp</option>
-                <option value="cups">Cups</option>
-                <option value="oz">oz</option>
-                <option value="lbs">lbs</option>
-                <option value="ml">mL</option>
-                <option value="liters">Liters</option>
-                <option value="gallon">Gallon</option>
-                <option value="cans">Cans</option>
-                <option value="jars">Jars</option>
-                <option value="cloves">Cloves</option>
-                <option value="box">Box</option>
-                <option value="bag">Bag</option>
-                <option value="stick">Stick</option>
-                <option value="pint">Pint</option>
-                <option value="container">Container</option>
-              </select>
+              <label for="groceryUnit">
+                Unit
+              </label>
+
+              <input
+                type="text"
+                id="groceryUnit"
+                placeholder=""
+                readonly
+                tabindex="-1"
+              />
             </div>
 
             <div class="grocery-submit-wrap">
-              <button type="button" id="addManualGroceryBtn">Add to Grocery List</button>
+              <button
+                type="button"
+                id="addManualGroceryBtn"
+              >
+                Add to Grocery List
+              </button>
             </div>
           </div>
         </section>
       </div>
 
-      <div id="groceryListContainer" class="inventory-list"></div>
+      <div
+        id="groceryListContainer"
+        class="inventory-list"
+      ></div>
     </section>
   </main>
+
+  <!-- Add New Ingredient Modal -->
+  <div
+    id="newIngredientModal"
+    class="custom-modal-overlay"
+    style="display: none;"
+  >
+    <div class="custom-modal ingredient-create-modal">
+      <button
+        type="button"
+        id="closeNewIngredientModalBtn"
+        class="modal-close-btn"
+        aria-label="Close"
+      >
+        &times;
+      </button>
+
+      <h3>Add New Ingredient</h3>
+
+      <p>
+        Search before adding to make sure the ingredient does not already
+        exist.
+      </p>
+
+      <div class="ingredient-modal-search">
+        <label for="modalIngredientName">
+          Ingredient Name
+        </label>
+
+        <input
+          type="text"
+          id="modalIngredientName"
+          placeholder="Enter ingredient name"
+          autocomplete="off"
+        />
+
+        <div
+          id="modalIngredientSuggestions"
+          class="suggestions-list ingredient-modal-suggestions"
+        ></div>
+      </div>
+
+      <div class="ingredient-modal-unit-field">
+        <label for="modalIngredientUnit">
+          Default Unit
+        </label>
+
+        <select id="modalIngredientUnit">
+          <option value="count">Count</option>
+          <option value="tsp">tsp</option>
+          <option value="tbsp">tbsp</option>
+          <option value="cups">Cups</option>
+          <option value="oz">oz</option>
+          <option value="lbs">lbs</option>
+          <option value="ml">mL</option>
+          <option value="liters">Liters</option>
+          <option value="gallon">Gallon</option>
+          <option value="cans">Cans</option>
+          <option value="jars">Jars</option>
+          <option value="cloves">Cloves</option>
+          <option value="box">Box</option>
+          <option value="bag">Bag</option>
+          <option value="stick">Stick</option>
+          <option value="pint">Pint</option>
+          <option value="container">Container</option>
+        </select>
+      </div>
+
+      <div class="ingredient-modal-category-field">
+        <label for="modalIngredientCategory">
+          Category
+        </label>
+
+        <select id="modalIngredientCategory">
+          <!-- Loaded automatically from Supabase -->
+        </select>
+      </div>
+
+      <p
+        id="modalIngredientMessage"
+        class="ingredient-modal-message"
+      ></p>
+
+      <div class="custom-modal-actions">
+        <button
+          type="button"
+          id="cancelNewIngredientBtn"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          id="confirmNewIngredientBtn"
+        >
+          Add Ingredient
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grocery Message Modal -->
+  <div
+    id="groceryMessageModal"
+    class="custom-modal-overlay"
+    style="display: none;"
+  >
+    <div class="custom-modal">
+      <h3 id="groceryMessageTitle">
+        Grocery List
+      </h3>
+
+      <p id="groceryMessageText"></p>
+
+      <div class="custom-modal-actions">
+        <button
+          type="button"
+          id="closeGroceryMessageBtn"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <p>&copy; 2026 Gab's Italian Kitchen</p>
   </footer>
 
-  <div id="groceryMessageModal" class="custom-modal-overlay" style="display: none;">
-    <div class="custom-modal auth-message-modal">
-      <h3 id="groceryMessageTitle">Notice</h3>
-      <p id="groceryMessageText"></p>
-      <div class="custom-modal-actions">
-        <button type="button" id="closeGroceryMessageBtn">OK</button>
-      </div>
-    </div>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>
   <script src="supabase-db.js"></script>
   <script src="auth-guard.js"></script>
+  <script src="ingredient-modal.js"></script>
   <script src="grocery-list.js"></script>
   <script src="background.js"></script>
   <script src="nav-scroll.js"></script>

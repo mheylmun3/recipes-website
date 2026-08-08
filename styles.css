@@ -2064,7 +2064,11 @@ header.nav-scrolled .nav-logo {
 
 .ingredient-management-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px auto;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(150px, 190px)
+    minmax(180px, 220px)
+    auto;
   gap: 1rem;
   align-items: end;
 }
@@ -2082,6 +2086,7 @@ header.nav-scrolled .nav-logo {
 .ingredient-management-field input,
 .ingredient-management-field select {
   width: 100%;
+  min-width: 0;
 }
 
 .ingredient-management-suggestions {
@@ -2117,27 +2122,65 @@ header.nav-scrolled .nav-logo {
 }
 
 .ingredient-management-item {
+  display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
 .ingredient-management-edit-fields {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) 190px;
+  grid-template-columns:
+    minmax(220px, 1fr)
+    minmax(150px, 190px)
+    minmax(180px, 220px);
   gap: 1rem;
   flex: 1;
+  min-width: 0;
 }
 
 .ingredient-management-edit-fields input,
 .ingredient-management-edit-fields select {
   width: 100%;
+  min-width: 0;
 }
 
+.ingredient-management-item .grocery-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 0 0 auto;
+}
+
+/* Tablet */
+@media (max-width: 1050px) {
+  .ingredient-management-row {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(140px, 180px)
+      minmax(170px, 200px);
+  }
+
+  .ingredient-management-row #createIngredientBtn {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .ingredient-management-edit-fields {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(140px, 180px)
+      minmax(170px, 200px);
+  }
+}
+
+/* Mobile */
 @media (max-width: 800px) {
   .ingredient-management-row {
     grid-template-columns: 1fr;
   }
 
-  .ingredient-management-row button {
+  .ingredient-management-row #createIngredientBtn {
+    grid-column: auto;
     width: 100%;
   }
 
@@ -2151,11 +2194,13 @@ header.nav-scrolled .nav-logo {
   }
 
   .ingredient-management-item {
+    flex-direction: column;
     align-items: stretch;
   }
 
   .ingredient-management-edit-fields {
     grid-template-columns: 1fr;
+    width: 100%;
   }
 
   .ingredient-management-item .grocery-item-actions {
@@ -2442,5 +2487,113 @@ header.nav-scrolled .nav-logo {
 
   .edit-ingredient-row .ingredient-search-wrapper {
     grid-column: auto;
+  }
+}
+
+/* =========================================================
+   INVENTORY CATEGORY GROUPS
+========================================================= */
+
+.inventory-category-group {
+  margin-bottom: 1.5rem;
+}
+
+.inventory-category-group:last-child {
+  margin-bottom: 0;
+}
+
+.inventory-category-heading {
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.45rem;
+
+  font-size: 1.15rem;
+  font-weight: 700;
+
+  color: var(--text);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.inventory-category-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Keep the individual inventory cards aligned */
+.inventory-category-items .inventory-item {
+  margin: 0;
+}
+
+/* Slightly tighter layout on mobile */
+@media (max-width: 700px) {
+  .inventory-category-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .inventory-category-heading {
+    font-size: 1.05rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .inventory-category-items {
+    gap: 0.65rem;
+  }
+}
+
+/* =========================================================
+   INVENTORY + GROCERY CATEGORY GROUPS
+========================================================= */
+
+.inventory-category-group,
+.grocery-category-group {
+  margin-bottom: 1.5rem;
+}
+
+.inventory-category-group:last-child,
+.grocery-category-group:last-child {
+  margin-bottom: 0;
+}
+
+.inventory-category-heading,
+.grocery-category-heading {
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.45rem;
+
+  font-size: 1.15rem;
+  font-weight: 700;
+
+  color: var(--text);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.inventory-category-items,
+.grocery-category-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.inventory-category-items .inventory-item,
+.grocery-category-items .inventory-item {
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .inventory-category-group,
+  .grocery-category-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .inventory-category-heading,
+  .grocery-category-heading {
+    font-size: 1.05rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .inventory-category-items,
+  .grocery-category-items {
+    gap: 0.65rem;
   }
 }

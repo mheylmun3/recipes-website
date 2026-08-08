@@ -2,21 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
   <title>Ingredients</title>
 
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" type="image/png" sizes="32x32" href="images/logo2.png" />
-  <link rel="apple-touch-icon" href="images/logo2.png" />
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="32x32"
+    href="images/logo2.png"
+  />
+
+  <link
+    rel="apple-touch-icon"
+    href="images/logo2.png"
+  />
 </head>
 
 <body>
   <canvas id="fairy-canvas"></canvas>
 
-  <div class="vine vine-left" aria-hidden="true"></div>
-  <div class="vine vine-right" aria-hidden="true"></div>
+  <div
+    class="vine vine-left"
+    aria-hidden="true"
+  ></div>
 
-  <div class="corner-palm-wrap corner-palm-wrap-left" aria-hidden="true">
+  <div
+    class="vine vine-right"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="corner-palm-wrap corner-palm-wrap-left"
+    aria-hidden="true"
+  >
     <img
       src="images/palm-leaf.png"
       alt=""
@@ -24,7 +48,10 @@
     />
   </div>
 
-  <div class="corner-palm-wrap corner-palm-wrap-right" aria-hidden="true">
+  <div
+    class="corner-palm-wrap corner-palm-wrap-right"
+    aria-hidden="true"
+  >
     <img
       src="images/palm-leaf.png"
       alt=""
@@ -36,7 +63,10 @@
     <nav class="navbar">
       <h1 class="nav-logo">
         <a href="index.html">
-          <img src="images/logo3.png" alt="Gab's Italian Kitchen" />
+          <img
+            src="images/logo3.png"
+            alt="Gab's Italian Kitchen"
+          />
         </a>
       </h1>
 
@@ -53,19 +83,48 @@
         <span></span>
       </button>
 
-      <ul class="nav-links" id="desktopNav">
-        <li><a href="all-recipes.html">All Recipes</a></li>
-        <li><a href="add-recipe.html">Add Recipe</a></li>
-        <li><a href="ingredients.html">Ingredients</a></li>
-        <li><a href="meal-plan.html">Meal Plan</a></li>
-        <li><a href="inventory.html">Inventory</a></li>
-        <li><a href="grocery-list.html">Grocery List</a></li>
-        <li><a href="macro-tracker.html">Macros</a></li>
-        <li><a href="login.html">Login</a></li>
+      <ul
+        class="nav-links"
+        id="desktopNav"
+      >
+        <li>
+          <a href="all-recipes.html">All Recipes</a>
+        </li>
+
+        <li>
+          <a href="add-recipe.html">Add Recipe</a>
+        </li>
+
+        <li>
+          <a href="ingredients.html">Ingredients</a>
+        </li>
+
+        <li>
+          <a href="meal-plan.html">Meal Plan</a>
+        </li>
+
+        <li>
+          <a href="inventory.html">Inventory</a>
+        </li>
+
+        <li>
+          <a href="grocery-list.html">Grocery List</a>
+        </li>
+
+        <li>
+          <a href="macro-tracker.html">Macros</a>
+        </li>
+
+        <li>
+          <a href="login.html">Login</a>
+        </li>
       </ul>
     </nav>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div
+      class="mobile-nav"
+      id="mobileNav"
+    >
       <a href="all-recipes.html">All Recipes</a>
       <a href="add-recipe.html">Add Recipe</a>
       <a href="ingredients.html">Ingredients</a>
@@ -77,17 +136,23 @@
     </div>
   </header>
 
-  <main class="form-page ingredients-page">
+  <main class="form-page">
     <section class="form-card ingredients-card">
       <h2>Ingredients</h2>
-      <p>Add, edit, or archive ingredients used throughout the website.</p>
+
+      <p>
+        Manage ingredient names, default units, and grocery categories.
+      </p>
 
       <section class="ingredient-create-section">
         <h3>Add Ingredient</h3>
 
         <div class="ingredient-management-row">
           <div class="ingredient-management-field">
-            <label for="newIngredientName">Ingredient Name</label>
+            <label for="newIngredientName">
+              Ingredient Name
+            </label>
+
             <input
               type="text"
               id="newIngredientName"
@@ -102,7 +167,10 @@
           </div>
 
           <div class="ingredient-management-field">
-            <label for="newIngredientUnit">Default Unit</label>
+            <label for="newIngredientUnit">
+              Default Unit
+            </label>
+
             <select id="newIngredientUnit">
               <option value="count">Count</option>
               <option value="tsp">tsp</option>
@@ -124,7 +192,20 @@
             </select>
           </div>
 
-          <button type="button" id="createIngredientBtn">
+          <div class="ingredient-management-field">
+            <label for="newIngredientCategory">
+              Category
+            </label>
+
+            <select id="newIngredientCategory">
+              <!-- Loaded from Supabase -->
+            </select>
+          </div>
+
+          <button
+            type="button"
+            id="createIngredientBtn"
+          >
             Add Ingredient
           </button>
         </div>
@@ -137,31 +218,44 @@
           <input
             type="text"
             id="ingredientListSearch"
-            placeholder="Search ingredients..."
+            placeholder="Search ingredients or categories..."
             autocomplete="off"
           />
         </div>
 
-        <div id="ingredientList" class="inventory-list"></div>
+        <div
+          id="ingredientList"
+          class="inventory-list"
+        ></div>
       </section>
     </section>
   </main>
 
+  <!-- Ingredient Message Modal -->
   <div
     id="ingredientMessageModal"
     class="custom-modal-overlay"
     style="display: none;"
   >
-    <div class="custom-modal auth-message-modal">
-      <h3 id="ingredientMessageTitle">Notice</h3>
+    <div class="custom-modal">
+      <h3 id="ingredientMessageTitle">
+        Ingredient
+      </h3>
+
       <p id="ingredientMessageText"></p>
 
       <div class="custom-modal-actions">
-        <button type="button" id="closeIngredientMessageBtn">OK</button>
+        <button
+          type="button"
+          id="closeIngredientMessageBtn"
+        >
+          OK
+        </button>
       </div>
     </div>
   </div>
 
+  <!-- Archive Ingredient Confirmation Modal -->
   <div
     id="archiveIngredientModal"
     class="custom-modal-overlay"
@@ -171,12 +265,18 @@
       <h3>Archive Ingredient?</h3>
 
       <p>
-        This ingredient will no longer appear in ingredient searches, but
-        existing recipes and inventory records will remain connected to it.
+        This ingredient will no longer appear in ingredient searches,
+        but existing recipes and inventory records will remain connected
+        to it.
       </p>
 
       <div class="custom-modal-actions">
-        <button type="button" id="cancelArchiveIngredientBtn">Cancel</button>
+        <button
+          type="button"
+          id="cancelArchiveIngredientBtn"
+        >
+          Cancel
+        </button>
 
         <button
           type="button"

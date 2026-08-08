@@ -1,5 +1,6 @@
 let ingredientModalState = {
   existingIngredients: [],
+  categories: [],
   onCreated: null
 };
 
@@ -15,6 +16,7 @@ function getIngredientModalElements() {
     modal: document.getElementById("newIngredientModal"),
     nameInput: document.getElementById("modalIngredientName"),
     unitSelect: document.getElementById("modalIngredientUnit"),
+    categorySelect: document.getElementById("modalIngredientCategory"),
     suggestions: document.getElementById("modalIngredientSuggestions"),
     message: document.getElementById("modalIngredientMessage"),
     closeBtn: document.getElementById("closeNewIngredientModalBtn"),
@@ -39,6 +41,41 @@ function clearIngredientModalMessage() {
   }
 }
 
+function getDefaultModalCategory() {
+  return (
+    ingredientModalState.categories.find(
+      category => category.slug === "household-other"
+    ) ||
+    ingredientModalState.categories[0] ||
+    null
+  );
+}
+
+function populateModalCategorySelect() {
+  const { categorySelect } = getIngredientModalElements();
+
+  if (!categorySelect) {
+    return;
+  }
+
+  categorySelect.innerHTML = "";
+
+  ingredientModalState.categories.forEach(category => {
+    const option = document.createElement("option");
+
+    option.value = category.id;
+    option.textContent = category.name;
+
+    categorySelect.appendChild(option);
+  });
+
+  const defaultCategory = getDefaultModalCategory();
+
+  if (defaultCategory) {
+    categorySelect.value = defaultCategory.id;
+  }
+}
+
 function getModalIngredientMatches(searchTerm) {
   const normalizedSearch =
     normalizeModalIngredientName(searchTerm);
@@ -54,11 +91,17 @@ function getModalIngredientMatches(searchTerm) {
       ).includes(normalizedSearch)
     )
     .sort((a, b) => {
-      const aName = normalizeModalIngredientName(a.name);
-      const bName = normalizeModalIngredientName(b.name);
+      const aName =
+        normalizeModalIngredientName(a.name);
 
-      const aStarts = aName.startsWith(normalizedSearch);
-      const bStarts = bName.startsWith(normalizedSearch);
+      const bName =
+        normalizeModalIngredientName(b.name);
+
+      const aStarts =
+        aName.startsWith(normalizedSearch);
+
+      const bStarts =
+        bName.startsWith(normalizedSearch);
 
       if (aStarts !== bStarts) {
         return aStarts ? -1 : 1;
@@ -70,7 +113,8 @@ function getModalIngredientMatches(searchTerm) {
 }
 
 function renderModalIngredientSuggestions(searchTerm) {
-  const { suggestions } = getIngredientModalElements();
+  const { suggestions } =
+    getIngredientModalElements();
 
   if (!suggestions) {
     return;
@@ -78,7 +122,8 @@ function renderModalIngredientSuggestions(searchTerm) {
 
   suggestions.innerHTML = "";
 
-  const matches = getModalIngredientMatches(searchTerm);
+  const matches =
+    getModalIngredientMatches(searchTerm);
 
   if (!matches.length) {
     suggestions.style.display = "none";
@@ -86,19 +131,19 @@ function renderModalIngredientSuggestions(searchTerm) {
   }
 
   matches.forEach(ingredient => {
-    const option = document.createElement("div");
+    const option =
+      document.createElement("div");
+
     option.className =
       "suggestion-item ingredient-modal-suggestion";
 
-    const name = document.createElement("strong");
-    name.textContent = ingredient.name;
+    const name =
+      document.createElement("strong");
 
-    const unit = document.createElement("span");
-    unit.textContent =
-      ingredient.default_unit || "count";
+    name.textContent =
+      ingredient.name;
 
     option.appendChild(name);
-    option.appendChild(unit);
 
     option.addEventListener("click", event => {
       event.preventDefault();
@@ -115,7 +160,38 @@ function renderModalIngredientSuggestions(searchTerm) {
   suggestions.style.display = "block";
 }
 
-function openIngredientModal({
+async function loadModalCategories() {
+  try {
+    const categories =
+      await fetchIngredientCategoriesFromSupabase();
+
+    ingredientModalState.categories =
+      Array.isArray(categories)
+        ? categories
+            .slice()
+            .sort(
+              (a, b) =>
+                Number(a.sort_order) -
+                Number(b.sort_order)
+            )
+        : [];
+
+    populateModalCategorySelect();
+  } catch (error) {
+    console.error(
+      "Failed to load ingredient categories:",
+      error
+    );
+
+    ingredientModalState.categories = [];
+
+    showIngredientModalMessage(
+      "Ingredient categories could not be loaded."
+    );
+  }
+}
+
+async function openIngredientModal({
   initialName = "",
   ingredients = [],
   onCreated = null
@@ -124,25 +200,32 @@ function openIngredientModal({
     modal,
     nameInput,
     unitSelect,
+    categorySelect,
     suggestions
   } = getIngredientModalElements();
 
-  if (!modal || !nameInput || !unitSelect) {
+  if (
+    !modal ||
+    !nameInput ||
+    !unitSelect ||
+    !categorySelect
+  ) {
     console.error(
-      "The Add Ingredient modal HTML is missing."
+      "The Add Ingredient modal HTML is missing required elements."
     );
+
     return;
   }
 
-  ingredientModalState = {
-    existingIngredients: Array.isArray(ingredients)
+  ingredientModalState.existingIngredients =
+    Array.isArray(ingredients)
       ? ingredients
-      : [],
-    onCreated:
-      typeof onCreated === "function"
-        ? onCreated
-        : null
-  };
+      : [];
+
+  ingredientModalState.onCreated =
+    typeof onCreated === "function"
+      ? onCreated
+      : null;
 
   nameInput.value = initialName;
   unitSelect.value = "count";
@@ -154,6 +237,16 @@ function openIngredientModal({
 
   clearIngredientModalMessage();
 
+  await loadModalCategories();
+
+  const defaultCategory =
+    getDefaultModalCategory();
+
+  if (defaultCategory) {
+    categorySelect.value =
+      defaultCategory.id;
+  }
+
   modal.style.display = "flex";
 
   requestAnimationFrame(() => {
@@ -161,7 +254,10 @@ function openIngredientModal({
 
     if (initialName) {
       nameInput.select();
-      renderModalIngredientSuggestions(initialName);
+
+      renderModalIngredientSuggestions(
+        initialName
+      );
     }
   });
 }
@@ -171,6 +267,7 @@ function closeIngredientModal() {
     modal,
     nameInput,
     unitSelect,
+    categorySelect,
     suggestions,
     confirmBtn
   } = getIngredientModalElements();
@@ -187,6 +284,10 @@ function closeIngredientModal() {
     unitSelect.value = "count";
   }
 
+  if (categorySelect) {
+    categorySelect.innerHTML = "";
+  }
+
   if (suggestions) {
     suggestions.innerHTML = "";
     suggestions.style.display = "none";
@@ -201,6 +302,7 @@ function closeIngredientModal() {
 
   ingredientModalState = {
     existingIngredients: [],
+    categories: [],
     onCreated: null
   };
 }
@@ -209,10 +311,16 @@ async function submitNewIngredientModal() {
   const {
     nameInput,
     unitSelect,
+    categorySelect,
     confirmBtn
   } = getIngredientModalElements();
 
-  if (!nameInput || !unitSelect || !confirmBtn) {
+  if (
+    !nameInput ||
+    !unitSelect ||
+    !categorySelect ||
+    !confirmBtn
+  ) {
     return;
   }
 
@@ -220,12 +328,25 @@ async function submitNewIngredientModal() {
     .trim()
     .replace(/\s+/g, " ");
 
-  const defaultUnit = unitSelect.value || "count";
+  const defaultUnit =
+    unitSelect.value || "count";
+
+  const categoryId =
+    categorySelect.value || "";
 
   if (!name) {
     showIngredientModalMessage(
       "Enter an ingredient name."
     );
+
+    return;
+  }
+
+  if (!categoryId) {
+    showIngredientModalMessage(
+      "Select an ingredient category."
+    );
+
     return;
   }
 
@@ -246,6 +367,7 @@ async function submitNewIngredientModal() {
     );
 
     renderModalIngredientSuggestions(name);
+
     return;
   }
 
@@ -256,7 +378,8 @@ async function submitNewIngredientModal() {
     const createdIngredient =
       await createIngredientInSupabase({
         name,
-        defaultUnit
+        defaultUnit,
+        categoryId
       });
 
     const callback =
@@ -275,7 +398,7 @@ async function submitNewIngredientModal() {
 
     showIngredientModalMessage(
       error.message ||
-      "The ingredient could not be added."
+        "The ingredient could not be added."
     );
 
     confirmBtn.disabled = false;
@@ -311,16 +434,20 @@ function initializeIngredientModal() {
     );
   });
 
-  nameInput.addEventListener("keydown", event => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      submitNewIngredientModal();
-    }
+  nameInput.addEventListener(
+    "keydown",
+    event => {
+      if (event.key === "Enter") {
+        event.preventDefault();
 
-    if (event.key === "Escape") {
-      closeIngredientModal();
+        submitNewIngredientModal();
+      }
+
+      if (event.key === "Escape") {
+        closeIngredientModal();
+      }
     }
-  });
+  );
 
   closeBtn?.addEventListener(
     "click",
