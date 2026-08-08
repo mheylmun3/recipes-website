@@ -2597,3 +2597,56 @@ header.nav-scrolled .nav-logo {
     gap: 0.65rem;
   }
 }
+
+/* =========================================================
+   INGREDIENT MODAL FIELDS
+========================================================= */
+
+.ingredient-modal-unit-field,
+.ingredient-modal-category-field {
+  margin-top: 1rem;
+}
+
+.ingredient-modal-unit-field label,
+.ingredient-modal-category-field label {
+  display: block;
+  margin-bottom: 0.45rem;
+}
+
+.ingredient-modal-unit-field select,
+.ingredient-modal-category-field select {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+
+  padding: 0 1rem;
+
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+
+  background-color: rgba(255, 255, 255, 0.92);
+
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 22px rgba(132, 112, 150, 0.08);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.ingredient-modal-unit-field select:focus,
+.ingredient-modal-category-field select:focus {
+  outline: none;
+
+  border-color: var(--border-strong);
+
+  box-shadow:
+    0 0 0 3px rgba(214, 185, 238, 0.25),
+    0 8px 22px rgba(132, 112, 150, 0.1);
+}
